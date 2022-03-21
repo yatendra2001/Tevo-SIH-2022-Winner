@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "71721129063",
+    "project_id": "tevo-a2f71",
+    "storage_bucket": "tevo-a2f71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71721129063:android:caf1ebc0f009dfa99930c2",
+        "android_client_info": {
+          "package_name": "com.superawesomeapps.tevo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71721129063-idcu2vpe5ds0j48o8jtkpi0hsdqri8sh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjqsVEgD1-r5qWBj5pgOdJGOamOISrORU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71721129063-idcu2vpe5ds0j48o8jtkpi0hsdqri8sh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
