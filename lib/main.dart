@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/blocs/simple_bloc_observer.dart';
@@ -57,22 +58,22 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           navigatorKey: navigatorKey,
-          title: 'Flutter Instagram',
+          title: 'Flutter Tevo',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
             scaffoldBackgroundColor: Colors.grey[50],
-            appBarTheme: AppBarTheme(
-              brightness: Brightness.light,
+            appBarTheme: const AppBarTheme(
               color: Colors.white,
-              iconTheme: const IconThemeData(color: Colors.black),
-              textTheme: const TextTheme(
+              iconTheme: IconThemeData(color: Colors.black),
+              textTheme: TextTheme(
                 headline6: TextStyle(
                   color: Colors.black,
                   fontSize: 20.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
             ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),

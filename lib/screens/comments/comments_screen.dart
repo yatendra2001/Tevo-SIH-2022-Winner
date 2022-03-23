@@ -63,34 +63,35 @@ class _CommentsScreenState extends State<CommentsScreen> {
             itemBuilder: (BuildContext context, int index) {
               final comment = state.comments[index];
               return ListTile(
-                leading: UserProfileImage(
-                  radius: 22.0,
-                  profileImageUrl: comment!.author.profileImageUrl,
-                ),
-                title: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: comment.author.username,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      const TextSpan(text: ' '),
-                      TextSpan(text: comment.content),
-                    ],
+                  leading: UserProfileImage(
+                    radius: 22.0,
+                    profileImageUrl: comment!.author.profileImageUrl,
                   ),
-                ),
-                subtitle: Text(
-                  DateFormat.yMd().add_jm().format(comment.date),
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
+                  title: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: comment.author.username,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        const TextSpan(text: ' '),
+                        TextSpan(text: comment.content),
+                      ],
+                    ),
                   ),
-                ),
-                onTap: () => Navigator.of(context).pushNamed(
-                  ProfileScreen.routeName,
-                  arguments: ProfileScreenArgs(userId: comment.author.id),
-                ),
-              );
+                  subtitle: Text(
+                    DateFormat.yMd().add_jm().format(comment.date),
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onTap: () => null
+                  // Navigator.of(context).pushNamed(
+                  //   ProfileScreen.routeName,
+                  //   arguments: ProfileScreenArgs(userId: comment.author.id),
+                  // ),
+                  );
             },
           ),
           bottomSheet: Padding(

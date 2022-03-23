@@ -18,37 +18,38 @@ class NotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: UserProfileImage(
-        radius: 18.0,
-        profileImageUrl: notification.fromUser.profileImageUrl,
-      ),
-      title: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: notification.fromUser.username,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
+        leading: UserProfileImage(
+          radius: 18.0,
+          profileImageUrl: notification.fromUser.profileImageUrl,
+        ),
+        title: Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: notification.fromUser.username,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const TextSpan(text: ' '),
-            TextSpan(text: _getText(notification)),
-          ],
+              const TextSpan(text: ' '),
+              TextSpan(text: _getText(notification)),
+            ],
+          ),
         ),
-      ),
-      subtitle: Text(
-        DateFormat.yMd().add_jm().format(notification.date),
-        style: TextStyle(
-          color: Colors.grey[600],
-          fontWeight: FontWeight.w500,
+        subtitle: Text(
+          DateFormat.yMd().add_jm().format(notification.date),
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
+          ),
         ),
-      ),
-      trailing: _getTrailing(context, notification),
-      onTap: () => Navigator.of(context).pushNamed(
-        ProfileScreen.routeName,
-        arguments: ProfileScreenArgs(userId: notification.fromUser.id),
-      ),
-    );
+        trailing: _getTrailing(context, notification),
+        onTap: () => null
+        // Navigator.of(context).pushNamed(
+        //   // ProfileScreen.routeName,
+        //   // arguments: ProfileScreenArgs(userId: notification.fromUser.id),
+        // ),
+        );
   }
 
   String _getText(Notif notification) {
@@ -75,7 +76,8 @@ class NotificationTile extends StatelessWidget {
         child: CachedNetworkImage(
           height: 60.0,
           width: 60.0,
-          imageUrl: notification.post!.imageUrl,
+          imageUrl: '',
+          // imageUrl: notification.post!.imageUrl,
           fit: BoxFit.cover,
         ),
       );
