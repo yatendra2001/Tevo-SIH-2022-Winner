@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class Task extends Equatable {
@@ -21,14 +22,14 @@ class Task extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
-      'dateTime': dateTime,
+      'dateTime': Timestamp.fromDate(dateTime),
       'task': task,
     };
   }
 
-  // factory TaskModel.fromMap(Map<String, dynamic> map) {
-  //   return TaskModel(
-  //     timestamp: T
+  // factory Task.fromMap(Map<String, dynamic> map) {
+  //   return Task(
+  //     timestamp: map[]
   //     task: map['task'] ?? '',
   //   );
   // }

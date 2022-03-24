@@ -1,18 +1,18 @@
 part of 'create_post_bloc.dart';
 
 class CreatePostState extends Equatable {
-  final List<Task> todoTask;
-  final List<Task> completedTask;
-  final Failure failure;
+  List<Task> todoTask;
+  List<Task> completedTask;
+  Failure failure;
 
-  const CreatePostState({
+  CreatePostState({
     required this.todoTask,
     required this.completedTask,
     required this.failure,
   });
 
   factory CreatePostState.initial() {
-    return const CreatePostState(
+    return CreatePostState(
       todoTask: [],
       completedTask: [],
       failure: Failure(),
