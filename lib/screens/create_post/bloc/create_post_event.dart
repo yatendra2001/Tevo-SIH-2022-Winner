@@ -32,3 +32,18 @@ class GetTaskEvent extends CreatePostEvent {
   @override
   List<Object> get props => [];
 }
+
+class DeleteTaskEvent extends CreatePostEvent {
+  final Task task;
+  const DeleteTaskEvent({
+    required this.task,
+  });
+  @override
+  List<Object> get props => [task];
+}
+
+class DeletePostEvent extends CreatePostEvent {
+  const DeletePostEvent();
+  @override
+  List<Object> get props => [];
+}

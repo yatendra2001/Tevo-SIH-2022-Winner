@@ -29,6 +29,10 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       yield* _mapToCompleteTaskEvent(event);
     } else if (event is GetTaskEvent) {
       yield* _mapToGetTaskEvent(event);
+    } else if (event is DeleteTaskEvent) {
+      yield* _mapToDeleteTask(event);
+    } else if (event is DeletePostEvent) {
+      yield* _mapTodeletePost(event);
     }
   }
 
@@ -52,11 +56,28 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
 
   Stream<CreatePostState> _mapToCompleteTaskEvent(
       CompleteTaskEvent event) async* {
-    List<Task> completeTask = List<Task>.from(state.completedTask)
-      ..add(event.task);
-    List<Task> toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
+    final completeTask = List<Task>.from(state.completedTask)..add(event.task);
+    final toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
     yield state.copyWith(todoTask: toDoTask, completedTask: completeTask);
     submit();
+  }
+
+  Stream<CreatePostState> _mapToDeleteTask(DeleteTaskEvent event) async* {
+    final toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
+    yield state.copyWith(todoTask: toDoTask);
+    submit();
+  }
+
+  Stream<CreatePostState> _mapTodeletePost(DeletePostEvent event) async* {
+    if (state.postId != null) {
+      _postRepository.deletePost(postId: state.postId!);
+    }
+    state.copyWith(
+      completedTask: [],
+      dateTime: null,
+      postId: null,
+      todoTask: [],
+    );
   }
 
   void submit() async {

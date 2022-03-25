@@ -79,7 +79,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     _textEditingController.clear();
                   },
                 ),
-                _buildToDoTaskList(state),
+                _buildToDoTaskList(state, context),
               ],
             ),
           ),
@@ -89,16 +89,24 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 }
 
-_buildToDoTaskList(CreatePostState state) {
+_buildToDoTaskList(CreatePostState state, BuildContext context) {
+  final todoTask = state.todoTask;
   return Expanded(
-    child: state.todoTask.isEmpty
+    child: todoTask.isEmpty
         ? const Center(
             child: Text('Add Task Now'),
           )
         : ListView.builder(
-            itemBuilder: (_, index) =>
-                TaskCard(task: state.todoTask[index], index: index + 1),
-            itemCount: state.todoTask.length,
+            itemBuilder: (_, index) => TaskCard(
+              task: todoTask[index],
+              index: index + 1,
+              isDeleted: () => context.read<CreatePostBloc>().add(
+                    DeleteTaskEvent(
+                      task: todoTask[index],
+                    ),
+                  ),
+            ),
+            itemCount: todoTask.length,
           ),
   );
 }

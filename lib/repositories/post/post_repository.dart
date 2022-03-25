@@ -188,4 +188,8 @@ class PostRepository extends BasePostRepository {
         .doc(post.id)
         .update(post.toDocument());
   }
+
+  void deletePost({required String postId}) {
+    _firebaseFirestore.collection(Paths.posts).doc(postId).delete();
+  }
 }

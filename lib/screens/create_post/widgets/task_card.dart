@@ -6,12 +6,14 @@ class TaskCard extends StatelessWidget {
   final Task task;
   final int index;
   final bool isCompleted;
+  final Function()? isDeleted;
 
   const TaskCard(
       {Key? key,
       required this.task,
       required this.index,
-      this.isCompleted = false})
+      this.isCompleted = false,
+      this.isDeleted})
       : super(key: key);
 
   @override
@@ -41,7 +43,12 @@ class TaskCard extends StatelessWidget {
                     SizedBox(
                       width: 10,
                     ),
-                    !isCompleted ? Icon(Icons.delete) : SizedBox.shrink(),
+                    !isCompleted
+                        ? IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: isDeleted,
+                          )
+                        : SizedBox.shrink(),
                   ],
                 ),
               ],

@@ -29,10 +29,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               'Create Post',
               style: TextStyle(color: Colors.black),
             ),
-            actions: const [
+            actions: [
               Padding(
-                padding: EdgeInsets.only(right: 15),
-                child: Icon(Icons.refresh),
+                padding: const EdgeInsets.only(right: 15),
+                child: IconButton(
+                  onPressed: () => context
+                      .read<CreatePostBloc>()
+                      .add(const DeletePostEvent()),
+                  icon: const Icon(Icons.delete),
+                ),
               )
             ],
           ),
@@ -44,8 +49,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 state.dateTime != null
                     ? _buildRemainingTime(state)
                     : const Text('No Posts Yet'),
-                const Text('Completed'),
-                _buildCompletedTask(state),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -60,6 +63,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ],
                 ),
                 _buildToDoTask(state, context),
+                const Text('Completed'),
+                _buildCompletedTask(state),
               ],
             ),
           ),
@@ -67,45 +72,58 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       },
     );
   }
+}
 
-  _buildCompletedTask(CreatePostState state) {
-    final completedTask = state.completedTask;
-    return Expanded(
-      child: completedTask.isEmpty
-          ? const Center(child: Text('Add Task Now'))
-          : ListView.builder(
-              itemBuilder: (_, index) => TaskCard(
-                task: completedTask[index],
-                index: index + 1,
-                isCompleted: true,
-              ),
-              itemCount: completedTask.length,
+_buildCompletedTask(CreatePostState state) {
+  final completedTask = state.completedTask;
+  return Expanded(
+    child: completedTask.isEmpty
+        ? const Center(child: Text('Add Task Now'))
+        : ListView.builder(
+            itemBuilder: (_, index) => TaskCard(
+              task: completedTask[index],
+              index: index + 1,
+              isCompleted: true,
             ),
-    );
-  }
+            itemCount: completedTask.length,
+          ),
+  );
 }
 
 _buildToDoTask(CreatePostState state, BuildContext context) {
   final todoTask = state.todoTask;
   return Expanded(
     child: todoTask.isEmpty
-        ? const Center(child: Text('Add Task Now'))
+        ? const Center(
+            child: Text('Add Task Now'),
+          )
         : ListView.builder(
-            itemBuilder: (_, index) => Dismissible(
+            itemBuilder: (_, index) {
+              return Dismissible(
                 key: Key(todoTask[index].timestamp.toString()),
                 onDismissed: (_) {
                   context
                       .read<CreatePostBloc>()
                       .add(CompleteTaskEvent(task: todoTask[index]));
                 },
-                child: TaskCard(task: todoTask[index], index: index + 1)),
+                child: TaskCard(
+                  task: todoTask[index],
+                  index: index + 1,
+                  isDeleted: () => context.read<CreatePostBloc>().add(
+                        DeleteTaskEvent(
+                          task: todoTask[index],
+                        ),
+                      ),
+                ),
+              );
+            },
             itemCount: todoTask.length,
           ),
   );
 }
 
 _buildRemainingTime(CreatePostState state) {
-  int endTime = state.dateTime!.millisecondsSinceEpoch + 1000 * 30;
+  int endTime = state.dateTime!.millisecondsSinceEpoch;
   return Center(
     child: CountdownTimer(
       endTime: endTime,
