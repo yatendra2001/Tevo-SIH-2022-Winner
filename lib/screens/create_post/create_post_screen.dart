@@ -6,179 +6,121 @@ import 'package:tevo/screens/create_post/add_task_screen.dart';
 import 'bloc/create_post_bloc.dart';
 import 'widgets/task_card.dart';
 
-class CreatePostScreen extends StatelessWidget {
+class CreatePostScreen extends StatefulWidget {
   static const String routeName = '/createPost';
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  CreatePostScreen({Key? key}) : super(key: key);
+  const CreatePostScreen({Key? key}) : super(key: key);
 
   @override
+  State<CreatePostScreen> createState() => _CreatePostScreenState();
+}
+
+class _CreatePostScreenState extends State<CreatePostScreen> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Create Post',
-          style: TextStyle(color: Colors.black),
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: Icon(Icons.refresh),
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: BlocConsumer<CreatePostBloc, CreatePostState>(
-          listener: (context, state) {
-            // TODO: implement listener
-          },
-          builder: (context, state) {
-            return Column(
+    return BlocConsumer<CreatePostBloc, CreatePostState>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Create Post',
+              style: TextStyle(color: Colors.black),
+            ),
+            actions: const [
+              Padding(
+                padding: EdgeInsets.only(right: 15),
+                child: Icon(Icons.refresh),
+              )
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildRemainingTime(),
+                state.dateTime != null
+                    ? _buildRemainingTime(state)
+                    : const Text('No Posts Yet'),
                 const Text('Completed'),
-                _buildCompletedTask(),
+                _buildCompletedTask(state),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('To Do Task'),
                     ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(AddTaskScreen.routeName);
-                        },
-                        child: const Text('Add Task'))
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(AddTaskScreen.routeName);
+                      },
+                      child: const Text('Add Task'),
+                    )
                   ],
                 ),
-                _buildToDoTask(state),
+                _buildToDoTask(state, context),
               ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  _buildCompletedTask() {
-    return Expanded(
-      child: ListView(
-        padding: const EdgeInsets.all(10),
-        children: [
-          Card(
-            elevation: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: const [
-                          Text('1'),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('Task 1'),
-                        ],
-                      ),
-                      const Text('12:30 A.M'),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
-                      Icon(Icons.favorite),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('24'),
-                    ],
-                  )
-                ],
-              ),
             ),
           ),
-          Card(
-            elevation: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: const [
-                          Text('1'),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('Task 1'),
-                        ],
-                      ),
-                      const Text('12:30 A.M'),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
-                      Icon(Icons.favorite),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('24'),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 
-  _buildToDoTask(CreatePostState state) {
+  _buildCompletedTask(CreatePostState state) {
+    final completedTask = state.completedTask;
     return Expanded(
-      child: state.todoTask.isEmpty
+      child: completedTask.isEmpty
           ? const Center(child: Text('Add Task Now'))
           : ListView.builder(
-              itemBuilder: (_, index) =>
-                  TaskCard(task: state.todoTask[index], index: index + 1),
-              itemCount: state.todoTask.length,
+              itemBuilder: (_, index) => TaskCard(
+                task: completedTask[index],
+                index: index + 1,
+                isCompleted: true,
+              ),
+              itemCount: completedTask.length,
             ),
-    );
-  }
-
-  _buildRemainingTime() {
-    int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 9000;
-    return Center(
-      child: CountdownTimer(
-        endTime: endTime,
-        widgetBuilder: (_, time) {
-          if (time == null) {
-            return const Text('Game over');
-          }
-          return Text(
-            '${time.hours} hrs ${time.min} min ${time.sec} sec',
-          );
-        },
-      ),
     );
   }
 }
+
+_buildToDoTask(CreatePostState state, BuildContext context) {
+  final todoTask = state.todoTask;
+  return Expanded(
+    child: todoTask.isEmpty
+        ? const Center(child: Text('Add Task Now'))
+        : ListView.builder(
+            itemBuilder: (_, index) => Dismissible(
+                key: Key(todoTask[index].timestamp.toString()),
+                onDismissed: (_) {
+                  context
+                      .read<CreatePostBloc>()
+                      .add(CompleteTaskEvent(task: todoTask[index]));
+                },
+                child: TaskCard(task: todoTask[index], index: index + 1)),
+            itemCount: todoTask.length,
+          ),
+  );
+}
+
+_buildRemainingTime(CreatePostState state) {
+  int endTime = state.dateTime!.millisecondsSinceEpoch + 1000 * 30;
+  return Center(
+    child: CountdownTimer(
+      endTime: endTime,
+      widgetBuilder: (_, time) {
+        if (time == null) {
+          return const Text('Game over');
+        }
+        return Text(
+          '${time.hours} hrs ${time.min} min ${time.sec} sec',
+        );
+      },
+    ),
+  );
+}
+
   // void _selectPostImage(BuildContext context) async {
   //   final pickedFile = await ImageHelper.pickImageFromGallery(
   //     context: context,
