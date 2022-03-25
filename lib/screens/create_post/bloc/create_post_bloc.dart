@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tevo/blocs/auth/auth_bloc.dart';
-import 'package:tevo/models/failure_model.dart';
 import 'package:tevo/models/models.dart';
-import 'package:tevo/repositories/post/post_repository.dart';
 import 'package:tevo/repositories/repositories.dart';
 
 part 'create_post_event.dart';
@@ -30,6 +27,8 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       yield* _mapToAddTaskEvent(event);
     } else if (event is CompleteTaskEvent) {
       yield* _mapToCompleteTaskEvent(event);
+    } else if (event is GetTaskEvent) {
+      yield* _mapToGetTaskEvent(event);
     }
   }
 
@@ -38,25 +37,43 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     yield state.copyWith(todoTask: toDoTask);
   }
 
+  Stream<CreatePostState> _mapToGetTaskEvent(GetTaskEvent event) async* {
+    final userId = _authBloc.state.user!.uid;
+    final post = await _postRepository.getUserLastPost(userId: userId);
+    if (post != null) {
+      yield state.copyWith(
+        todoTask: post.toDoTask,
+        completedTask: post.completedTask,
+        postId: post.id,
+        dateTime: post.enddate,
+      );
+    }
+  }
+
   Stream<CreatePostState> _mapToCompleteTaskEvent(
       CompleteTaskEvent event) async* {
-    List<Task> completeTask = state.completedTask;
-    List<Task> toDoTask = state.todoTask;
-    toDoTask.remove(event.task);
-    completeTask.add(event.task);
+    List<Task> completeTask = List<Task>.from(state.completedTask)
+      ..add(event.task);
+    List<Task> toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
     yield state.copyWith(todoTask: toDoTask, completedTask: completeTask);
+    submit();
   }
 
   void submit() async {
     final userId = _authBloc.state.user!.uid;
     final user = await _userRepository.getUserWithId(userId: userId);
     final post = Post(
+      id: state.postId,
       author: user,
       toDoTask: state.todoTask,
       completedTask: state.completedTask,
       likes: 0,
-      date: DateTime.now(),
+      enddate: state.dateTime ?? DateTime.now().add(const Duration(hours: 24)),
     );
-    await _postRepository.createPost(post: post);
+    if (state.postId == null) {
+      await _postRepository.createPost(post: post);
+    } else {
+      _postRepository.updatePost(post: post);
+    }
   }
 }

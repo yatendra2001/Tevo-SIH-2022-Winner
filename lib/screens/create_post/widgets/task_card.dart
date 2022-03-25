@@ -5,11 +5,14 @@ import 'package:tevo/models/models.dart';
 class TaskCard extends StatelessWidget {
   final Task task;
   final int index;
-  const TaskCard({
-    Key? key,
-    required this.task,
-    required this.index,
-  }) : super(key: key);
+  final bool isCompleted;
+
+  const TaskCard(
+      {Key? key,
+      required this.task,
+      required this.index,
+      this.isCompleted = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +37,11 @@ class TaskCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text(DateFormat('HH:mm').format(task.dateTime)),
+                    Text(DateFormat('HH:mm').format(task.timestamp.toDate())),
                     SizedBox(
                       width: 10,
                     ),
-                    Icon(Icons.delete),
+                    !isCompleted ? Icon(Icons.delete) : SizedBox.shrink(),
                   ],
                 ),
               ],
@@ -46,6 +49,18 @@ class TaskCard extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
+            isCompleted
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: const [
+                      Icon(Icons.favorite),
+                      Text('24'),
+                      SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  )
+                : SizedBox.shrink(),
           ],
         ),
       ),

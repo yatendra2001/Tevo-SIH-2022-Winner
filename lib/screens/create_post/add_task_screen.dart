@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tevo/blocs/auth/auth_bloc.dart';
+import 'package:tevo/models/draggable_list.dart';
 import 'package:tevo/models/models.dart';
-import 'package:tevo/repositories/post/post_repository.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
 import 'package:tevo/screens/create_post/widgets/task_card.dart';
@@ -14,18 +14,18 @@ class AddTaskScreen extends StatefulWidget {
   static Route route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => BlocProvider(
+      builder: (context) => BlocProvider<CreatePostBloc>(
         create: (context) => CreatePostBloc(
           authBloc: context.read<AuthBloc>(),
           userRepository: context.read<UserRepository>(),
           postRepository: context.read<PostRepository>(),
-        ),
-        child: AddTaskScreen(),
+        )..add(const GetTaskEvent()),
+        child: const AddTaskScreen(),
       ),
     );
   }
 
-  AddTaskScreen({Key? key}) : super(key: key);
+  const AddTaskScreen({Key? key}) : super(key: key);
 
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
@@ -49,8 +49,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             ),
             actions: [
               IconButton(
-                onPressed: () {
+                onPressed: () async {
                   context.read<CreatePostBloc>().submit();
+                  Navigator.of(context).pop();
                 },
                 icon: const Icon(
                   Icons.save,
@@ -70,13 +71,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     context.read<CreatePostBloc>().add(
                           AddTaskEvent(
                             task: Task(
-                              dateTime: DateTime.now(),
+                              timestamp: Timestamp.now(),
                               task: _textEditingController.text,
                             ),
                           ),
                         );
                     _textEditingController.clear();
-                    setState(() {});
                   },
                 ),
                 _buildToDoTaskList(state),
@@ -92,7 +92,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 _buildToDoTaskList(CreatePostState state) {
   return Expanded(
     child: state.todoTask.isEmpty
-        ? const Center(child: Text('Add Task Now'))
+        ? const Center(
+            child: Text('Add Task Now'),
+          )
         : ListView.builder(
             itemBuilder: (_, index) =>
                 TaskCard(task: state.todoTask[index], index: index + 1),

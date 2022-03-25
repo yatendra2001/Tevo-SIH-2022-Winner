@@ -26,3 +26,9 @@ class CompleteTaskEvent extends CreatePostEvent {
   @override
   List<Object> get props => [task];
 }
+
+class GetTaskEvent extends CreatePostEvent {
+  const GetTaskEvent();
+  @override
+  List<Object> get props => [];
+}

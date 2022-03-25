@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
 import 'package:tevo/models/models.dart';
-import 'package:tevo/models/post_model.dart';
-import 'package:tevo/models/comment_model.dart';
 import 'package:tevo/repositories/repositories.dart';
 
 class PostRepository extends BasePostRepository {
@@ -82,6 +80,17 @@ class PostRepository extends BasePostRepository {
         .orderBy('date', descending: true)
         .snapshots()
         .map((snap) => snap.docs.map((doc) => Post.fromDocument(doc)).toList());
+  }
+
+  Future<Post?> getUserLastPost({required String userId}) async {
+    final authorRef = _firebaseFirestore.collection(Paths.users).doc(userId);
+    final currentTimeStamp = Timestamp.now();
+    final post = await _firebaseFirestore
+        .collection(Paths.posts)
+        .where('author', isEqualTo: authorRef)
+        .where('enddate', isGreaterThan: currentTimeStamp)
+        .get();
+    return post.docs.isNotEmpty ? Post.fromDocument(post.docs.single) : null;
   }
 
   @override
@@ -171,5 +180,12 @@ class PostRepository extends BasePostRepository {
         .collection(Paths.postLikes)
         .doc(userId)
         .delete();
+  }
+
+  void updatePost({required Post post}) {
+    _firebaseFirestore
+        .collection(Paths.posts)
+        .doc(post.id)
+        .update(post.toDocument());
   }
 }

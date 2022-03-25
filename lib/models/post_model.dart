@@ -9,7 +9,7 @@ class Post extends Equatable {
   final List<Task> toDoTask;
   final List<Task> completedTask;
   final int likes;
-  final DateTime date;
+  final DateTime enddate;
 
   const Post({
     this.id,
@@ -17,7 +17,7 @@ class Post extends Equatable {
     required this.toDoTask,
     required this.completedTask,
     required this.likes,
-    required this.date,
+    required this.enddate,
   });
 
   @override
@@ -27,33 +27,41 @@ class Post extends Equatable {
         toDoTask,
         completedTask,
         likes,
-        date,
+        enddate,
       ];
 
   Map<String, dynamic> toDocument() {
     return {
       'author':
           FirebaseFirestore.instance.collection(Paths.users).doc(author.id),
-      'toDoTask': toDoTask,
-      'completedTask': completedTask,
+      'toDoTask': toDoTask.map((task) => task.toMap()).toList(),
+      'completedTask': completedTask.map((task) => task.toMap()).toList(),
       'likes': likes,
-      'date': Timestamp.fromDate(date),
+      'enddate': Timestamp.fromDate(enddate),
     };
   }
 
   static Future<Post?> fromDocument(DocumentSnapshot doc) async {
     final data = doc.data() as Map<String, dynamic>;
     final authorRef = data['author'] as DocumentReference?;
+    List<Task> ls = [];
+    List<Task> ps = [];
+    for (var map in data['toDoTask']) {
+      ls.add(Task(timestamp: map['timestamp'], task: map['task']));
+    }
+    for (var map in data['completedTask']) {
+      ps.add(Task(timestamp: map['timestamp'], task: map['task']));
+    }
     if (authorRef != null) {
       final authorDoc = await authorRef.get();
       if (authorDoc.exists) {
         return Post(
           id: doc.id,
           author: User.fromDocument(authorDoc),
-          toDoTask: data['toDoTask'] ?? '',
-          completedTask: data['completedTask'] ?? '',
+          toDoTask: ls,
+          completedTask: ps,
           likes: (data['likes'] ?? 0).toInt(),
-          date: (data['date'] as Timestamp).toDate(),
+          enddate: (data['enddate'] as Timestamp).toDate(),
         );
       }
     }
@@ -66,7 +74,7 @@ class Post extends Equatable {
     List<Task>? toDoTask,
     List<Task>? completedTask,
     int? likes,
-    DateTime? date,
+    DateTime? enddate,
   }) {
     return Post(
       id: id ?? this.id,
@@ -74,7 +82,7 @@ class Post extends Equatable {
       toDoTask: toDoTask ?? this.toDoTask,
       completedTask: completedTask ?? this.completedTask,
       likes: likes ?? this.likes,
-      date: date ?? this.date,
+      enddate: enddate ?? this.enddate,
     );
   }
 }

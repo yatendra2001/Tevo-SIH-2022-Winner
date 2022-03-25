@@ -2,38 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class Task extends Equatable {
-  final DateTime dateTime;
+  final Timestamp timestamp;
   final String task;
 
   const Task({
-    required this.dateTime,
+    required this.timestamp,
     required this.task,
   });
 
   Task copyWith({
-    DateTime? dateTime,
+    Timestamp? timestamp,
     String? task,
   }) {
     return Task(
-      dateTime: dateTime ?? this.dateTime,
+      timestamp: timestamp ?? this.timestamp,
       task: task ?? this.task,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'dateTime': Timestamp.fromDate(dateTime),
+      'timestamp': timestamp,
       'task': task,
     };
   }
 
-  // factory Task.fromMap(Map<String, dynamic> map) {
-  //   return Task(
-  //     timestamp: map[]
-  //     task: map['task'] ?? '',
-  //   );
-  // }
-
   @override
-  List<Object?> get props => [dateTime, task];
+  List<Object?> get props => [timestamp, task];
 }
