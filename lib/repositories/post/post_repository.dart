@@ -71,13 +71,19 @@ class PostRepository extends BasePostRepository {
         .add(notification.toDocument());
   }
 
+  Future<Post?> getPost(String postId) async {
+    final doc =
+        await _firebaseFirestore.collection(Paths.posts).doc(postId).get();
+    return doc.exists ? Post.fromDocument(doc) : null;
+  }
+
   @override
   Stream<List<Future<Post?>>> getUserPosts({required String userId}) {
     final authorRef = _firebaseFirestore.collection(Paths.users).doc(userId);
     return _firebaseFirestore
         .collection(Paths.posts)
         .where('author', isEqualTo: authorRef)
-        .orderBy('date', descending: true)
+        .orderBy('enddate', descending: true)
         .snapshots()
         .map((snap) => snap.docs.map((doc) => Post.fromDocument(doc)).toList());
   }
@@ -116,7 +122,7 @@ class PostRepository extends BasePostRepository {
           .collection(Paths.feeds)
           .doc(userId)
           .collection(Paths.userFeed)
-          .orderBy('date', descending: true)
+          .orderBy('enddate', descending: true)
           .limit(3)
           .get();
     } else {
@@ -135,7 +141,7 @@ class PostRepository extends BasePostRepository {
           .collection(Paths.feeds)
           .doc(userId)
           .collection(Paths.userFeed)
-          .orderBy('date', descending: true)
+          .orderBy('enddate', descending: true)
           .startAfterDocument(lastPostDoc)
           .limit(3)
           .get();
