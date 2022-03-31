@@ -48,21 +48,21 @@ class TabNavigator extends StatelessWidget {
 
   Widget _getScreen(BuildContext context, BottomNavItem item) {
     switch (item) {
-      // case BottomNavItem.feed:
-      //   return BlocProvider<FeedBloc>(
-      //     create: (context) => FeedBloc(
-      //       postRepository: context.read<PostRepository>(),
-      //       authBloc: context.read<AuthBloc>(),
-      //       likedPostsCubit: context.read<LikedPostsCubit>(),
-      //     )..add(FeedFetchPosts()),
-      //     // child: const FeedScreen(),
-      //   );
-      // case BottomNavItem.search:
-      //   return BlocProvider<SearchCubit>(
-      //     create: (context) =>
-      //         SearchCubit(userRepository: context.read<UserRepository>()),
-      //     child: const SearchScreen(),
-      //   );
+      case BottomNavItem.feed:
+        return BlocProvider<FeedBloc>(
+          create: (context) => FeedBloc(
+            postRepository: context.read<PostRepository>(),
+            authBloc: context.read<AuthBloc>(),
+            likedPostsCubit: context.read<LikedPostsCubit>(),
+          )..add(FeedFetchPosts()),
+          child: const FeedScreen(),
+        );
+      case BottomNavItem.search:
+        return BlocProvider<SearchCubit>(
+          create: (context) =>
+              SearchCubit(userRepository: context.read<UserRepository>()),
+          child: const SearchScreen(),
+        );
       case BottomNavItem.create:
         return BlocProvider<CreatePostBloc>(
           create: (context) => CreatePostBloc(
@@ -80,18 +80,18 @@ class TabNavigator extends StatelessWidget {
       //     ),
       //     child: const NotificationsScreen(),
       //   );
-      // case BottomNavItem.profile:
-      //   return BlocProvider<ProfileBloc>(
-      //     create: (_) => ProfileBloc(
-      //       userRepository: context.read<UserRepository>(),
-      //       postRepository: context.read<PostRepository>(),
-      //       authBloc: context.read<AuthBloc>(),
-      //       likedPostsCubit: context.read<LikedPostsCubit>(),
-      //     )..add(
-      //         ProfileLoadUser(userId: context.read<AuthBloc>().state.user!.uid),
-      //       ),
-      //     // child: const ProfileScreen(),
-      //   );
+      case BottomNavItem.profile:
+        return BlocProvider<ProfileBloc>(
+          create: (_) => ProfileBloc(
+            userRepository: context.read<UserRepository>(),
+            postRepository: context.read<PostRepository>(),
+            authBloc: context.read<AuthBloc>(),
+            likedPostsCubit: context.read<LikedPostsCubit>(),
+          )..add(
+              ProfileLoadUser(userId: context.read<AuthBloc>().state.user!.uid),
+            ),
+          child: const ProfileScreen(),
+        );
       default:
         return Scaffold();
     }

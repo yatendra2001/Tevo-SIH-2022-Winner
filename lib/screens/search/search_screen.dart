@@ -66,23 +66,22 @@ class _SearchScreenState extends State<SearchScreen> {
                         itemBuilder: (BuildContext context, int index) {
                           final user = state.users[index];
                           return ListTile(
-                              leading: UserProfileImage(
-                                radius: 22.0,
-                                profileImageUrl: user.profileImageUrl,
-                              ),
-                              title: Text(
-                                user.username,
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                              onTap: () => null
-                              // Navigator.of(context).pushNamed(
-                              //   ProfileScreen.routeName,
-                              //   arguments: ProfileScreenArgs(userId: user.id),
-                              // ),
-                              );
+                            leading: UserProfileImage(
+                              radius: 22.0,
+                              profileImageUrl: user.profileImageUrl,
+                            ),
+                            title: Text(
+                              user.username,
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                            onTap: () => Navigator.of(context).pushNamed(
+                              ProfileScreen.routeName,
+                              arguments: ProfileScreenArgs(userId: user.id),
+                            ),
+                          );
                         },
                       )
-                    : CenteredText(text: 'No users found');
+                    : const CenteredText(text: 'No users found');
               default:
                 return const SizedBox.shrink();
             }

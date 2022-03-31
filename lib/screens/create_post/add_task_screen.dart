@@ -71,9 +71,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     context.read<CreatePostBloc>().add(
                           AddTaskEvent(
                             task: Task(
-                              timestamp: Timestamp.now(),
-                              task: _textEditingController.text,
-                            ),
+                                timestamp: Timestamp.now(),
+                                task: _textEditingController.text,
+                                likes: 0),
                           ),
                         );
                     _textEditingController.clear();
@@ -98,6 +98,8 @@ _buildToDoTaskList(CreatePostState state, BuildContext context) {
           )
         : ListView.builder(
             itemBuilder: (_, index) => TaskCard(
+              isCompleted: false,
+              likes: 0,
               task: todoTask[index],
               index: index + 1,
               isDeleted: () => context.read<CreatePostBloc>().add(

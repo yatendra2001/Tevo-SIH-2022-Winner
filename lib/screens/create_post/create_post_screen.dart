@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
+import 'package:tevo/screens/comments/comments_screen.dart';
 import 'package:tevo/screens/create_post/add_task_screen.dart';
 
+import '../profile/profile_screen.dart';
 import 'bloc/create_post_bloc.dart';
 import 'widgets/task_card.dart';
 
@@ -65,6 +67,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 _buildToDoTask(state, context),
                 const Text('Completed'),
                 _buildCompletedTask(state),
+                SizedBox(
+                  height: 10,
+                ),
+                state.post != null
+                    ? ElevatedButton(
+                        onPressed: () => Navigator.of(context).pushNamed(
+                            CommentsScreen.routeName,
+                            arguments: CommentsScreenArgs(post: state.post!)),
+                        child: Text("Comments"),
+                      )
+                    : SizedBox.shrink()
               ],
             ),
           ),
@@ -81,6 +94,7 @@ _buildCompletedTask(CreatePostState state) {
         ? const Center(child: Text('Add Task Now'))
         : ListView.builder(
             itemBuilder: (_, index) => TaskCard(
+              likes: completedTask[index].likes,
               task: completedTask[index],
               index: index + 1,
               isCompleted: true,
@@ -107,6 +121,8 @@ _buildToDoTask(CreatePostState state, BuildContext context) {
                       .add(CompleteTaskEvent(task: todoTask[index]));
                 },
                 child: TaskCard(
+                  isCompleted: false,
+                  likes: todoTask[index].likes,
                   task: todoTask[index],
                   index: index + 1,
                   isDeleted: () => context.read<CreatePostBloc>().add(
@@ -138,6 +154,8 @@ _buildRemainingTime(CreatePostState state) {
     ),
   );
 }
+
+
 
   // void _selectPostImage(BuildContext context) async {
   //   final pickedFile = await ImageHelper.pickImageFromGallery(

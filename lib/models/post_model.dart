@@ -8,7 +8,6 @@ class Post extends Equatable {
   final User author;
   final List<Task> toDoTask;
   final List<Task> completedTask;
-  final int likes;
   final DateTime enddate;
 
   const Post({
@@ -16,7 +15,6 @@ class Post extends Equatable {
     required this.author,
     required this.toDoTask,
     required this.completedTask,
-    required this.likes,
     required this.enddate,
   });
 
@@ -26,7 +24,6 @@ class Post extends Equatable {
         author,
         toDoTask,
         completedTask,
-        likes,
         enddate,
       ];
 
@@ -36,7 +33,6 @@ class Post extends Equatable {
           FirebaseFirestore.instance.collection(Paths.users).doc(author.id),
       'toDoTask': toDoTask.map((task) => task.toMap()).toList(),
       'completedTask': completedTask.map((task) => task.toMap()).toList(),
-      'likes': likes,
       'enddate': Timestamp.fromDate(enddate),
     };
   }
@@ -47,10 +43,13 @@ class Post extends Equatable {
     List<Task> ls = [];
     List<Task> ps = [];
     for (var map in data['toDoTask']) {
-      ls.add(Task(timestamp: map['timestamp'], task: map['task']));
+      ls.add(Task(timestamp: map['timestamp'], task: map['task'], likes: 0));
     }
     for (var map in data['completedTask']) {
-      ps.add(Task(timestamp: map['timestamp'], task: map['task']));
+      ps.add(Task(
+          timestamp: map['timestamp'],
+          task: map['task'],
+          likes: (map['likes'] ?? 0).toInt()));
     }
     if (authorRef != null) {
       final authorDoc = await authorRef.get();
@@ -60,7 +59,6 @@ class Post extends Equatable {
           author: User.fromDocument(authorDoc),
           toDoTask: ls,
           completedTask: ps,
-          likes: (data['likes'] ?? 0).toInt(),
           enddate: (data['enddate'] as Timestamp).toDate(),
         );
       }
@@ -73,7 +71,6 @@ class Post extends Equatable {
     User? author,
     List<Task>? toDoTask,
     List<Task>? completedTask,
-    int? likes,
     DateTime? enddate,
   }) {
     return Post(
@@ -81,7 +78,6 @@ class Post extends Equatable {
       author: author ?? this.author,
       toDoTask: toDoTask ?? this.toDoTask,
       completedTask: completedTask ?? this.completedTask,
-      likes: likes ?? this.likes,
       enddate: enddate ?? this.enddate,
     );
   }

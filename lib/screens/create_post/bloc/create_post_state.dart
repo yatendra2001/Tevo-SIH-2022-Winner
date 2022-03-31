@@ -1,23 +1,23 @@
 part of 'create_post_bloc.dart';
 
 class CreatePostState extends Equatable {
-  final String? postId;
+  final Post? post;
   final List<Task> todoTask;
   final List<Task> completedTask;
   final DateTime? dateTime;
   final Failure failure;
 
   const CreatePostState({
-    required this.postId,
+    this.post,
     required this.todoTask,
     required this.completedTask,
-    required this.dateTime,
+    this.dateTime,
     required this.failure,
   });
 
   factory CreatePostState.initial() {
     return const CreatePostState(
-      postId: null,
+      post: null,
       todoTask: [],
       completedTask: [],
       dateTime: null,
@@ -26,14 +26,14 @@ class CreatePostState extends Equatable {
   }
 
   CreatePostState copyWith({
-    String? postId,
+    Post? post,
     List<Task>? todoTask,
     List<Task>? completedTask,
     DateTime? dateTime,
     Failure? failure,
   }) {
     return CreatePostState(
-      postId: postId ?? this.postId,
+      post: post ?? this.post,
       todoTask: todoTask ?? this.todoTask,
       completedTask: completedTask ?? this.completedTask,
       dateTime: dateTime ?? this.dateTime,
@@ -42,6 +42,5 @@ class CreatePostState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [postId, dateTime, todoTask, completedTask, failure];
+  List<Object?> get props => [post, dateTime, todoTask, completedTask, failure];
 }

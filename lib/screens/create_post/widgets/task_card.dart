@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:tevo/models/models.dart';
 
 class TaskCard extends StatelessWidget {
   final Task task;
   final int index;
   final bool isCompleted;
+  final int likes;
   final Function()? isDeleted;
-
-  const TaskCard(
-      {Key? key,
-      required this.task,
-      required this.index,
-      this.isCompleted = false,
-      this.isDeleted})
-      : super(key: key);
+  const TaskCard({
+    Key? key,
+    required this.task,
+    required this.index,
+    required this.isCompleted,
+    required this.likes,
+    this.isDeleted,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +61,9 @@ class TaskCard extends StatelessWidget {
             isCompleted
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
-                      Icon(Icons.favorite),
-                      Text('24'),
+                    children: [
+                      Icon(Icons.favorite_outline),
+                      Text(likes.toString()),
                       SizedBox(
                         width: 10,
                       ),

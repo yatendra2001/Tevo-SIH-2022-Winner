@@ -48,7 +48,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       yield state.copyWith(
         todoTask: post.toDoTask,
         completedTask: post.completedTask,
-        postId: post.id,
+        post: post,
         dateTime: post.enddate,
       );
     }
@@ -69,13 +69,13 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   }
 
   Stream<CreatePostState> _mapTodeletePost(DeletePostEvent event) async* {
-    if (state.postId != null) {
-      _postRepository.deletePost(postId: state.postId!);
+    if (state.post != null) {
+      _postRepository.deletePost(postId: state.post!.id!);
     }
     state.copyWith(
       completedTask: [],
       dateTime: null,
-      postId: null,
+      post: null,
       todoTask: [],
     );
   }
@@ -84,17 +84,20 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     final userId = _authBloc.state.user!.uid;
     final user = await _userRepository.getUserWithId(userId: userId);
     final post = Post(
-      id: state.postId,
+      id: state.post!.id,
       author: user,
       toDoTask: state.todoTask,
       completedTask: state.completedTask,
-      likes: 0,
       enddate: state.dateTime ?? DateTime.now().add(const Duration(hours: 24)),
     );
-    if (state.postId == null) {
+    if (state.post == null) {
       await _postRepository.createPost(post: post);
     } else {
       _postRepository.updatePost(post: post);
     }
   }
+
+  // Future<Post?> findPost(String postId) async {
+  //   return await _postRepository.getPost(postId);
+  // }
 }
