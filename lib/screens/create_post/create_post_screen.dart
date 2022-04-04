@@ -4,7 +4,6 @@ import 'package:flutter_countdown_timer/index.dart';
 import 'package:tevo/screens/comments/comments_screen.dart';
 import 'package:tevo/screens/create_post/add_task_screen.dart';
 
-import '../profile/profile_screen.dart';
 import 'bloc/create_post_bloc.dart';
 import 'widgets/task_card.dart';
 
@@ -67,7 +66,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 _buildToDoTask(state, context),
                 const Text('Completed'),
                 _buildCompletedTask(state),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 state.post != null

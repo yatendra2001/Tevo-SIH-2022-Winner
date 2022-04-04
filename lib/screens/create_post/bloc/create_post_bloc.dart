@@ -37,6 +37,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   }
 
   Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
+    print('++++++++++++++++++++');
     final toDoTask = List<Task>.from(state.todoTask)..add(event.task);
     yield state.copyWith(todoTask: toDoTask);
   }
@@ -84,13 +85,14 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     final userId = _authBloc.state.user!.uid;
     final user = await _userRepository.getUserWithId(userId: userId);
     final post = Post(
-      id: state.post!.id,
+      id: state.post != null ? state.post!.id : null,
       author: user,
       toDoTask: state.todoTask,
       completedTask: state.completedTask,
       enddate: state.dateTime ?? DateTime.now().add(const Duration(hours: 24)),
     );
     if (state.post == null) {
+      print('Creating post++++++++++');
       await _postRepository.createPost(post: post);
     } else {
       _postRepository.updatePost(post: post);
