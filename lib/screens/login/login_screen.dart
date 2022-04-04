@@ -8,8 +8,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:tevo/repositories/repositories.dart';
-
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
+    as facebook_auth;
 import '../../widgets/widgets.dart';
 import 'cubit/login_cubit.dart';
 
@@ -34,6 +37,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    SmsAutoFill().listenForCode();
+    super.initState();
+  }
+
+  String? mobileNumber;
+  String? otp;
   final kHintTextStyle = const TextStyle(
     color: Colors.white54,
     fontFamily: 'OpenSans',
@@ -57,120 +68,56 @@ class _LoginScreenState extends State<LoginScreen> {
     ],
   );
 
-  bool _rememberMe = false;
-
-  Widget _buildEmailTF() {
+  Widget _buildPhoneTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Email',
+          'Phone',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        const SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: IntlPhoneField(
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'OpenSans',
+              ),
+              dropdownTextStyle: const TextStyle(color: Colors.white),
+              dropdownIcon: const Icon(
+                Icons.arrow_drop_down,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            obscureText: true,
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: const Icon(
-                Icons.lock,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        style: TextButton.styleFrom(padding: EdgeInsets.only(right: 0.0)),
-        child: Text(
-          'Forgot Password?',
-          style: kLabelStyle,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
+              initialCountryCode: 'IN',
+              disableLengthCheck: true,
               onChanged: (value) {
                 setState(() {
-                  _rememberMe = value!;
+                  mobileNumber = value.completeNumber;
                 });
               },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(top: 14.0),
+                prefixIcon: const Icon(
+                  Icons.phone,
+                  color: Colors.white,
+                ),
+                hintText: 'Enter your Phone Number',
+                hintStyle: kHintTextStyle,
+              ),
             ),
           ),
-          Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildLoginBtn() {
+  Widget _buildContinueBtn() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
@@ -182,9 +129,14 @@ class _LoginScreenState extends State<LoginScreen> {
               borderRadius: BorderRadius.circular(30.0),
             ),
             primary: Colors.white),
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () {
+          BlocProvider.of<LoginCubit>(context)
+              .sendOtpOnPhone(phone: mobileNumber!);
+          _otpBottomSheet(context);
+          print('Login Button Pressed');
+        },
         child: const Text(
-          'LOGIN',
+          'CONTINUE',
           style: TextStyle(
             color: Color(0xFF527DAA),
             letterSpacing: 1.5,
@@ -195,6 +147,83 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void _otpBottomSheet(context) {
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        backgroundColor: Color(0xFF478DE0),
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return BlocListener<LoginCubit, LoginState>(
+            listener: (context, state) {
+              if (state.status == LoginStatus.submitting) {
+                child:
+                const Center(child: CircularProgressIndicator());
+              }
+            },
+            child: Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Wrap(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: PinFieldAutoFill(
+                      autoFocus: true,
+                      keyboardType: TextInputType.number,
+                      decoration: const UnderlineDecoration(
+                        textStyle: TextStyle(fontSize: 20, color: Colors.white),
+                        colorBuilder: FixedColorBuilder(Colors.white),
+                        lineStrokeCap: StrokeCap.square,
+                      ),
+                      currentCode: otp,
+                      onCodeSubmitted: (code) {},
+                      onCodeChanged: (code) {
+                        if (code!.length == 6) {
+                          otp = code;
+                          BlocProvider.of<LoginCubit>(context)
+                              .verifyOtp(otp: otp!);
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            elevation: 5.0,
+                            padding: const EdgeInsets.all(15.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            primary: Colors.white),
+                        onPressed: () {
+                          BlocProvider.of<LoginCubit>(context)
+                              .verifyOtp(otp: otp!);
+                          print('Login Button Pressed');
+                        },
+                        child: const Text(
+                          'Verify OTP',
+                          style: TextStyle(
+                            color: Color(0xFF527DAA),
+                            letterSpacing: 1.5,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'OpenSans',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Widget _buildSignInWithText() {
@@ -247,46 +276,35 @@ class _LoginScreenState extends State<LoginScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _buildSocialBtn(
-            () => print('Login with Facebook'),
+            () async {
+              final facebook_auth.LoginResult result = await facebook_auth
+                  .FacebookAuth.instance
+                  .login(); // by default we request the email and the public profile
+// or FacebookAuth.i.login()
+              if (result.status == LoginStatus.success) {
+                // you are logged
+                final facebook_auth.AccessToken accessToken =
+                    result.accessToken!;
+              } else {
+                print(result.status);
+                print(result.message);
+              }
+              print('Login with Facebook');
+            },
             const AssetImage(
               'assets/icons/facebook.jpeg',
             ),
           ),
           _buildSocialBtn(
-            () => print('Login with Google'),
+            () {
+              BlocProvider.of<LoginCubit>(context).logInWithGoogle();
+              print('Login with Google');
+            },
             const AssetImage(
-              'assets/icons/google.jpeg',
+              'assets/icons/google.png',
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSignupBtn() {
-    return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
-      child: RichText(
-        text: const TextSpan(
-          children: [
-            TextSpan(
-              text: 'Don\'t have an Account? ',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 13.0,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            TextSpan(
-              text: 'Sign Up',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 13.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -327,14 +345,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    height: double.infinity,
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40.0,
-                        vertical: 120.0,
-                      ),
+                  Center(
+                    child: SizedBox(
+                      height: double.infinity,
+                      width: MediaQuery.of(context).size.width * 0.9,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -360,17 +374,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 30.0),
-                          _buildEmailTF(),
+                          _buildPhoneTF(),
                           const SizedBox(
                             height: 30.0,
                           ),
-                          _buildPasswordTF(),
-                          _buildForgotPasswordBtn(),
-                          _buildRememberMeCheckbox(),
-                          _buildLoginBtn(),
+                          _buildContinueBtn(),
                           _buildSignInWithText(),
                           _buildSocialBtnRow(),
-                          _buildSignupBtn(),
                         ],
                       ),
                     ),
@@ -384,130 +394,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-
-
-
-// class LoginScreen extends StatelessWidget {
-//   static const String routeName = '/login';
-
-//   static Route route() {
-//     return PageRouteBuilder(
-//       settings: const RouteSettings(name: routeName),
-//       transitionDuration: const Duration(seconds: 0),
-//       pageBuilder: (context, _, __) => BlocProvider<LoginCubit>(
-//         create: (_) =>
-//             LoginCubit(authRepository: context.read<AuthRepository>()),
-//         child: LoginScreen(),
-//       ),
-//     );
-//   }
-
-//   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return WillPopScope(
-//       onWillPop: () async => false,
-//       child: GestureDetector(
-//         onTap: () => FocusScope.of(context).unfocus(),
-//         child: BlocConsumer<LoginCubit, LoginState>(
-//           listener: (context, state) {
-//             if (state.status == LoginStatus.error) {
-//               showDialog(
-//                 context: context,
-//                 builder: (context) =>
-//                     ErrorDialog(content: state.failure.message),
-//               );
-//             }
-//           },
-//           builder: (context, state) {
-//             return Scaffold(
-//               resizeToAvoidBottomInset: false,
-//               body: Center(
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(24.0),
-//                   child: Card(
-//                     color: Colors.white,
-//                     child: Padding(
-//                       padding: const EdgeInsets.all(24.0),
-//                       child: Form(
-//                         key: _formKey,
-//                         child: Column(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           crossAxisAlignment: CrossAxisAlignment.stretch,
-//                           mainAxisSize: MainAxisSize.min,
-//                           children: [
-//                             const Text(
-//                               'Instagram',
-//                               style: TextStyle(
-//                                 fontSize: 28.0,
-//                                 fontWeight: FontWeight.bold,
-//                               ),
-//                               textAlign: TextAlign.center,
-//                             ),
-//                             const SizedBox(height: 12.0),
-//                             TextFormField(
-//                               decoration: InputDecoration(hintText: 'Email'),
-//                               onChanged: (value) => context
-//                                   .read<LoginCubit>()
-//                                   .emailChanged(value),
-//                               validator: (value) => !value!.contains('@')
-//                                   ? 'Please enter a valid email.'
-//                                   : null,
-//                             ),
-//                             const SizedBox(height: 16.0),
-//                             TextFormField(
-//                               decoration: InputDecoration(hintText: 'Password'),
-//                               obscureText: true,
-//                               onChanged: (value) => context
-//                                   .read<LoginCubit>()
-//                                   .passwordChanged(value),
-//                               validator: (value) => value!.length < 6
-//                                   ? 'Must be at least 6 characters.'
-//                                   : null,
-//                             ),
-//                             const SizedBox(height: 28.0),
-//                             ElevatedButton(
-//                               style: ElevatedButton.styleFrom(
-//                                 primary: Theme.of(context).primaryColor,
-//                                 textStyle: const TextStyle(color: Colors.white),
-//                               ),
-//                               onPressed: () => _submitForm(
-//                                 context,
-//                                 state.status == LoginStatus.submitting,
-//                               ),
-//                               child: const Text('Log In'),
-//                             ),
-//                             const SizedBox(height: 12.0),
-//                             ElevatedButton(
-//                               style: ElevatedButton.styleFrom(
-//                                 primary: Colors.grey[200],
-//                               ),
-//                               onPressed: () => Navigator.of(context)
-//                                   .pushNamed(SignupScreen.routeName),
-//                               child: const Text(
-//                                 'No account? Sign up',
-//                                 style: TextStyle(color: Colors.black),
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-
-//   void _submitForm(BuildContext context, bool isSubmitting) {
-//     if (_formKey.currentState!.validate() && !isSubmitting) {
-//       context.read<LoginCubit>().logInWithCredentials();
-//     }
-//   }
-// }

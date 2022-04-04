@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tevo</string>
+    <string name="facebook_app_id">450305180204932</string>
+    <string name="fb_login_protocol_scheme">fb450305180204932</string>
+    <string name="facebook_client_token">699f51eb07bd644bcea3c1e14e1f2136</string>
+</resources>

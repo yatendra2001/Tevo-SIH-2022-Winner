@@ -54,6 +54,10 @@ dependencies:
   timeago: ^3.1.0
   uuid: ^3.0.5
   flutter_countdown_timer: ^4.1.0
+  sms_autofill: ^2.2.0
+  google_sign_in: ^5.2.4
+  intl_phone_field: ^3.1.0
+  flutter_facebook_auth: ^4.1.2
 
 dev_dependencies:
   flutter_test:
