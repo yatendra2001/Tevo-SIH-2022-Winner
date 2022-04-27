@@ -9,6 +9,7 @@ import 'package:tevo/blocs/simple_bloc_observer.dart';
 import 'package:tevo/config/custom_router.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/screens/login/cubit/login_cubit.dart';
 import 'package:tevo/screens/screens.dart';
 
 void main() async {
@@ -54,6 +55,10 @@ class MyApp extends StatelessWidget {
               postRepository: context.read<PostRepository>(),
               authBloc: context.read<AuthBloc>(),
             ),
+          ),
+          BlocProvider<LoginCubit>(
+            create: (context) =>
+                LoginCubit(authRepository: context.read<AuthRepository>()),
           ),
         ],
         child: MaterialApp(

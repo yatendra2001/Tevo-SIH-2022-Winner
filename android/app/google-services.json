@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "71721129063-8b9vtl1d8i80ak11id7ot9d6kt9hmtbs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superawesomeapps.tevo",
+            "certificate_hash": "1e4d43531e1920997d4fbc10c8c6151292d70ad3"
+          }
+        },
+        {
           "client_id": "71721129063-idcu2vpe5ds0j48o8jtkpi0hsdqri8sh.apps.googleusercontent.com",
           "client_type": 3
         }
