@@ -56,19 +56,25 @@ class _FeedScreenState extends State<FeedScreen> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Instagram'),
-            actions: [
-              if (state.posts.isEmpty && state.status == FeedStatus.loaded)
-                IconButton(
-                  icon: const Icon(Icons.refresh),
-                  onPressed: () =>
-                      context.read<FeedBloc>().add(FeedFetchPosts()),
-                )
-            ],
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                'TEVO',
+                style: TextStyle(color: Colors.black),
+              ),
+              actions: [
+                if (state.posts.isEmpty && state.status == FeedStatus.loaded)
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () =>
+                        context.read<FeedBloc>().add(FeedFetchPosts()),
+                  )
+              ],
+            ),
+            body: _buildBody(state),
           ),
-          body: _buildBody(state),
         );
       },
     );

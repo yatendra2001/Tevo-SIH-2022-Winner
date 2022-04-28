@@ -1,17 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tevo/extensions/extensions.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/widgets/task_tile.dart';
 import 'package:tevo/widgets/widgets.dart';
 
-class PostView extends StatelessWidget {
+class PostView extends StatefulWidget {
   final Post post;
   // final bool isLiked;
   // final VoidCallback onLike;
   // final bool recentlyLiked;
 
-  const PostView({
+  PostView({
     Key? key,
     required this.post,
     // required this.isLiked,
@@ -20,109 +22,138 @@ class PostView extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<PostView> createState() => _PostViewState();
+}
+
+class _PostViewState extends State<PostView> {
+  List<Task>? tasks;
+
+  @override
+  void initState() {
+    tasks = List.from(widget.post.completedTask);
+    tasks!.addAll(List.from(widget.post.toDoTask));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final tasks = post.completedTask..addAll(post.toDoTask);
-    return Card(
-      elevation: 5,
-      child: Column(
-        children: [
-          Row(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.white70, width: 1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
             children: [
-              post.author.profileImageUrl == ''
-                  ? const Icon(
-                      Icons.person,
-                      size: 50,
-                    )
-                  : CachedNetworkImage(
-                      imageUrl: post.author.profileImageUrl,
-                    ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(post.author.username),
-                  Text(post.enddate.toString())
+                  Row(
+                    children: [
+                      widget.post.author.profileImageUrl == ''
+                          ? const Icon(
+                              Icons.person,
+                              size: 50,
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: widget.post.author.profileImageUrl,
+                            ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(widget.post.author.username,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(DateFormat().format(widget.post.enddate))
+                        ],
+                      ),
+                    ],
+                  ),
+                  DropdownButton<String>(
+                    underline: const SizedBox.shrink(),
+                    icon: const Icon(Icons.more_vert_outlined),
+                    items: <String>["Unfollow", "Report"].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (_) {},
+                  )
                 ],
-              )
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  if (index < widget.post.completedTask.length) {
+                    return TaskTile(
+                      index: index + 1,
+                      task: tasks![index],
+                      isComplete: true,
+                    );
+                  } else {
+                    return TaskTile(
+                      index: index + 1,
+                      task: tasks![index],
+                      isComplete: false,
+                    );
+                  }
+                },
+                itemCount: tasks!.length,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              _buildCommentTile(context, widget.post),
             ],
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              if (index < post.completedTask.length - 1) {
-                return _buildTaskTile(index + 1, tasks[index], Colors.green);
-              } else {
-                return _buildTaskTile(index + 1, tasks[index], Colors.red);
-              }
-            },
-            itemCount: tasks.length,
-          ),
-          _buildCommentTile(),
-          Icon(
-            Icons.arrow_drop_down,
-            size: 30,
-          )
-        ],
+        ),
       ),
     );
   }
-}
 
-_buildTaskTile(int index, Task task, Color color) {
-  return Card(
-    color: color,
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 10,
+  _buildCommentTile(BuildContext context, Post post) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: 300,
+          child: TextField(
+            onTap: () => Navigator.of(context).pushNamed(
+                CommentsScreen.routeName,
+                arguments: CommentsScreenArgs(post: post)),
+            readOnly: true,
+            decoration: InputDecoration(
+              disabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-              Text(index.toString()),
-              SizedBox(
-                width: 10,
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(task.task),
-                  Text(task.timestamp.toDate().toString())
-                ],
+              filled: true,
+              hintText: "Add Comment",
+              hintStyle: TextStyle(fontSize: 12),
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-            ],
+              isDense: true, // Added this
+              contentPadding: EdgeInsets.all(12),
+            ),
           ),
-          Row(
-            children: [
-              SizedBox(
-                width: 10,
-              ),
-              Text('24'),
-              SizedBox(
-                width: 10,
-              ),
-              Icon(Icons.favorite),
-            ],
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-_buildCommentTile() {
-  return ListTile(
-    leading: Icon(Icons.person),
-    minLeadingWidth: 10,
-    title: Container(
-      decoration: BoxDecoration(
-          color: Colors.grey[100], borderRadius: BorderRadius.circular(10)),
-      width: 100,
-      height: 30,
-    ),
-    trailing: Icon(Icons.send),
-  );
+        ),
+        Icon(Icons.send)
+      ],
+    );
+  }
 }
