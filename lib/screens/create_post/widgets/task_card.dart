@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:tevo/models/models.dart';
+import 'package:tevo/utils/theme_constants.dart';
 
 class TaskCard extends StatelessWidget {
   final Task task;
@@ -21,7 +22,11 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 0,
+      color: isCompleted
+          ? kSecondaryBlueColor.withOpacity(0.2)
+          : kPrimaryRedColor.withOpacity(0.2),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -32,7 +37,6 @@ class TaskCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(index.toString()),
                     const SizedBox(
                       width: 10,
                     ),
@@ -41,22 +45,18 @@ class TaskCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text(DateFormat('HH:mm').format(task.timestamp.toDate())),
                     SizedBox(
                       width: 10,
                     ),
                     !isCompleted
                         ? IconButton(
-                            icon: Icon(Icons.delete),
+                            icon: Icon(Icons.delete_outline_rounded),
                             onPressed: isDeleted,
                           )
                         : SizedBox.shrink(),
                   ],
                 ),
               ],
-            ),
-            const SizedBox(
-              height: 10,
             ),
             isCompleted
                 ? Row(

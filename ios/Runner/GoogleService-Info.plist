@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>71721129063-9apf9pfim227crli10kb7a93domqk0fm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.71721129063-9apf9pfim227crli10kb7a93domqk0fm</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>71721129063-8b9vtl1d8i80ak11id7ot9d6kt9hmtbs.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAS9DQLvm440qwLq4icLoUELM2rHtuimcQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>71721129063</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.superawesomeapps.tevo</string>
+	<key>PROJECT_ID</key>
+	<string>tevo-a2f71</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tevo-a2f71.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:71721129063:ios:49dc2e3d067bbec19930c2</string>
+</dict>
+</plist>

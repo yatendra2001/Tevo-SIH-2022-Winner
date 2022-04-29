@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
+import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class FeedScreen extends StatefulWidget {
@@ -60,17 +61,25 @@ class _FeedScreenState extends State<FeedScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
             appBar: AppBar(
+              automaticallyImplyLeading: false,
+              centerTitle: false,
+              elevation: 1,
+              toolbarHeight: 70,
               title: const Text(
-                'TEVO',
-                style: TextStyle(color: Colors.black),
+                "TEVO",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 32),
               ),
               actions: [
-                if (state.posts.isEmpty && state.status == FeedStatus.loaded)
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () =>
-                        context.read<FeedBloc>().add(FeedFetchPosts()),
-                  )
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image.asset(kBaseProfileImagePath),
+                  ),
+                )
               ],
             ),
             body: _buildBody(state),

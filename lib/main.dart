@@ -11,6 +11,7 @@ import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/login/cubit/login_cubit.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/utils/theme_constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,7 +67,8 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Tevo',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            fontFamily: "WorkSans",
+            primaryColor: kPrimaryTealColor,
             scaffoldBackgroundColor: Colors.grey[50],
             appBarTheme: const AppBarTheme(
               color: Colors.white,
