@@ -186,13 +186,56 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ],
                 ),
                 SizedBox(height: 15),
-                _buildToDoTask(state, context),
+                Expanded(
+                  child: state.todoTask.isEmpty
+                      ? const Center(
+                          child: Text('Add Task Now'),
+                        )
+                      : ListView.builder(
+                          itemBuilder: (_, index) {
+                            return Dismissible(
+                              key: Key(
+                                  state.todoTask[index].timestamp.toString()),
+                              onDismissed: (_) {
+                                context.read<CreatePostBloc>().add(
+                                    CompleteTaskEvent(
+                                        task: state.todoTask[index]));
+                              },
+                              child: TaskCard(
+                                isCompleted: false,
+                                likes: state.todoTask[index].likes,
+                                task: state.todoTask[index],
+                                index: index + 1,
+                                isDeleted: () =>
+                                    context.read<CreatePostBloc>().add(
+                                          DeleteTaskEvent(
+                                            task: state.todoTask[index],
+                                          ),
+                                        ),
+                              ),
+                            );
+                          },
+                          itemCount: state.todoTask.length,
+                        ),
+                ),
                 const Text(
                   "Completed",
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 15),
-                _buildCompletedTask(state),
+                Expanded(
+                  child: state.completedTask.isEmpty
+                      ? const Center(child: Text('Completed Tasks'))
+                      : ListView.builder(
+                          itemBuilder: (_, index) => TaskCard(
+                            likes: state.completedTask[index].likes,
+                            task: state.completedTask[index],
+                            index: index + 1,
+                            isCompleted: true,
+                          ),
+                          itemCount: state.completedTask.length,
+                        ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),

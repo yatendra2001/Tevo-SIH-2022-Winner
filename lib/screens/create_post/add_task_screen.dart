@@ -35,10 +35,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CreatePostBloc, CreatePostState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+    return BlocBuilder<CreatePostBloc, CreatePostState>(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
