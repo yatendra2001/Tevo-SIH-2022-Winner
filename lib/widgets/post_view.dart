@@ -91,6 +91,7 @@ class _PostViewState extends State<PostView> {
               ),
               ListView.builder(
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   if (index < widget.post.completedTask.length) {
                     return TaskTile(

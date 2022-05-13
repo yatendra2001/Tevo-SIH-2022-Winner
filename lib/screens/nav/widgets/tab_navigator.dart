@@ -55,7 +55,7 @@ class TabNavigator extends StatelessWidget {
             authBloc: context.read<AuthBloc>(),
             likedPostsCubit: context.read<LikedPostsCubit>(),
           )..add(FeedFetchPosts()),
-          child: const FeedScreen(),
+          child: FeedScreen(),
         );
       case BottomNavItem.search:
         return BlocProvider<SearchCubit>(

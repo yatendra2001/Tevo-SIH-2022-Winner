@@ -7,6 +7,8 @@ import 'package:tevo/screens/nav/widgets/widgets.dart';
 class NavScreen extends StatelessWidget {
   static const String routeName = '/nav';
 
+  NavScreen({Key? key}) : super(key: key);
+
   static Route route() {
     return PageRouteBuilder(
       settings: const RouteSettings(name: routeName),
@@ -40,30 +42,36 @@ class NavScreen extends StatelessWidget {
       onWillPop: () async => false,
       child: BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
         builder: (context, state) {
-          return Scaffold(
-            body: Stack(
-              children: items
-                  .map((item, _) => MapEntry(
-                        item,
-                        _buildOffstageNavigator(
+          return SafeArea(
+            child: Scaffold(
+              backgroundColor: Color(0xffE5E5E5),
+              resizeToAvoidBottomInset: false,
+              extendBody: true,
+              body: Stack(
+                children: items
+                    .map((item, _) => MapEntry(
                           item,
-                          item == state.selectedItem,
-                        ),
-                      ))
-                  .values
-                  .toList(),
-            ),
-            bottomNavigationBar: BottomNavBar(
-              items: items,
-              selectedItem: state.selectedItem,
-              onTap: (index) {
-                final selectedItem = BottomNavItem.values[index];
-                _selectBottomNavItem(
-                  context,
-                  selectedItem,
-                  selectedItem == state.selectedItem,
-                );
-              },
+                          _buildOffstageNavigator(
+                            item,
+                            item == state.selectedItem,
+                          ),
+                        ))
+                    .values
+                    .toList(),
+              ),
+              bottomNavigationBar: _customisedBottomNavBar(),
+              //  BottomNavBar(
+              //   items: items,
+              //   selectedItem: state.selectedItem,
+              //   onTap: (index) {
+              //     final selectedItem = BottomNavItem.values[index];
+              //     _selectBottomNavItem(
+              //       context,
+              //       selectedItem,
+              //       selectedItem == state.selectedItem,
+              //     );
+              //   },
+              // ),
             ),
           );
         },
@@ -93,6 +101,56 @@ class NavScreen extends StatelessWidget {
       child: TabNavigator(
         navigatorKey: navigatorKeys[currentItem]!,
         item: currentItem,
+      ),
+    );
+  }
+
+  _customisedBottomNavBar() {
+    return Container(
+      height: 60,
+      decoration: const BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            spreadRadius: 0,
+            blurRadius: 20,
+          ),
+        ],
+        color: Color(0xffFFFFFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(50),
+          topRight: Radius.circular(50),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.home,
+              size: 30,
+              color: Color(0xffBBBBBB),
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.add_box_rounded,
+              size: 30,
+              color: Color(0xff009688),
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.notification_add_outlined,
+              size: 30,
+              color: Color(0xffBBBBBB),
+            ),
+          )
+        ],
       ),
     );
   }
