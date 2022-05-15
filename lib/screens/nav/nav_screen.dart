@@ -28,12 +28,41 @@ class NavScreen extends StatelessWidget {
     BottomNavItem.profile: GlobalKey<NavigatorState>(),
   };
 
-  final Map<BottomNavItem, IconData> items = const {
-    BottomNavItem.feed: Icons.home,
-    BottomNavItem.search: Icons.search,
-    BottomNavItem.create: Icons.add,
-    BottomNavItem.notifications: Icons.favorite_border,
-    BottomNavItem.profile: Icons.account_circle,
+  final Map<BottomNavItem, dynamic> items = {
+    BottomNavItem.feed: Container(
+      height: 40,
+      decoration: BoxDecoration(
+          color: const Color(0xffD8F3F1),
+          borderRadius: BorderRadius.circular(8)),
+      child: const Icon(
+        Icons.home_outlined,
+        size: 35,
+        color: Color(0xff009688),
+      ),
+    ),
+    BottomNavItem.create: Container(
+      height: 50,
+      width: 50,
+      decoration: BoxDecoration(
+          color: Color(0xff009688), borderRadius: BorderRadius.circular(8)),
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+        size: 30,
+      ),
+    ),
+    BottomNavItem.notifications: Container(
+      height: 40,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: const Color(0xffD8F3F1),
+          borderRadius: BorderRadius.circular(8)),
+      child: const Icon(
+        Icons.notifications_none_outlined,
+        size: 35,
+        color: Color(0xff009688),
+      ),
+    )
   };
 
   @override
@@ -59,19 +88,7 @@ class NavScreen extends StatelessWidget {
                     .values
                     .toList(),
               ),
-              bottomNavigationBar: _customisedBottomNavBar(),
-              //  BottomNavBar(
-              //   items: items,
-              //   selectedItem: state.selectedItem,
-              //   onTap: (index) {
-              //     final selectedItem = BottomNavItem.values[index];
-              //     _selectBottomNavItem(
-              //       context,
-              //       selectedItem,
-              //       selectedItem == state.selectedItem,
-              //     );
-              //   },
-              // ),
+              bottomNavigationBar: _customisedBottomNavBar(context, state),
             ),
           );
         },
@@ -105,9 +122,9 @@ class NavScreen extends StatelessWidget {
     );
   }
 
-  _customisedBottomNavBar() {
+  _customisedBottomNavBar(context, state) {
     return Container(
-      height: 60,
+      height: 80,
       decoration: const BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -125,32 +142,21 @@ class NavScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.home,
-              size: 30,
-              color: Color(0xffBBBBBB),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.add_box_rounded,
-              size: 30,
-              color: Color(0xff009688),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notification_add_outlined,
-              size: 30,
-              color: Color(0xffBBBBBB),
-            ),
-          )
-        ],
+        children: items
+            .map((item, icon) => MapEntry(
+                item,
+                Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                      highlightColor: Colors.grey,
+                      onTap: () {
+                        _selectBottomNavItem(
+                            context, item, item == state.selectedItem);
+                      },
+                      child: icon),
+                )))
+            .values
+            .toList(),
       ),
     );
   }

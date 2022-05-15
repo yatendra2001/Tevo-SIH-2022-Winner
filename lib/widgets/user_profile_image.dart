@@ -17,15 +17,24 @@ class UserProfileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: Colors.grey[200],
-      backgroundImage: profileImage != null
-          ? FileImage(profileImage!) as ImageProvider
-          : profileImageUrl.isNotEmpty
-              ? CachedNetworkImageProvider(profileImageUrl)
-              : null,
-      child: _noProfileIcon(),
+    return fn();
+  }
+
+  fn() {
+    return Container(
+      width: radius * 3,
+      height: radius * 3,
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        shape: BoxShape.circle,
+        image: DecorationImage(
+            image: profileImage != null
+                ? FileImage(profileImage!) as ImageProvider
+                : profileImageUrl.isNotEmpty
+                    ? CachedNetworkImageProvider(profileImageUrl)
+                    : null as ImageProvider,
+            fit: BoxFit.fitHeight),
+      ),
     );
   }
 

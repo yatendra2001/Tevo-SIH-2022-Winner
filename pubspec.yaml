@@ -58,6 +58,8 @@ dependencies:
   google_sign_in: ^5.2.4
   intl_phone_field: ^3.1.0
   flutter_facebook_auth: ^4.1.2
+  google_fonts: ^2.3.2
+  font_awesome_flutter: ^10.1.0
 
 dev_dependencies:
   flutter_test:
@@ -100,6 +102,10 @@ flutter:
     - family: WorkSans
       fonts:
         - asset: assets/fonts/WorkSans-Regular.ttf
+        - asset: assets/fonts/WorkSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/WorkSans-ExtraBold.ttf
+          weight: 900
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

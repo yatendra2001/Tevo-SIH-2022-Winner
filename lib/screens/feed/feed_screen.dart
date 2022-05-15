@@ -214,28 +214,42 @@ class _FeedScreenState extends State<FeedScreen> {
                   title: const Text(
                     "TEVO",
                     style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 32),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 38,
+                    ),
                   ),
                   bottom: PreferredSize(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         child: TextField(
-
                             // controller: _textEditingController,
                             decoration: InputDecoration(
-                              fillColor: Colors.grey[200],
+                              fillColor: Color(0xffF5F5F5),
                               filled: true,
-                              border: InputBorder.none,
-                              hintText: 'Search Username',
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 1.0),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 1.0),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              hintText: 'Search for accounts',
+                              hintStyle: const TextStyle(
+                                  fontWeight: FontWeight.normal),
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   // context.read<SearchCubit>().clearSearch();
                                   // _textEditingController?.clear();
                                 },
-                                icon: const Icon(Icons.clear),
+                                icon: const Icon(
+                                  Icons.search,
+                                  size: 30,
+                                ),
                               ),
                             ),
                             textInputAction: TextInputAction.search,
@@ -248,7 +262,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               // },
                             }),
                       ),
-                      preferredSize: Size(double.infinity, 64)),
+                      preferredSize: Size(double.infinity, 77)),
                   actions: [
                     Padding(
                         padding: EdgeInsets.only(right: 16),
