@@ -122,6 +122,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
+import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
@@ -136,7 +137,7 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   late ScrollController _scrollController;
-  bool _showSeachBox = true;
+  late TextEditingController _textEditingController;
   bool isScrollingDown = true;
 
   @override
@@ -154,7 +155,6 @@ class _FeedScreenState extends State<FeedScreen> {
             ScrollDirection.reverse) {
           if (!isScrollingDown) {
             isScrollingDown = true;
-            _showSeachBox = false;
             setState(() {});
           }
         }
@@ -162,7 +162,6 @@ class _FeedScreenState extends State<FeedScreen> {
             ScrollDirection.forward) {
           if (isScrollingDown) {
             isScrollingDown = false;
-            _showSeachBox = true;
             setState(() {});
           }
         }
@@ -171,12 +170,15 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   void dispose() {
+    _textEditingController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    FocusNode _focusNode = FocusNode();
+    bool _searchScreen = false;
     return BlocConsumer<FeedBloc, FeedState>(
       listener: (context, state) {
         if (state.status == FeedStatus.error) {
@@ -224,43 +226,34 @@ class _FeedScreenState extends State<FeedScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         child: TextField(
-                            // controller: _textEditingController,
-                            decoration: InputDecoration(
-                              fillColor: Color(0xffF5F5F5),
-                              filled: true,
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.white, width: 1.0),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.white, width: 1.0),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              hintText: 'Search for accounts',
-                              hintStyle: const TextStyle(
-                                  fontWeight: FontWeight.normal),
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  // context.read<SearchCubit>().clearSearch();
-                                  // _textEditingController?.clear();
-                                },
-                                icon: const Icon(
-                                  Icons.search,
-                                  size: 30,
-                                ),
-                              ),
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(SearchScreen.routeName);
+                          },
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            fillColor: const Color(0xffF5F5F5),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 1.0),
+                              borderRadius: BorderRadius.circular(20.0),
                             ),
-                            textInputAction: TextInputAction.search,
-                            textAlignVertical: TextAlignVertical.center,
-                            onChanged: (value) {
-                              //   context.read<SearchCubit>().clearSearch();
-                              //   if (value.trim().isNotEmpty) {
-                              //     context.read<SearchCubit>().searchUser(query: value.trim());
-                              //   }
-                              // },
-                            }),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 1.0),
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            hintText: 'Search for accounts',
+                            hintStyle:
+                                const TextStyle(fontWeight: FontWeight.normal),
+                            suffixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.black38,
+                              size: 30,
+                            ),
+                          ),
+                        ),
                       ),
                       preferredSize: Size(double.infinity, 77)),
                   actions: [

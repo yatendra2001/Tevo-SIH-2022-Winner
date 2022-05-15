@@ -61,7 +61,7 @@ class TabNavigator extends StatelessWidget {
         return BlocProvider<SearchCubit>(
           create: (context) =>
               SearchCubit(userRepository: context.read<UserRepository>()),
-          child: const SearchScreen(),
+          child: SearchScreen(),
         );
       case BottomNavItem.create:
         return BlocProvider<CreatePostBloc>(

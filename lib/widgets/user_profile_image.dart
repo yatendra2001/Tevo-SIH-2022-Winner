@@ -17,7 +17,9 @@ class UserProfileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fn();
+    return (profileImage == null && profileImageUrl.isEmpty)
+        ? _noProfileIcon()
+        : fn();
   }
 
   fn() {

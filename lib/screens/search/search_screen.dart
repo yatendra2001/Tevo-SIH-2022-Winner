@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/search/cubit/search_cubit.dart';
 import 'package:tevo/widgets/widgets.dart';
@@ -7,7 +8,28 @@ import 'package:tevo/widgets/widgets.dart';
 class SearchScreen extends StatefulWidget {
   static const String routeName = '/search';
 
-  const SearchScreen();
+  static Route route() {
+    return PageRouteBuilder(
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.linear;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+      settings: const RouteSettings(name: routeName),
+      pageBuilder: (_, __, ___) => BlocProvider<SearchCubit>(
+        create: (context) =>
+            SearchCubit(userRepository: context.read<UserRepository>()),
+        child: SearchScreen(),
+      ),
+    );
+  }
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -27,30 +49,54 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          title: TextField(
-            controller: _textController,
-            decoration: InputDecoration(
-              fillColor: Colors.grey[200],
-              filled: true,
-              border: InputBorder.none,
-              hintText: 'Search Users',
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  context.read<SearchCubit>().clearSearch();
-                  _textController.clear();
-                },
+        appBar: PreferredSize(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: TextField(
+              controller: _textController,
+              autofocus: true,
+              decoration: InputDecoration(
+                iconColor: Colors.black,
+                focusColor: Colors.black,
+                fillColor: const Color(0xffF5F5F5),
+                filled: true,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white, width: 1.0),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white, width: 1.0),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                hintStyle: const TextStyle(fontWeight: FontWeight.normal),
+                hintText: 'Search Users @ John',
+                prefixIcon: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon:
+                        Icon(Icons.arrow_back_ios_new, color: Colors.black38)),
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.clear,
+                    color: Colors.black38,
+                  ),
+                  onPressed: () {
+                    context.read<SearchCubit>().clearSearch();
+                    _textController.clear();
+                  },
+                ),
               ),
+              textInputAction: TextInputAction.search,
+              textAlignVertical: TextAlignVertical.center,
+              onSubmitted: (value) {
+                if (value.trim().isNotEmpty) {
+                  context.read<SearchCubit>().searchUsers(value.trim());
+                }
+              },
             ),
-            textInputAction: TextInputAction.search,
-            textAlignVertical: TextAlignVertical.center,
-            onSubmitted: (value) {
-              if (value.trim().isNotEmpty) {
-                context.read<SearchCubit>().searchUsers(value.trim());
-              }
-            },
           ),
+          preferredSize: Size(100, 100),
         ),
         body: BlocBuilder<SearchCubit, SearchState>(
           builder: (context, state) {

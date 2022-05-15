@@ -41,6 +41,8 @@ class CustomRouter {
         return CommentsScreen.route(
           args: settings.arguments as CommentsScreenArgs,
         );
+      case SearchScreen.routeName:
+        return SearchScreen.route();
       default:
         return _errorRoute();
     }
