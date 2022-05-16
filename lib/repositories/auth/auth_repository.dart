@@ -119,7 +119,8 @@ class AuthRepository extends BaseAuthRepository {
   }
 
   @override
-  Future<auth.UserCredential> verifyOTP({required String otp}) async {
+  Future<auth.UserCredential> verifyOTP(
+      {required String otp, Map<String, dynamic>? json}) async {
     auth.PhoneAuthCredential credential = auth.PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: otp);
     return await _firebaseAuth.signInWithCredential(credential);

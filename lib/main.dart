@@ -51,15 +51,15 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 AuthBloc(authRepository: context.read<AuthRepository>()),
           ),
+          BlocProvider<LoginCubit>(
+            create: (context) =>
+                LoginCubit(authRepository: context.read<AuthRepository>()),
+          ),
           BlocProvider<LikedPostsCubit>(
             create: (context) => LikedPostsCubit(
               postRepository: context.read<PostRepository>(),
               authBloc: context.read<AuthBloc>(),
             ),
-          ),
-          BlocProvider<LoginCubit>(
-            create: (context) =>
-                LoginCubit(authRepository: context.read<AuthRepository>()),
           ),
         ],
         child: MaterialApp(

@@ -60,6 +60,8 @@ dependencies:
   flutter_facebook_auth: ^4.1.2
   google_fonts: ^2.3.2
   font_awesome_flutter: ^10.1.0
+  timer_button: ^2.0.0
+  animations: ^2.0.2
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tevo/screens/create_post/add_task_screen.dart';
+import 'package:tevo/screens/login/auth_screen.dart';
 import 'package:tevo/screens/screens.dart';
 
 class CustomRouter {
@@ -13,10 +14,8 @@ class CustomRouter {
         );
       case SplashScreen.routeName:
         return SplashScreen.route();
-      case LoginScreen.routeName:
-        return LoginScreen.route();
-      case SignupScreen.routeName:
-        return SignupScreen.route();
+      case AuthScreen.routeName:
+        return AuthScreen.route();
       case NavScreen.routeName:
         return NavScreen.route();
       default:

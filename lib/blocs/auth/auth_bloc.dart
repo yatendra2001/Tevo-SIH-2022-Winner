@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required AuthRepository authRepository,
   })  : _authRepository = authRepository,
         super(AuthState.unknown()) {
+    add(AuthLogoutRequested());
     _userSubscription =
         _authRepository.user.listen((user) => add(AuthUserChanged(user: user)));
   }
@@ -37,8 +38,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _mapAuthUserChangedToState(AuthUserChanged event) async* {
-    yield event.user != null
-        ? AuthState.authenticated(user: event.user!)
-        : AuthState.unauthenticated();
+    if (event.user != null) {
+      final check =
+          await _authRepository.checkUserDataExists(userId: event.user!.uid);
+      yield AuthState.authenticated(user: event.user!, check: check);
+    } else {
+      yield AuthState.unauthenticated();
+    }
   }
 }
