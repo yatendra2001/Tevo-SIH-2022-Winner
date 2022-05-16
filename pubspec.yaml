@@ -102,6 +102,12 @@ flutter:
     - family: WorkSans
       fonts:
         - asset: assets/fonts/WorkSans-Regular.ttf
+        - asset: assets/fonts/WorkSans-ExtraLight.ttf
+          weight: 100
+        - asset: assets/fonts/WorkSans-Light.ttf
+          weight: 200
+        - asset: assets/fonts/WorkSans-Thin.ttf
+          weight: 300
         - asset: assets/fonts/WorkSans-Bold.ttf
           weight: 700
         - asset: assets/fonts/WorkSans-ExtraBold.ttf

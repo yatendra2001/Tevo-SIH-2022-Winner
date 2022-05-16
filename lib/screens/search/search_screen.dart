@@ -8,6 +8,8 @@ import 'package:tevo/widgets/widgets.dart';
 class SearchScreen extends StatefulWidget {
   static const String routeName = '/search';
 
+  const SearchScreen({Key? key}) : super(key: key);
+
   static Route route() {
     return PageRouteBuilder(
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -51,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Scaffold(
         appBar: PreferredSize(
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               controller: _textController,
               autofocus: true,
@@ -71,11 +73,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 hintStyle: const TextStyle(fontWeight: FontWeight.normal),
                 hintText: 'Search Users @ John',
                 prefixIcon: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon:
-                        Icon(Icons.arrow_back_ios_new, color: Colors.black38)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.black38,
+                  ),
+                ),
                 suffixIcon: IconButton(
                   icon: const Icon(
                     Icons.clear,
@@ -129,7 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       )
                     : const CenteredText(text: 'No users found');
               default:
-                return const SizedBox.shrink();
+                return Center(child: Text('So Whom To Stalk....'));
             }
           },
         ),
