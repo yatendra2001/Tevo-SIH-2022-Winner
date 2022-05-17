@@ -58,7 +58,6 @@ class _SearchScreenState extends State<SearchScreen> {
               controller: _textController,
               autofocus: true,
               decoration: InputDecoration(
-                iconColor: Colors.black,
                 focusColor: Colors.black,
                 fillColor: const Color(0xffF5F5F5),
                 filled: true,

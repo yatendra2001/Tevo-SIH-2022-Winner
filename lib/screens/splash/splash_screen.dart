@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/screens/login/auth_screen.dart';
 import 'package:tevo/screens/screens.dart';
@@ -19,15 +20,20 @@ class SplashScreen extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => false,
       child: BlocListener<AuthBloc, AuthState>(
-        listenWhen: (prevState, state) =>
-            prevState.status == AuthStatus.unknown ||
-            (prevState.status == AuthStatus.unauthenticated &&
-                state.status ==
-                    AuthStatus
-                        .authenticated), // Run on first launch OR on sign up/in.
+        listenWhen: (prevState, state) => prevState.status != state.status,
         listener: (context, state) {
           if (state.status == AuthStatus.unauthenticated) {
             Navigator.of(context).pushNamed(AuthScreen.routeName);
+          } else if (state.status == AuthStatus.authenticated &&
+              state.isUserExist == false) {
+            Fluttertoast.showToast(
+                msg: "Account doesn't exist",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
           } else if (state.status == AuthStatus.authenticated &&
               state.isUserExist == true) {
             Navigator.of(context).pushNamed(NavScreen.routeName);

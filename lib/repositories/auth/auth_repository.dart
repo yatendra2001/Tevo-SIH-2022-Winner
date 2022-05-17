@@ -35,67 +35,6 @@ class AuthRepository extends BaseAuthRepository {
     throw Exception(_errorMessage);
   }
 
-  @override
-  Future<auth.User> signUpWithEmailAndPassword({
-    required String username,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      final user = credential.user;
-      _firebaseFirestore.collection(Paths.users).doc(user!.uid).set({
-        'username': username,
-        'email': email,
-        'followers': 0,
-        'following': 0,
-      });
-      return user;
-    } on auth.FirebaseAuthException catch (err) {
-      throw Failure(code: err.code, message: err.message!);
-    } on PlatformException catch (err) {
-      throw Failure(code: err.code, message: err.message!);
-    }
-  }
-
-  @override
-  Future<auth.User> logInWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final credential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return credential.user!;
-    } on auth.FirebaseAuthException catch (err) {
-      throw Failure(code: err.code, message: err.message!);
-    } on PlatformException catch (err) {
-      throw Failure(code: err.code, message: err.message!);
-    }
-  }
-
-  @override
-  Future<GoogleSignInAccount> signInByGoogle() async {
-    try {
-      final user = await _googleSignIn.signIn();
-      if (user != null) {
-        final googleAuth = await user.authentication;
-        final credential = auth.GoogleAuthProvider.credential(
-            accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-        await _firebaseAuth.signInWithCredential(credential);
-        return user;
-      }
-    } on auth.FirebaseAuthException catch (e) {
-      debugPrint(e.message);
-    }
-    throw Exception('something went wrong');
-  }
-
   String _verificationId = "";
   int? _resendToken;
   @override
@@ -123,7 +62,15 @@ class AuthRepository extends BaseAuthRepository {
       {required String otp, Map<String, dynamic>? json}) async {
     auth.PhoneAuthCredential credential = auth.PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: otp);
-    return await _firebaseAuth.signInWithCredential(credential);
+    final credentials = await _firebaseAuth.signInWithCredential(credential);
+    if (json != null && credentials.user != null) {
+      _firebaseFirestore
+          .collection(Paths.users)
+          .doc(credentials.user?.uid)
+          .set(json);
+    }
+
+    return credentials;
   }
 
   @override

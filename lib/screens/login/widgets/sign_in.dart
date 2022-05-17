@@ -92,6 +92,7 @@ class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController _phoneNumberController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
     return Padding(
       padding: const EdgeInsets.all(32.0),
       child: Column(
@@ -111,8 +112,9 @@ class SignIn extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  child:
-                      PhoneForm(phoneNumberController: _phoneNumberController),
+                  child: PhoneForm(
+                    phoneNumberController: _phoneNumberController,
+                  ),
                 ),
                 const SizedBox(height: 32),
                 SignInBar(

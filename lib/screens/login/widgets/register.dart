@@ -142,6 +142,13 @@ class _RegisterState extends State<Register> {
                         fontSize: 18,
                         color: Colors.white,
                       ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "username can't be empty";
+                        }
+                        return null;
+                      },
                       decoration:
                           registerInputDecoration(hintText: 'username*')),
                   const SizedBox(height: 32),
@@ -158,7 +165,7 @@ class _RegisterState extends State<Register> {
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.white,
-                            fontWeight: FontWeight.w600),
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       GestureDetector(
