@@ -1,42 +1,97 @@
 {
   "project_info": {
-    "project_number": "71721129063",
-    "project_id": "tevo-a2f71",
-    "storage_bucket": "tevo-a2f71.appspot.com"
+    "project_number": "473696881217",
+    "project_id": "neodocs-8d6cd",
+    "storage_bucket": "neodocs-8d6cd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:71721129063:android:caf1ebc0f009dfa99930c2",
+        "mobilesdk_app_id": "1:473696881217:android:3d1541d589dd1c28dd14c0",
         "android_client_info": {
-          "package_name": "com.superawesomeapps.tevo"
+          "package_name": "com.app.neodocs"
         }
       },
       "oauth_client": [
         {
-          "client_id": "71721129063-8b9vtl1d8i80ak11id7ot9d6kt9hmtbs.apps.googleusercontent.com",
+          "client_id": "473696881217-39dchqudhbv266d3fn9j6ii7g7eebfi4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.superawesomeapps.tevo",
-            "certificate_hash": "1e4d43531e1920997d4fbc10c8c6151292d70ad3"
+            "package_name": "com.app.neodocs",
+            "certificate_hash": "cc5bede2615c2cc3ea2e25bd5a09f97fbe993ce9"
           }
         },
         {
-          "client_id": "71721129063-idcu2vpe5ds0j48o8jtkpi0hsdqri8sh.apps.googleusercontent.com",
+          "client_id": "473696881217-9t1bk8afk420s2begarhse6f5vbb3d27.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.neodocs",
+            "certificate_hash": "7ce76262e7136016caf63071a4ed2fa6594b2039"
+          }
+        },
+        {
+          "client_id": "473696881217-css9o0vdffttfteup2h7nvl9li74nrlk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.neodocs",
+            "certificate_hash": "65d3047d62908a72e5f933da251304fff5d75a45"
+          }
+        },
+        {
+          "client_id": "473696881217-efua9naspd1tlpim1egklgadh1pj0dcr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.neodocs",
+            "certificate_hash": "de20e252a7ac464588957600a922cf655b40062e"
+          }
+        },
+        {
+          "client_id": "473696881217-m79tsbj55ql674h2un4c1prcqs7ggkq5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.neodocs",
+            "certificate_hash": "64ecc2fa0d5739a503f479bcb7a4516f2be4aeb9"
+          }
+        },
+        {
+          "client_id": "473696881217-qp8d0u6b2nav29n1k7ealo79ds7t7crv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.neodocs",
+            "certificate_hash": "f89a2589dd0e50db6abbda2206288a66c03c6329"
+          }
+        },
+        {
+          "client_id": "473696881217-tmh5ohd9cjrr5l6utuaiif1q4u7k93v1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.neodocs",
+            "certificate_hash": "19c62af6069d875549bf74c4dfa04e8c58a16995"
+          }
+        },
+        {
+          "client_id": "473696881217-f24thp2eh2omptvvhh7qv2rgqk4hkjv6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCjqsVEgD1-r5qWBj5pgOdJGOamOISrORU"
+          "current_key": "AIzaSyDWHRLrD32Bz6Q5pcupWoiEO7Rnb4_tXDA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "71721129063-idcu2vpe5ds0j48o8jtkpi0hsdqri8sh.apps.googleusercontent.com",
+              "client_id": "473696881217-f24thp2eh2omptvvhh7qv2rgqk4hkjv6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "473696881217-8689on5tkrnj5ej4949c3p4ujlhgaurq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.neodocs"
+              }
             }
           ]
         }
