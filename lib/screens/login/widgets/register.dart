@@ -83,7 +83,7 @@ class _RegisterState extends State<Register> {
                             "gender": _genderRadioBtnVal,
                             "phoneNumber": _phoneNumberController.text,
                             "followers": 0,
-                            "following": 1
+                            "following": 0
                           });
 
                           FocusScope.of(context).requestFocus(FocusNode());
