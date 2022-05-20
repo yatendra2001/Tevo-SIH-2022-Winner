@@ -30,21 +30,22 @@ class NavScreen extends StatelessWidget {
 
   final Map<BottomNavItem, dynamic> items = {
     BottomNavItem.feed: Container(
-      height: 40,
+      height: 38,
+      width: 38,
       decoration: BoxDecoration(
           color: const Color(0xffD8F3F1),
           borderRadius: BorderRadius.circular(8)),
       child: const Icon(
         Icons.home_outlined,
-        size: 35,
+        size: 23,
         color: Color(0xff009688),
       ),
     ),
     BottomNavItem.create: Container(
-      height: 50,
-      width: 50,
+      height: 48,
+      width: 48,
       decoration: BoxDecoration(
-          color: Color(0xff009688), borderRadius: BorderRadius.circular(8)),
+          color: Color(0xff009688), borderRadius: BorderRadius.circular(10)),
       child: Icon(
         Icons.add,
         color: Colors.white,
@@ -52,14 +53,15 @@ class NavScreen extends StatelessWidget {
       ),
     ),
     BottomNavItem.notifications: Container(
-      height: 40,
+      height: 38,
+      width: 38,
       alignment: Alignment.center,
       decoration: BoxDecoration(
           color: const Color(0xffD8F3F1),
           borderRadius: BorderRadius.circular(8)),
       child: const Icon(
         Icons.notifications_none_outlined,
-        size: 35,
+        size: 23,
         color: Color(0xff009688),
       ),
     )
@@ -124,19 +126,19 @@ class NavScreen extends StatelessWidget {
 
   _customisedBottomNavBar(context, state) {
     return Container(
-      height: 80,
+      height: 76,
       decoration: const BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.black38,
             spreadRadius: 0,
-            blurRadius: 20,
+            blurRadius: 10,
           ),
         ],
         color: Color(0xffFFFFFF),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(50),
-          topRight: Radius.circular(50),
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
       ),
       child: Row(

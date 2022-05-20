@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tevo/models/task_model.dart';
+import 'package:tevo/utils/theme_constants.dart';
 
 class TaskTile extends StatefulWidget {
   final Task task;
   final bool isComplete;
+  final Function()? isDeleted;
 
   const TaskTile({
     Key? key,
     required this.task,
     required this.isComplete,
+    this.isDeleted,
   }) : super(key: key);
 
   @override

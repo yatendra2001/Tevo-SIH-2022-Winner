@@ -238,12 +238,12 @@ class _FeedScreenState extends State<FeedScreen> {
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(20.0),
+                              borderRadius: BorderRadius.circular(50.0),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(20.0),
+                              borderRadius: BorderRadius.circular(50.0),
                             ),
                             hintText: 'Search for accounts',
                             hintStyle:
@@ -295,19 +295,21 @@ class _FeedScreenState extends State<FeedScreen> {
               // final isLiked = likedPostsState.likedPostIds.contains(post!.id);
               // final recentlyLiked =
               //     likedPostsState.recentlyLikedPostIds.contains(post.id);
-              return PostView(
-                post: post!,
-                onPressed: () {
-                  context
-                      .read<FeedBloc>()
-                      .add(FeedToUnfollowUser(unfollowUserId: post.author.id));
-                  Fluttertoast.showToast(
-                    msg: "${post.author.username} Unfollowed",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.black54,
-                  );
-                },
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: PostView(
+                  post: post!,
+                  onPressed: () {
+                    context.read<FeedBloc>().add(
+                        FeedToUnfollowUser(unfollowUserId: post.author.id));
+                    Fluttertoast.showToast(
+                      msg: "${post.author.username} Unfollowed",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: Colors.black54,
+                    );
+                  },
+                ),
               );
             },
           ),

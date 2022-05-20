@@ -5,7 +5,7 @@ import 'package:tevo/blocs/auth/auth_bloc.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
-import 'package:tevo/screens/create_post/widgets/task_card.dart';
+import 'package:tevo/widgets/task_tile.dart';
 
 class AddTaskScreen extends StatefulWidget {
   static const routeName = 'add_task_screen';
@@ -93,16 +93,14 @@ _buildToDoTaskList(CreatePostState state, BuildContext context) {
             child: Text('Add Task Now'),
           )
         : ListView.builder(
-            itemBuilder: (_, index) => TaskCard(
-              isCompleted: false,
-              likes: 0,
+            itemBuilder: (_, index) => TaskTile(
               task: todoTask[index],
-              index: index + 1,
               isDeleted: () => context.read<CreatePostBloc>().add(
                     DeleteTaskEvent(
                       task: todoTask[index],
                     ),
                   ),
+              isComplete: false,
             ),
             itemCount: todoTask.length,
           ),
