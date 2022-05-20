@@ -130,7 +130,7 @@ import 'package:tevo/widgets/widgets.dart';
 class FeedScreen extends StatefulWidget {
   static const String routeName = '/feed';
 
-  const FeedScreen();
+  FeedScreen();
 
   @override
   _FeedScreenState createState() => _FeedScreenState();
