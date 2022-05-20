@@ -175,120 +175,129 @@ class _PostViewState extends State<PostView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Card(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Colors.grey[200],
+      color: Color(0xffFFFFFF),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(ProfileScreen.routeName,
-                  arguments: ProfileScreenArgs(userId: widget.post.author.id));
-            },
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 8),
-                          child: UserProfileImage(
-                            radius: 20,
-                            profileImageUrl: widget.post.author.profileImageUrl,
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(ProfileScreen.routeName,
+                    arguments:
+                        ProfileScreenArgs(userId: widget.post.author.id));
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 8),
+                            child: UserProfileImage(
+                              radius: 20,
+                              profileImageUrl:
+                                  widget.post.author.profileImageUrl,
+                            ),
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(widget.post.author.username,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 15)),
-                            Text(
-                              "Posted ${widget.post.enddate.timeAgo()}",
-                              style: TextStyle(fontWeight: FontWeight.w300),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: Text('Are you sure to unfollow ?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        // widget.onPressed!();
-                                        Navigator.of(context).popAndPushNamed(
-                                            ReportScreen.routeName);
-                                      },
-                                      child: const Text('Report'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        widget.onPressed!();
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Unfollow'),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        child: const Text(
-                          'Following',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xff009688),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                        ))
-                  ],
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    if (index < widget.post.completedTask.length) {
-                      return TaskTile(
-                        task: tasks![index],
-                        isComplete: true,
-                      );
-                    } else {
-                      return TaskTile(
-                        task: tasks![index],
-                        isComplete: false,
-                      );
-                    }
-                  },
-                  itemCount: tasks!.length,
-                ),
-                _buildFavoriteCommentTitle(widget.post),
-              ],
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(widget.post.author.username,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15)),
+                              Text(
+                                "Posted ${widget.post.enddate.timeAgo()}",
+                                style: TextStyle(fontWeight: FontWeight.w300),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Text('Are you sure to unfollow ?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          // widget.onPressed!();
+                                          Navigator.of(context).popAndPushNamed(
+                                              ReportScreen.routeName);
+                                        },
+                                        child: const Text('Report'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          widget.onPressed!();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Unfollow'),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: const Text(
+                            'Following',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xff009688),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                          ))
+                    ],
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      if (index < widget.post.completedTask.length) {
+                        return TaskTile(
+                          task: tasks![index],
+                          isComplete: true,
+                        );
+                      } else {
+                        return TaskTile(
+                          task: tasks![index],
+                          isComplete: false,
+                        );
+                      }
+                    },
+                    itemCount: tasks!.length,
+                  ),
+                  _buildFavoriteCommentTitle(widget.post),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   _buildFavoriteCommentTitle(Post post) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(4.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -304,9 +313,6 @@ class _PostViewState extends State<PostView> {
                   size: 30,
                 ),
               ),
-              SizedBox(
-                width: 5,
-              ),
               IconButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(
@@ -320,12 +326,21 @@ class _PostViewState extends State<PostView> {
                   onPressed: () {}, icon: Icon(FontAwesomeIcons.paperPlane))
             ],
           ),
+          RichText(
+              text: TextSpan(
+                  text: "Liked by",
+                  style: TextStyle(color: Colors.black),
+                  children: [
+                TextSpan(
+                    text: " Tanmay",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: " and"),
+                TextSpan(
+                    text: " 19", style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: " others"),
+              ])),
           SizedBox(
-            height: 10,
-          ),
-          Text(
-            '20 Likes',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            height: 2,
           ),
           Text(
             '10 comments',
