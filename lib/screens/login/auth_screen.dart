@@ -5,7 +5,6 @@ import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/widgets/register.dart';
 import 'package:tevo/screens/login/widgets/sign_in.dart';
-
 import 'widgets/background_painter.dart';
 
 class AuthScreen extends StatefulWidget {

@@ -150,6 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         arguments: CommentsScreenArgs(post: post!),
                       ),
                       child: PostView(
+                        onPressed: null,
                         post: post!,
                       ),
                     );

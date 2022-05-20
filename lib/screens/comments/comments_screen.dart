@@ -10,12 +10,13 @@ import 'package:intl/intl.dart';
 
 class CommentsScreenArgs {
   final Post post;
-
   const CommentsScreenArgs({required this.post});
 }
 
 class CommentsScreen extends StatefulWidget {
-  static const String routeName = '/comments';
+  static const String routeName = 'comments_screen';
+
+  const CommentsScreen({Key? key}) : super(key: key);
 
   static Route route({required CommentsScreenArgs args}) {
     return MaterialPageRoute(
@@ -25,7 +26,7 @@ class CommentsScreen extends StatefulWidget {
           postRepository: context.read<PostRepository>(),
           authBloc: context.read<AuthBloc>(),
         )..add(CommentsFetchComments(post: args.post)),
-        child: CommentsScreen(),
+        child: const CommentsScreen(),
       ),
     );
   }
@@ -55,78 +56,100 @@ class _CommentsScreenState extends State<CommentsScreen> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(title: const Text('Comments')),
-          body: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 60.0),
-            itemCount: state.comments.length,
-            itemBuilder: (BuildContext context, int index) {
-              final comment = state.comments[index];
-              return ListTile(
-                leading: UserProfileImage(
-                  radius: 22.0,
-                  profileImageUrl: comment!.author.profileImageUrl,
-                ),
-                title: Text.rich(
-                  TextSpan(
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios_new),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              title: const Text(
+                'Comments',
+                style: TextStyle(color: Colors.black),
+              ),
+              bottom: PreferredSize(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextSpan(
-                        text: comment.author.username,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _commentController,
+                              textCapitalization: TextCapitalization.sentences,
+                              decoration: const InputDecoration.collapsed(
+                                  hintText: 'Write a comment...'),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.send),
+                            onPressed: () {
+                              final content = _commentController.text.trim();
+                              if (content.isNotEmpty) {
+                                context
+                                    .read<CommentsBloc>()
+                                    .add(CommentsPostComment(content: content));
+                                _commentController.clear();
+                              }
+                            },
+                          ),
+                        ],
                       ),
-                      const TextSpan(text: ' '),
-                      TextSpan(text: comment.content),
+                      if (state.status == CommentsStatus.submitting)
+                        const LinearProgressIndicator(),
                     ],
                   ),
                 ),
-                subtitle: Text(
-                  DateFormat.yMd().add_jm().format(comment.date),
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () => Navigator.of(context).pushNamed(
-                  ProfileScreen.routeName,
-                  arguments: ProfileScreenArgs(userId: comment.author.id),
-                ),
-              );
-            },
-          ),
-          bottomSheet: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (state.status == CommentsStatus.submitting)
-                  const LinearProgressIndicator(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _commentController,
-                        textCapitalization: TextCapitalization.sentences,
-                        decoration: InputDecoration.collapsed(
-                            hintText: 'Write a comment...'),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () {
-                        final content = _commentController.text.trim();
-                        if (content.isNotEmpty) {
-                          context
-                              .read<CommentsBloc>()
-                              .add(CommentsPostComment(content: content));
-                          _commentController.clear();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                preferredSize: Size(300, 50),
+              ),
             ),
+            body: state.status == CommentsStatus.loading
+                ? const CircularProgressIndicator()
+                : ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 60.0),
+                    itemCount: state.comments.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final comment = state.comments[index];
+                      return ListTile(
+                        leading: UserProfileImage(
+                          radius: 22.0,
+                          profileImageUrl: comment!.author.profileImageUrl,
+                        ),
+                        title: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: comment.author.username,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const TextSpan(text: ' '),
+                              TextSpan(text: comment.content),
+                            ],
+                          ),
+                        ),
+                        subtitle: Text(
+                          DateFormat.yMd().add_jm().format(comment.date),
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        onTap: () => Navigator.of(context).pushNamed(
+                          ProfileScreen.routeName,
+                          arguments:
+                              ProfileScreenArgs(userId: comment.author.id),
+                        ),
+                      );
+                    },
+                  ),
           ),
         );
       },

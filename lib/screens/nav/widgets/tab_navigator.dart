@@ -54,6 +54,7 @@ class TabNavigator extends StatelessWidget {
             postRepository: context.read<PostRepository>(),
             authBloc: context.read<AuthBloc>(),
             likedPostsCubit: context.read<LikedPostsCubit>(),
+            userRepository: context.read<UserRepository>(),
           )..add(FeedFetchPosts()),
           child: FeedScreen(),
         );

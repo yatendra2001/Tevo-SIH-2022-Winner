@@ -14,14 +14,17 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final PostRepository _postRepository;
   final AuthBloc _authBloc;
   final LikedPostsCubit _likedPostsCubit;
+  final UserRepository _userRepository;
 
-  FeedBloc({
-    required PostRepository postRepository,
-    required AuthBloc authBloc,
-    required LikedPostsCubit likedPostsCubit,
-  })  : _postRepository = postRepository,
+  FeedBloc(
+      {required PostRepository postRepository,
+      required AuthBloc authBloc,
+      required LikedPostsCubit likedPostsCubit,
+      required UserRepository userRepository})
+      : _postRepository = postRepository,
         _authBloc = authBloc,
         _likedPostsCubit = likedPostsCubit,
+        _userRepository = userRepository,
         super(FeedState.initial());
 
   @override
@@ -30,6 +33,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       yield* _mapFeedFetchPostsToState();
     } else if (event is FeedPaginatePosts) {
       yield* _mapFeedPaginatePostsToState();
+    } else if (event is FeedToUnfollowUser) {
+      yield* _mapToUnfollowUserToState(event);
     }
   }
 
@@ -78,6 +83,22 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       yield state.copyWith(
         status: FeedStatus.error,
         failure: const Failure(message: 'We were unable to load your feed.'),
+      );
+    }
+  }
+
+  Stream<FeedState> _mapToUnfollowUserToState(FeedToUnfollowUser event) async* {
+    try {
+      final userId = _authBloc.state.user!.uid;
+      _userRepository.unfollowUser(
+          userId: userId, unfollowUserId: event.unfollowUserId);
+      List<Post?> posts = List<Post?>.from(state.posts)
+        ..removeWhere((post) => post!.author.id == event.unfollowUserId);
+      yield state.copyWith(posts: posts);
+    } catch (err) {
+      yield state.copyWith(
+        status: FeedStatus.error,
+        failure: const Failure(message: 'We were unable to Unfollow User'),
       );
     }
   }

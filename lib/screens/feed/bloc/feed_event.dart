@@ -10,3 +10,10 @@ abstract class FeedEvent extends Equatable {
 class FeedFetchPosts extends FeedEvent {}
 
 class FeedPaginatePosts extends FeedEvent {}
+
+class FeedToUnfollowUser extends FeedEvent {
+  String unfollowUserId;
+  FeedToUnfollowUser({required this.unfollowUserId});
+  @override
+  List<Object?> get props => [unfollowUserId];
+}

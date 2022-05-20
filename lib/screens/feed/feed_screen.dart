@@ -120,6 +120,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
 import 'package:tevo/screens/screens.dart';
@@ -286,27 +287,6 @@ class _FeedScreenState extends State<FeedScreen> {
             context.read<FeedBloc>().add(FeedFetchPosts());
             context.read<LikedPostsCubit>().clearAllLikedPosts();
           },
-          // child: Padding(
-          //   padding: const EdgeInsets.only(bottom: 50),
-          //   child: CustomScrollView(
-          //     // controller: _scrollController,
-
-          //     slivers: [
-          //       SliverList(
-          //         delegate: SliverChildBuilderDelegate(
-          //           (context, index) {
-          //             final post = state.posts[index];
-          //             return PostView(
-          //               post: post!,
-          //             );
-          //           },
-          //           childCount: state.posts.length,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
           child: ListView.builder(
             itemCount: state.posts.length,
             itemBuilder: (BuildContext context, int index) {
@@ -317,6 +297,17 @@ class _FeedScreenState extends State<FeedScreen> {
               //     likedPostsState.recentlyLikedPostIds.contains(post.id);
               return PostView(
                 post: post!,
+                onPressed: () {
+                  context
+                      .read<FeedBloc>()
+                      .add(FeedToUnfollowUser(unfollowUserId: post.author.id));
+                  Fluttertoast.showToast(
+                    msg: "${post.author.username} Unfollowed",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: Colors.black54,
+                  );
+                },
               );
             },
           ),

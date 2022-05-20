@@ -1,16 +1,14 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/repositories/repositories.dart';
-
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
-
   late StreamSubscription<auth.User?> _userSubscription;
 
   AuthBloc({

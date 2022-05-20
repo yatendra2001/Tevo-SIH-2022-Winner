@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tevo/screens/create_post/add_task_screen.dart';
 import 'package:tevo/screens/login/auth_screen.dart';
+import 'package:tevo/screens/report/report_screen.dart';
 import 'package:tevo/screens/screens.dart';
 
 class CustomRouter {
@@ -18,6 +19,9 @@ class CustomRouter {
         return AuthScreen.route();
       case NavScreen.routeName:
         return NavScreen.route();
+      case ReportScreen.routeName:
+        return ReportScreen.route();
+
       default:
         return _errorRoute();
     }
@@ -36,12 +40,12 @@ class CustomRouter {
         return EditProfileScreen.route(
           args: settings.arguments as EditProfileScreenArgs,
         );
+      case SearchScreen.routeName:
+        return SearchScreen.route();
       case CommentsScreen.routeName:
         return CommentsScreen.route(
           args: settings.arguments as CommentsScreenArgs,
         );
-      case SearchScreen.routeName:
-        return SearchScreen.route();
       default:
         return _errorRoute();
     }
