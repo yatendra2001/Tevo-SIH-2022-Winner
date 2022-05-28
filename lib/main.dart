@@ -9,9 +9,11 @@ import 'package:tevo/blocs/simple_bloc_observer.dart';
 import 'package:tevo/config/custom_router.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:sizer/sizer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,31 +63,40 @@ class MyApp extends StatelessWidget {
               authBloc: context.read<AuthBloc>(),
             ),
           ),
-        ],
-        child: MaterialApp(
-          navigatorKey: navigatorKey,
-          title: 'Flutter Tevo',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: "WorkSans",
-            primaryColor: kPrimaryTealColor,
-            scaffoldBackgroundColor: Colors.grey[50],
-            appBarTheme: const AppBarTheme(
-              color: Colors.white,
-              iconTheme: IconThemeData(color: Colors.black),
-              textTheme: TextTheme(
-                headline6: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              systemOverlayStyle: SystemUiOverlayStyle.dark,
+          BlocProvider<CreatePostBloc>(
+            create: (context) => CreatePostBloc(
+              authBloc: context.read<AuthBloc>(),
+              userRepository: context.read<UserRepository>(),
+              postRepository: context.read<PostRepository>(),
             ),
-            visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          onGenerateRoute: CustomRouter.onGenerateRoute,
-          initialRoute: SplashScreen.routeName,
+        ],
+        child: Sizer(
+          builder: (context, orientation, deviceType) => MaterialApp(
+            navigatorKey: navigatorKey,
+            title: 'Flutter Tevo',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              fontFamily: "WorkSans",
+              primaryColor: kPrimaryTealColor,
+              scaffoldBackgroundColor: Colors.grey[50],
+              appBarTheme: const AppBarTheme(
+                color: Colors.white,
+                iconTheme: IconThemeData(color: Colors.black),
+                textTheme: TextTheme(
+                  headline6: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                systemOverlayStyle: SystemUiOverlayStyle.dark,
+              ),
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            onGenerateRoute: CustomRouter.onGenerateRoute,
+            initialRoute: SplashScreen.routeName,
+          ),
         ),
       ),
     );

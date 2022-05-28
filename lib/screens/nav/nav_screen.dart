@@ -139,6 +139,8 @@ class NavScreen extends StatelessWidget {
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
+          bottomLeft: Radius.zero,
+          bottomRight: Radius.zero,
         ),
       ),
       child: Row(

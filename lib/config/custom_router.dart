@@ -34,8 +34,6 @@ class CustomRouter {
         return ProfileScreen.route(
           args: settings.arguments as ProfileScreenArgs,
         );
-      case AddTaskScreen.routeName:
-        return AddTaskScreen.route();
       case EditProfileScreen.routeName:
         return EditProfileScreen.route(
           args: settings.arguments as EditProfileScreenArgs,
