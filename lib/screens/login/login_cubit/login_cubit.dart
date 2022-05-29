@@ -14,8 +14,12 @@ part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepository _authRepository;
-  LoginCubit({required AuthRepository authRepository})
+  final UserRepository _userRepository;
+  LoginCubit(
+      {required AuthRepository authRepository,
+      required UserRepository userRepository})
       : _authRepository = authRepository,
+        _userRepository = userRepository,
         super(LoginState.initial());
 
   void sendOtpOnPhone({required String phone}) async {
@@ -43,5 +47,9 @@ class LoginCubit extends Cubit<LoginState> {
     } on Failure catch (err) {
       emit(state.copyWith(failure: err, status: LoginStatus.error));
     }
+  }
+
+  Future<bool> checkNumber(String phone) async {
+    return await _userRepository.searchUserbyPhone(query: phone);
   }
 }

@@ -71,16 +71,16 @@ class TabNavigator extends StatelessWidget {
             authBloc: context.read<AuthBloc>(),
             postRepository: context.read<PostRepository>(),
           )..add(const GetTaskEvent()),
-          child: const CreatePostScreen(),
+          child: CreatePostScreen(),
         );
-      // case BottomNavItem.notifications:
-      //   return BlocProvider<NotificationsBloc>(
-      //     create: (context) => NotificationsBloc(
-      //       notificationRepository: context.read<NotificationRepository>(),
-      //       authBloc: context.read<AuthBloc>(),
-      //     ),
-      //     child: const NotificationsScreen(),
-      //   );
+      case BottomNavItem.notifications:
+        return BlocProvider<NotificationsBloc>(
+          create: (context) => NotificationsBloc(
+            notificationRepository: context.read<NotificationRepository>(),
+            authBloc: context.read<AuthBloc>(),
+          ),
+          child: const NotificationsScreen(),
+        );
       case BottomNavItem.profile:
         return BlocProvider<ProfileBloc>(
           create: (_) => ProfileBloc(

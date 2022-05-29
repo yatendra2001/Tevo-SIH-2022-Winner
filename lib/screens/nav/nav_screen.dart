@@ -153,7 +153,10 @@ class NavScreen extends StatelessWidget {
                       highlightColor: Colors.grey,
                       onTap: () {
                         _selectBottomNavItem(
-                            context, item, item == state.selectedItem);
+                          context,
+                          item,
+                          item == state.selectedItem,
+                        );
                       },
                       child: icon),
                 )))

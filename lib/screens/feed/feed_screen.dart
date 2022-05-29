@@ -124,13 +124,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
 import 'package:tevo/screens/screens.dart';
-import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class FeedScreen extends StatefulWidget {
   static const String routeName = '/feed';
 
-  FeedScreen();
+  const FeedScreen({Key? key}) : super(key: key);
 
   @override
   _FeedScreenState createState() => _FeedScreenState();
@@ -178,8 +177,6 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FocusNode _focusNode = FocusNode();
-    bool _searchScreen = false;
     return BlocConsumer<FeedBloc, FeedState>(
       listener: (context, state) {
         if (state.status == FeedStatus.error) {
@@ -214,14 +211,8 @@ class _FeedScreenState extends State<FeedScreen> {
                   pinned: true,
                   elevation: 1,
                   toolbarHeight: 70,
-                  title: const Text(
-                    "TEVO",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 38,
-                    ),
-                  ),
+                  title: Text("TEVO",
+                      style: Theme.of(context).textTheme.displayLarge),
                   bottom: PreferredSize(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(

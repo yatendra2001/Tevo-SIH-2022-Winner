@@ -42,5 +42,8 @@ class CreatePostState extends Equatable {
   }
 
   @override
+  bool? get stringify => true;
+
+  @override
   List<Object?> get props => [post, dateTime, todoTask, completedTask, failure];
 }

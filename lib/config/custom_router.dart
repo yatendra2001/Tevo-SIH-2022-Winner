@@ -19,8 +19,8 @@ class CustomRouter {
         return AuthScreen.route();
       case NavScreen.routeName:
         return NavScreen.route();
-      case ReportScreen.routeName:
-        return ReportScreen.route();
+      // case ReportScreen.routeName:
+      //   return ReportScreen.route();
 
       default:
         return _errorRoute();
@@ -35,7 +35,9 @@ class CustomRouter {
           args: settings.arguments as ProfileScreenArgs,
         );
       case AddTaskScreen.routeName:
-        return AddTaskScreen.route();
+        return AddTaskScreen.route(
+          args: settings.arguments as AddTaskScreenArgs,
+        );
       case EditProfileScreen.routeName:
         return EditProfileScreen.route(
           args: settings.arguments as EditProfileScreenArgs,

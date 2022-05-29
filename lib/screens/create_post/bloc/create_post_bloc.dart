@@ -37,9 +37,8 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   }
 
   Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
-    print('++++++++++++++++++++');
-    final toDoTask = List<Task>.from(state.todoTask)..add(event.task);
-    yield state.copyWith(todoTask: toDoTask);
+    yield state.copyWith(todoTask: event.task);
+    submit();
   }
 
   Stream<CreatePostState> _mapToGetTaskEvent(GetTaskEvent event) async* {
@@ -57,14 +56,15 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
 
   Stream<CreatePostState> _mapToCompleteTaskEvent(
       CompleteTaskEvent event) async* {
-    final completeTask = List<Task>.from(state.completedTask)..add(event.task);
-    final toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
+    List<Task> completeTask = List<Task>.from(state.completedTask)
+      ..add(event.task);
+    List<Task> toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
     yield state.copyWith(todoTask: toDoTask, completedTask: completeTask);
     submit();
   }
 
   Stream<CreatePostState> _mapToDeleteTask(DeleteTaskEvent event) async* {
-    final toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
+    List<Task> toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
     yield state.copyWith(todoTask: toDoTask);
     submit();
   }
@@ -92,7 +92,6 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       enddate: state.dateTime ?? DateTime.now().add(const Duration(hours: 24)),
     );
     if (state.post == null) {
-      print('Creating post++++++++++');
       await _postRepository.createPost(post: post);
     } else {
       _postRepository.updatePost(post: post);
