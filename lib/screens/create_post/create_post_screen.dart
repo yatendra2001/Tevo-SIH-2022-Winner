@@ -73,14 +73,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       ),
                     ]),
                     actions: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: Image.asset(
-                            kBaseProfileImagePath,
-                            scale: 0.8,
-                          ),
+                      GestureDetector(
+                        onTap: (() {}),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Image.asset(
+                                kBaseProfileImagePath,
+                                scale: 0.8,
+                              )),
                         ),
                       )
                     ],
