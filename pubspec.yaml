@@ -63,6 +63,7 @@ dependencies:
   timer_button: ^2.0.0
   animations: ^2.0.2
   fluttertoast: ^8.0.9
+  sizer: ^2.0.15
 
 dev_dependencies:
   flutter_test:

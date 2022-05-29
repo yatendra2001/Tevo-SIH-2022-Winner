@@ -252,7 +252,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     Padding(
                         padding: EdgeInsets.only(right: 16),
                         child: UserProfileImage(
-                          radius: 20,
+                          radius: 16,
                           profileImageUrl:
                               'https://www.htplonline.com/wp-content/uploads/2020/01/Awesome-Profile-Pictures-for-Guys-look-away2.jpg',
                         ))
