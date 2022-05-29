@@ -41,14 +41,7 @@ class _PhoneFormState extends State<PhoneForm> {
             TextStyle(fontSize: 15, color: widget.textColor ?? Colors.black),
         initialCountryCode: 'IN',
         disableLengthCheck: true,
-        onChanged: (value) {
-          if (value.number.length == 10) {
-            FocusScope.of(context).requestFocus(FocusNode());
-          }
-          setState(() {
-            widget.phoneNumberController.text = value.completeNumber;
-          });
-        },
+        controller: widget.phoneNumberController,
         validator: (val) {
           if (val == null || val.number.isEmpty) {
             return "Please enter your phone number";

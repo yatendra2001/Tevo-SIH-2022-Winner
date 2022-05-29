@@ -1,30 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:tevo/blocs/auth/auth_bloc.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
 import 'package:tevo/widgets/task_tile.dart';
 
+class AddTaskScreenArgs {
+  final List<Task>? tasks;
+  final Function(List<Task>?) onSubmit;
+  AddTaskScreenArgs({
+    this.tasks,
+    required this.onSubmit,
+  });
+}
+
 class AddTaskScreen extends StatefulWidget {
   static const routeName = 'add_task_screen';
+  final List<Task>? tasks;
+  final Function(List<Task>?) onSubmit;
 
-  static Route route() {
+  const AddTaskScreen({
+    Key? key,
+    this.tasks,
+    required this.onSubmit,
+  }) : super(key: key);
+
+  static Route route({required AddTaskScreenArgs args}) {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => BlocProvider<CreatePostBloc>(
-        create: (context) => CreatePostBloc(
-          authBloc: context.read<AuthBloc>(),
-          userRepository: context.read<UserRepository>(),
-          postRepository: context.read<PostRepository>(),
-        )..add(const GetTaskEvent()),
-        child: const AddTaskScreen(),
+      builder: (context) => AddTaskScreen(
+        tasks: args.tasks,
+        onSubmit: args.onSubmit,
       ),
     );
   }
-
-  const AddTaskScreen({Key? key}) : super(key: key);
 
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
@@ -32,63 +44,65 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   final _textEditingController = TextEditingController();
+  List<Task>? tasks;
+
+  @override
+  void initState() {
+    tasks = widget.tasks;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CreatePostBloc, CreatePostState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Add Task',
-              style: TextStyle(color: Colors.black),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Add Task',
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              widget.onSubmit(tasks);
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.save,
             ),
-            actions: [
-              IconButton(
-                onPressed: () async {
-                  context.read<CreatePostBloc>().submit();
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(
-                  Icons.save,
-                ),
-              )
-            ],
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                TextField(
-                  autofocus: true,
-                  controller: _textEditingController,
-                  decoration: const InputDecoration(label: Text('Enter Task')),
-                  onSubmitted: (_) {
-                    context.read<CreatePostBloc>().add(
-                          AddTaskEvent(
-                            task: Task(
-                                timestamp: Timestamp.now(),
-                                task: _textEditingController.text,
-                                likes: 0),
-                          ),
-                        );
-                    _textEditingController.clear();
-                  },
-                ),
-                _buildToDoTaskList(state, context),
-              ],
+          )
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            TextField(
+              autofocus: true,
+              controller: _textEditingController,
+              decoration: const InputDecoration(label: Text('Enter Task')),
+              onSubmitted: (_) {
+                tasks!.add(
+                  Task(
+                    timestamp: Timestamp.now(),
+                    task: _textEditingController.text,
+                    likes: 0,
+                  ),
+                );
+                setState(() {});
+                _textEditingController.clear();
+              },
             ),
-          ),
-        );
-      },
+            _buildToDoTaskList(tasks, context),
+          ],
+        ),
+      ),
     );
   }
 }
 
-_buildToDoTaskList(CreatePostState state, BuildContext context) {
-  final todoTask = state.todoTask;
+_buildToDoTaskList(List<Task>? todoTask, BuildContext context) {
   return Expanded(
-    child: todoTask.isEmpty
+    child: todoTask!.isEmpty
         ? const Center(
             child: Text('Add Task Now'),
           )

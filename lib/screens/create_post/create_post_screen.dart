@@ -9,13 +9,15 @@ import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
+import '../../blocs/blocs.dart';
+import '../../repositories/repositories.dart';
 import '../../models/models.dart';
 import 'bloc/create_post_bloc.dart';
 
 class CreatePostScreen extends StatefulWidget {
   static const String routeName = '/createPost';
 
-  const CreatePostScreen({Key? key}) : super(key: key);
+  CreatePostScreen({Key? key}) : super(key: key);
 
   @override
   State<CreatePostScreen> createState() => _CreatePostScreenState();
@@ -26,6 +28,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<CreatePostBloc, CreatePostState>(
       builder: (context, state) {
+        final todoTask = state.todoTask;
         return DefaultTabController(
           length: 2,
           child: Scaffold(
@@ -112,6 +115,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               style: ElevatedButton.styleFrom(
                                   primary: kPrimaryTealColor),
                               onPressed: () {
+                                Navigator.of(context).pushNamed(
+                                  AddTaskScreen.routeName,
+                                  arguments: AddTaskScreenArgs(
+                                    onSubmit: (tasks) {
+                                      context
+                                          .read<CreatePostBloc>()
+                                          .add(AddTaskEvent(task: tasks!));
+                                      setState(() {});
+                                    },
+                                    tasks: state.todoTask,
+                                  ),
+                                );
+
                                 _taskBottomSheet();
                               },
                               child: const Text('Add Task'),
@@ -119,6 +135,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           ],
                         ),
                         SizedBox(height: 15),
+                        todoTask.isEmpty
+                            ? const Center(
+                                child: Text('Add Task Now'),
                         state.todoTask.isEmpty
                             ? Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -143,26 +162,26 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (_, index) {
                                   return Dismissible(
-                                    key: Key(state.todoTask[index].timestamp
-                                        .toString()),
+                                    key: Key(
+                                        todoTask[index].timestamp.toString()),
                                     onDismissed: (_) {
                                       context.read<CreatePostBloc>().add(
                                           CompleteTaskEvent(
-                                              task: state.todoTask[index]));
+                                              task: todoTask[index]));
                                     },
                                     child: TaskTile(
                                       isComplete: false,
-                                      task: state.todoTask[index],
+                                      task: todoTask[index],
                                       isDeleted: () =>
                                           context.read<CreatePostBloc>().add(
                                                 DeleteTaskEvent(
-                                                  task: state.todoTask[index],
+                                                  task: todoTask[index],
                                                 ),
                                               ),
                                     ),
                                   );
                                 },
-                                itemCount: state.todoTask.length,
+                                itemCount: todoTask.length,
                               ),
                       ],
                     ),

@@ -36,6 +36,15 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
+  Future<bool> searchUserbyPhone({required String query}) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.users)
+        .where('phoneNumber', isEqualTo: query)
+        .get();
+    return userSnap.docs.isNotEmpty;
+  }
+
+  @override
   void followUser({
     required String userId,
     required String followUserId,
