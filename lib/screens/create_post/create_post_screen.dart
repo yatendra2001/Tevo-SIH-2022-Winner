@@ -132,7 +132,12 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                                 //   ),
                                 // );
 
-                                _taskBottomSheet(state);
+                                _taskBottomSheet((task) {
+                                  context
+                                      .read<CreatePostBloc>()
+                                      .add(AddTaskEvent(task: task));
+                                  setState(() {});
+                                });
                               },
                               child: const Text('Add Task'),
                             )
@@ -254,8 +259,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
     );
   }
 
-  void _taskBottomSheet(CreatePostState state) {
-    final todoTask = state.todoTask;
+  void _taskBottomSheet(Function(Task) onSubmit) {
     final _taskTextEditingController = TextEditingController();
     final _descriptionTextEditingController = TextEditingController();
     showModalBottomSheet(
@@ -308,17 +312,12 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               alignment: Alignment.centerRight,
               child: IconButton(
                   onPressed: () {
-                    context.read<CreatePostBloc>().add(
-                          AddTaskEvent(
-                            task: todoTask
-                              ..add(
-                                Task(
-                                    timestamp: Timestamp.now(),
-                                    task: _taskTextEditingController.text,
-                                    likes: 0),
-                              ),
-                          ),
-                        );
+                    //TODO make Task here
+
+                    onSubmit(Task(
+                        timestamp: Timestamp.now(),
+                        task: _taskTextEditingController.text,
+                        likes: 0));
                     _taskTextEditingController.clear();
                     Navigator.pop(context);
                   },

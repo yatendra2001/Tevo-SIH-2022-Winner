@@ -37,7 +37,8 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   }
 
   Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
-    yield state.copyWith(todoTask: event.task);
+    List<Task> toDoTask = List<Task>.from(state.todoTask)..add(event.task);
+    yield state.copyWith(todoTask: toDoTask);
     submit();
   }
 

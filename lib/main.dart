@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/blocs/simple_bloc_observer.dart';
@@ -35,58 +34,59 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AuthRepository>(
+          create: (_) => AuthRepository(),
+        ),
+        RepositoryProvider<UserRepository>(
+          create: (_) => UserRepository(),
+        ),
+        RepositoryProvider<StorageRepository>(
+          create: (_) => StorageRepository(),
+        ),
+        RepositoryProvider<PostRepository>(
+          create: (_) => PostRepository(),
+        ),
+        RepositoryProvider<NotificationRepository>(
+          create: (_) => NotificationRepository(),
+        ),
+      ],
+      child: MultiBlocProvider(
         providers: [
-          RepositoryProvider<AuthRepository>(
-            create: (_) => AuthRepository(),
+          BlocProvider<AuthBloc>(
+            create: (context) =>
+                AuthBloc(authRepository: context.read<AuthRepository>()),
           ),
-          RepositoryProvider<UserRepository>(
-            create: (_) => UserRepository(),
+          BlocProvider<LoginCubit>(
+            create: (context) => LoginCubit(
+                authRepository: context.read<AuthRepository>(),
+                userRepository: context.read<UserRepository>()),
           ),
-          RepositoryProvider<StorageRepository>(
-            create: (_) => StorageRepository(),
+          BlocProvider<LikedPostsCubit>(
+            create: (context) => LikedPostsCubit(
+              postRepository: context.read<PostRepository>(),
+              authBloc: context.read<AuthBloc>(),
+            ),
           ),
-          RepositoryProvider<PostRepository>(
-            create: (_) => PostRepository(),
-          ),
-          RepositoryProvider<NotificationRepository>(
-            create: (_) => NotificationRepository(),
+          BlocProvider<CreatePostBloc>(
+            create: (context) => CreatePostBloc(
+              authBloc: context.read<AuthBloc>(),
+              userRepository: context.read<UserRepository>(),
+              postRepository: context.read<PostRepository>(),
+            ),
           ),
         ],
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<AuthBloc>(
-              create: (context) =>
-                  AuthBloc(authRepository: context.read<AuthRepository>()),
-            ),
-            BlocProvider<LoginCubit>(
-              create: (context) => LoginCubit(
-                  authRepository: context.read<AuthRepository>(),
-                  userRepository: context.read<UserRepository>()),
-            ),
-            BlocProvider<LikedPostsCubit>(
-              create: (context) => LikedPostsCubit(
-                postRepository: context.read<PostRepository>(),
-                authBloc: context.read<AuthBloc>(),
-              ),
-            ),
-            BlocProvider<CreatePostBloc>(
-              create: (context) => CreatePostBloc(
-                authBloc: context.read<AuthBloc>(),
-                userRepository: context.read<UserRepository>(),
-                postRepository: context.read<PostRepository>(),
-              ),
-            ),
-          ],
-          child: Sizer(
-            builder: (context, orientation, deviceType) => MaterialApp(
-              navigatorKey: navigatorKey,
-              title: 'Flutter Tevo',
-              debugShowCheckedModeBanner: false,
-              theme: AppThemes.lightTheme,
-              onGenerateRoute: CustomRouter.onGenerateRoute,
-              initialRoute: SplashScreen.routeName,
-            ),
+        child: Sizer(
+          builder: (context, orientation, deviceType) => MaterialApp(
+            navigatorKey: navigatorKey,
+            title: 'Flutter Tevo',
+            debugShowCheckedModeBanner: false,
+            theme: AppThemes.lightTheme,
+            onGenerateRoute: CustomRouter.onGenerateRoute,
+            initialRoute: SplashScreen.routeName,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
