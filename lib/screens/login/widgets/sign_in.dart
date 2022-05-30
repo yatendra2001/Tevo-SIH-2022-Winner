@@ -15,7 +15,7 @@ import 'package:tevo/utils/theme_constants.dart';
 
 import 'title.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({
     Key? key,
     this.onRegisterClicked,
@@ -23,75 +23,40 @@ class SignIn extends StatelessWidget {
 
   final VoidCallback? onRegisterClicked;
 
-  void _otpBottomSheet(context) {
-    String? otp;
-    showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
-        backgroundColor: kPrimaryTealColor,
-        isScrollControlled: true,
-        context: context,
-        builder: (context) {
-          return BlocListener<LoginCubit, LoginState>(
-            listener: (context, state) {
-              if (state.status == LoginStatus.submitting) {
-                const Center(child: CircularProgressIndicator());
-              } else if (state.status == LoginStatus.success) {
-                Navigator.of(context).pushNamed(NavScreen.routeName);
-              }
-            },
-            child: Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: Wrap(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: PinFieldAutoFill(
-                      autoFocus: true,
-                      keyboardType: TextInputType.number,
-                      decoration: const UnderlineDecoration(
-                        textStyle: TextStyle(fontSize: 20, color: Colors.white),
-                        colorBuilder: FixedColorBuilder(Colors.white),
-                        lineStrokeCap: StrokeCap.square,
-                      ),
-                      currentCode: otp,
-                      onCodeSubmitted: (code) {},
-                      onCodeChanged: (code) {
-                        if (code!.length == 6) {
-                          otp = code;
-                          BlocProvider.of<LoginCubit>(context)
-                              .verifyOtp(otp: otp!);
-                          FocusScope.of(context).requestFocus(FocusNode());
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.center,
-                    child: TimerButton(
-                      label: 'Resend',
-                      onPressed: () {
-                        BlocProvider.of<LoginCubit>(context)
-                            .sendOtpOnPhone(phone: SessionHelper.phone!);
-                      },
-                      timeOutInSeconds: 30,
-                      activeTextStyle: const TextStyle(color: Colors.white),
-                      disabledTextStyle:
-                          const TextStyle(color: kPrimaryBlackColor),
-                      color: kPrimaryBlackColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  late TextEditingController _phoneNumberController;
+  @override
+  void initState() {
+    _phoneNumberController = TextEditingController();
+    _phoneNumberController.addListener(() async {
+      if (_phoneNumberController.text.length == 10) {
+        final check = await context
+            .read<LoginCubit>()
+            .checkNumber("+91" + _phoneNumberController.text);
+        if (check) {
+          BlocProvider.of<LoginCubit>(context)
+              .sendOtpOnPhone(phone: _phoneNumberController.text);
+          _otpBottomSheet(context);
+        } else {
+          print('Please create account');
+        }
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _phoneNumberController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _phoneNumberController = TextEditingController();
     final _formKey = GlobalKey<FormState>();
     return Padding(
       padding: const EdgeInsets.all(32.0),
@@ -131,7 +96,7 @@ class SignIn extends StatelessWidget {
                   child: InkWell(
                     splashColor: Colors.white,
                     onTap: () {
-                      onRegisterClicked?.call();
+                      widget.onRegisterClicked?.call();
                     },
                     child: const Text(
                       'Sign up',
@@ -150,4 +115,70 @@ class SignIn extends StatelessWidget {
       ),
     );
   }
+}
+
+void _otpBottomSheet(context) {
+  String? otp;
+  showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+      backgroundColor: kPrimaryTealColor,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return BlocListener<LoginCubit, LoginState>(
+          listener: (context, state) {
+            if (state.status == LoginStatus.submitting) {
+              const Center(child: CircularProgressIndicator());
+            } else if (state.status == LoginStatus.success) {
+              Navigator.of(context).pushNamed(NavScreen.routeName);
+            }
+          },
+          child: Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Wrap(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: PinFieldAutoFill(
+                    autoFocus: true,
+                    keyboardType: TextInputType.number,
+                    decoration: const UnderlineDecoration(
+                      textStyle: TextStyle(fontSize: 20, color: Colors.white),
+                      colorBuilder: FixedColorBuilder(Colors.white),
+                      lineStrokeCap: StrokeCap.square,
+                    ),
+                    currentCode: otp,
+                    onCodeSubmitted: (code) {},
+                    onCodeChanged: (code) {
+                      if (code!.length == 6) {
+                        otp = code;
+                        BlocProvider.of<LoginCubit>(context)
+                            .verifyOtp(otp: otp!);
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.center,
+                  child: TimerButton(
+                    label: 'Resend',
+                    onPressed: () {
+                      BlocProvider.of<LoginCubit>(context)
+                          .sendOtpOnPhone(phone: SessionHelper.phone!);
+                    },
+                    timeOutInSeconds: 30,
+                    activeTextStyle: const TextStyle(color: Colors.white),
+                    disabledTextStyle:
+                        const TextStyle(color: kPrimaryBlackColor),
+                    color: kPrimaryBlackColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
 }

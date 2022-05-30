@@ -11,14 +11,9 @@ class AuthScreen extends StatefulWidget {
   static const String routeName = '/auth-screen';
   static Route route() {
     return PageRouteBuilder(
-      settings: const RouteSettings(name: routeName),
-      transitionDuration: const Duration(seconds: 0),
-      pageBuilder: (context, _, __) => BlocProvider<LoginCubit>(
-        create: (_) =>
-            LoginCubit(authRepository: context.read<AuthRepository>()),
-        child: AuthScreen(),
-      ),
-    );
+        settings: const RouteSettings(name: routeName),
+        transitionDuration: const Duration(seconds: 0),
+        pageBuilder: (context, _, __) => AuthScreen());
   }
 
   const AuthScreen({Key? key}) : super(key: key);

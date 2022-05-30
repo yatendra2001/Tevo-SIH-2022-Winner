@@ -5,6 +5,7 @@ import 'package:flutter_countdown_timer/index.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/screens/comments/comments_screen.dart';
+import 'package:tevo/screens/create_post/add_task_screen.dart';
 import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
@@ -78,11 +79,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: Image.asset(
-                                kBaseProfileImagePath,
-                                scale: 0.8,
-                              )),
+                            borderRadius: BorderRadius.circular(30),
+                            child: Image.asset(
+                              kBaseProfileImagePath,
+                              scale: 0.8,
+                            ),
+                          ),
                         ),
                       )
                     ],
@@ -270,7 +272,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 decoration: InputDecoration(
-                  hintText: 'Description\n\n\n',
+                  hintText: 'Description',
                   hintStyle: TextStyle(
                     color: Colors.grey,
                     fontSize: 15.sp,
@@ -283,14 +285,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               alignment: Alignment.centerRight,
               child: IconButton(
                   onPressed: () {
-                    context.read<CreatePostBloc>().add(
-                          AddTaskEvent(
-                            task: Task(
-                                timestamp: Timestamp.now(),
-                                task: _taskTextEditingController.text,
-                                likes: 0),
-                          ),
-                        );
+                    // context.read<CreatePostBloc>().add(
+                    //       AddTaskEvent(
+                    //         task: Task(
+                    //             timestamp: Timestamp.now(),
+                    //             task: _taskTextEditingController.text,
+                    //             likes: 0),
+                    //       ),
+                    // );
                     _taskTextEditingController.clear();
                     Navigator.pop(context);
                   },

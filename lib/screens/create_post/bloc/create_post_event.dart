@@ -8,7 +8,7 @@ abstract class CreatePostEvent extends Equatable {
 }
 
 class AddTaskEvent extends CreatePostEvent {
-  final Task task;
+  final List<Task> task;
   const AddTaskEvent({
     required this.task,
   });

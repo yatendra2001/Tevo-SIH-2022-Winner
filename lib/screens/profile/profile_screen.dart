@@ -4,7 +4,6 @@ import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/main.dart';
 import 'package:tevo/repositories/repositories.dart';
-import 'package:tevo/screens/login/auth_screen.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/screens/screens.dart';
@@ -12,14 +11,13 @@ import 'package:tevo/widgets/widgets.dart';
 
 class ProfileScreenArgs {
   final String userId;
-
   const ProfileScreenArgs({required this.userId});
 }
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
 
-  const ProfileScreen();
+  const ProfileScreen({Key? key}) : super(key: key);
 
   static Route route({required ProfileScreenArgs args}) {
     return MaterialPageRoute(
@@ -72,12 +70,15 @@ class _ProfileScreenState extends State<ProfileScreen>
           appBar: AppBar(
             title: Text(
               state.user.username,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
             ),
             actions: [
               if (state.isCurrentUser)
                 IconButton(
-                  icon: const Icon(Icons.exit_to_app),
+                  icon: const Icon(
+                    Icons.exit_to_app,
+                    color: Colors.black,
+                  ),
                   onPressed: () {
                     context.read<AuthBloc>().add(AuthLogoutRequested());
                     context.read<LikedPostsCubit>().clearAllLikedPosts();

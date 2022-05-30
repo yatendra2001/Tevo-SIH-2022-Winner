@@ -217,10 +217,10 @@ class _PostViewState extends State<PostView> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(widget.post.author.username,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 15)),
+                              Text(
+                                widget.post.author.username,
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
                               Text(
                                 "Posted ${widget.post.enddate.timeAgo()}",
                                 style: TextStyle(fontWeight: FontWeight.w300),
@@ -240,8 +240,8 @@ class _PostViewState extends State<PostView> {
                                       TextButton(
                                         onPressed: () {
                                           // widget.onPressed!();
-                                          Navigator.of(context).popAndPushNamed(
-                                              ReportScreen.routeName);
+                                          // Navigator.of(context).popAndPushNamed(
+                                          //     ReportScreen.routeName);
                                         },
                                         child: const Text('Report'),
                                       ),
