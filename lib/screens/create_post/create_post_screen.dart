@@ -5,12 +5,15 @@ import 'package:flutter_countdown_timer/index.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/screens/comments/comments_screen.dart';
-import 'package:tevo/screens/create_post/add_task_screen.dart';
+import 'package:tevo/screens/feed/feed_screen.dart';
+import 'package:tevo/screens/profile/profile_screen.dart';
 import 'package:tevo/utils/assets_constants.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 import '../../models/models.dart';
+import 'add_task_screen.dart';
 import 'bloc/create_post_bloc.dart';
 
 class CreatePostScreen extends StatefulWidget {
@@ -22,15 +25,17 @@ class CreatePostScreen extends StatefulWidget {
   State<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
-class _CreatePostScreenState extends State<CreatePostScreen> {
+class _CreatePostScreenState extends State<CreatePostScreen>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CreatePostBloc, CreatePostState>(
-      builder: (context, state) {
-        return DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            body: NestedScrollView(
+    return Scaffold(
+      body: BlocBuilder<CreatePostBloc, CreatePostState>(
+        builder: (context, state) {
+          final todoTask = state.todoTask;
+          return DefaultTabController(
+            length: 2,
+            child: NestedScrollView(
               clipBehavior: Clip.none,
               headerSliverBuilder: (_, __) {
                 return [
@@ -75,7 +80,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     ]),
                     actions: [
                       GestureDetector(
-                        onTap: (() {}),
+                        onTap: (() {
+                          Navigator.pushNamed(context, ProfileScreen.routeName,
+                              arguments: ProfileScreenArgs(
+                                  userId: SessionHelper.uid!));
+                        }),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: ClipRRect(
@@ -116,58 +125,74 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               style: ElevatedButton.styleFrom(
                                   primary: kPrimaryTealColor),
                               onPressed: () {
-                                _taskBottomSheet();
+                                // Navigator.of(context).pushNamed(
+                                //   AddTaskScreen.routeName,
+                                //   arguments: AddTaskScreenArgs(
+                                //     onSubmit: (tasks) {
+                                //       context
+                                //           .read<CreatePostBloc>()
+                                //     tasks: todoTask,
+                                //   ),
+                                // );
+
+                                _taskBottomSheet(state);
                               },
                               child: const Text('Add Task'),
                             )
                           ],
                         ),
                         SizedBox(height: 15),
-                        state.todoTask.isEmpty
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(height: 10.h),
-                                  Center(
-                                    child: Image.asset(
-                                      kEmptyTaskImagePath,
-                                      scale: 3,
-                                    ),
-                                  ),
-                                  SizedBox(height: 2.h),
-                                  Text(
-                                    'Drop your 1st task 🎯',
-                                    style: TextStyle(fontSize: 15.sp),
-                                  ),
-                                ],
-                              )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (_, index) {
-                                  return Dismissible(
-                                    key: Key(state.todoTask[index].timestamp
-                                        .toString()),
-                                    onDismissed: (_) {
-                                      context.read<CreatePostBloc>().add(
-                                          CompleteTaskEvent(
-                                              task: state.todoTask[index]));
-                                    },
-                                    child: TaskTile(
-                                      isComplete: false,
-                                      task: state.todoTask[index],
-                                      isDeleted: () =>
+                        todoTask.isEmpty
+                            ? const Center(child: Text('Add Task Now'))
+                            : state.todoTask.isEmpty
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(height: 10.h),
+                                      Center(
+                                        child: Image.asset(
+                                          kEmptyTaskImagePath,
+                                          scale: 3,
+                                        ),
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      Text(
+                                        'Drop your 1st task 🎯',
+                                        style: TextStyle(fontSize: 15.sp),
+                                      ),
+                                    ],
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (_, index) {
+                                      return Dismissible(
+                                        key: Key(todoTask[index]
+                                            .timestamp
+                                            .toString()),
+                                        onDismissed: (_) {
                                           context.read<CreatePostBloc>().add(
+                                              CompleteTaskEvent(
+                                                  task: todoTask[index]));
+                                        },
+                                        child: TaskTile(
+                                          isComplete: false,
+                                          task: todoTask[index],
+                                          isDeleted: () => context
+                                              .read<CreatePostBloc>()
+                                              .add(
                                                 DeleteTaskEvent(
                                                   task: state.todoTask[index],
                                                 ),
                                               ),
-                                    ),
-                                  );
-                                },
-                                itemCount: state.todoTask.length,
-                              ),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: todoTask.length,
+                                  ),
                       ],
                     ),
                   ),
@@ -226,13 +251,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ],
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
-  void _taskBottomSheet() {
+  void _taskBottomSheet(CreatePostState state) {
+    final todoTask = state.todoTask;
     final _taskTextEditingController = TextEditingController();
     final _descriptionTextEditingController = TextEditingController();
     showModalBottomSheet(
@@ -285,14 +311,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               alignment: Alignment.centerRight,
               child: IconButton(
                   onPressed: () {
-                    // context.read<CreatePostBloc>().add(
-                    //       AddTaskEvent(
-                    //         task: Task(
-                    //             timestamp: Timestamp.now(),
-                    //             task: _taskTextEditingController.text,
-                    //             likes: 0),
-                    //       ),
-                    // );
+                    context.read<CreatePostBloc>().add(
+                          AddTaskEvent(
+                            task: todoTask
+                              ..add(
+                                Task(
+                                    timestamp: Timestamp.now(),
+                                    task: _taskTextEditingController.text,
+                                    likes: 0),
+                              ),
+                          ),
+                        );
                     _taskTextEditingController.clear();
                     Navigator.pop(context);
                   },

@@ -1,11 +1,13 @@
-import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:tevo/screens/login/widgets/phoneform_widget.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/widgets/widgets.dart';
 import 'package:timer_button/timer_button.dart';
 
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
@@ -29,20 +31,20 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   late TextEditingController _phoneNumberController;
+  bool check = true;
   @override
   void initState() {
     _phoneNumberController = TextEditingController();
     _phoneNumberController.addListener(() async {
       if (_phoneNumberController.text.length == 10) {
-        final check = await context
+        check = await context
             .read<LoginCubit>()
-            .checkNumber("+91" + _phoneNumberController.text);
-        if (check) {
+            .checkNumber(_phoneNumberController.text);
+        if (check == false) {
           BlocProvider.of<LoginCubit>(context)
               .sendOtpOnPhone(phone: _phoneNumberController.text);
           _otpBottomSheet(context);
-        } else {
-          print('Please create account');
+          flutterToast(msg: 'Sending OTP', position: ToastGravity.CENTER);
         }
       }
     });
@@ -86,9 +88,20 @@ class _SignInState extends State<SignIn> {
                   isLoading: false,
                   label: "Sign In",
                   onPressed: () {
-                    BlocProvider.of<LoginCubit>(context)
-                        .sendOtpOnPhone(phone: _phoneNumberController.text);
-                    _otpBottomSheet(context);
+                    if (_phoneNumberController.text.length < 10) {
+                      flutterToast(
+                          msg: 'Invalid Number', position: ToastGravity.CENTER);
+                    } else if (check == false) {
+                      BlocProvider.of<LoginCubit>(context)
+                          .sendOtpOnPhone(phone: _phoneNumberController.text);
+                      _otpBottomSheet(context);
+                      flutterToast(
+                          msg: 'Sending OTP', position: ToastGravity.CENTER);
+                    } else {
+                      flutterToast(
+                          msg: 'Unable to Sign In',
+                          position: ToastGravity.CENTER);
+                    }
                   },
                 ),
                 Align(

@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/models/user_model.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/widgets/widgets.dart';
 
 class UserRepository extends BaseUserRepository {
   final FirebaseFirestore _firebaseFirestore;
@@ -36,12 +40,26 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
-  Future<bool> searchUserbyPhone({required String query}) async {
-    final userSnap = await _firebaseFirestore
-        .collection(Paths.users)
-        .where('phoneNumber', isEqualTo: query)
-        .get();
-    return userSnap.docs.isNotEmpty;
+  Future<bool> searchUserbyPhone(
+      {required String query, required bool newAccount}) async {
+    try {
+      return await _firebaseFirestore
+          .collection(Paths.users)
+          .where("phoneNumber", isEqualTo: query)
+          .snapshots()
+          .isEmpty;
+    } on FirebaseException catch (err) {
+      if (err.code == 'permission-denied') {
+        flutterToast(
+            msg: newAccount ? 'New Account' : 'Account does not exists',
+            position: ToastGravity.CENTER);
+      } else {
+        flutterToast(msg: 'An Error occured', position: ToastGravity.CENTER);
+      }
+    } catch (err) {
+      flutterToast(msg: 'An Error occured', position: ToastGravity.CENTER);
+    }
+    return true;
   }
 
   @override

@@ -43,58 +43,61 @@ class _AuthScreenState extends State<AuthScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          SizedBox.expand(
-            child: CustomPaint(
-              painter: BackgroundPainter(
-                animation: _controller,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            SizedBox.expand(
+              child: CustomPaint(
+                painter: BackgroundPainter(
+                  animation: _controller,
+                ),
               ),
             ),
-          ),
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: ValueListenableBuilder<bool>(
-                valueListenable: showSignInPage,
-                builder: (context, value, child) {
-                  return SizedBox.expand(
-                    child: PageTransitionSwitcher(
-                      reverse: !value,
-                      duration: const Duration(milliseconds: 800),
-                      transitionBuilder:
-                          (child, animation, secondaryAnimation) {
-                        return SharedAxisTransition(
-                          animation: animation,
-                          secondaryAnimation: secondaryAnimation,
-                          transitionType: SharedAxisTransitionType.vertical,
-                          fillColor: Colors.transparent,
-                          child: child,
-                        );
-                      },
-                      child: value
-                          ? SignIn(
-                              key: const ValueKey('SignIn'),
-                              onRegisterClicked: () {
-                                showSignInPage.value = false;
-                                _controller.forward();
-                              },
-                            )
-                          : Register(
-                              key: const ValueKey('Register'),
-                              onSignInPressed: () {
-                                showSignInPage.value = true;
-                                _controller.reverse();
-                              },
-                            ),
-                    ),
-                  );
-                },
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 800),
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: showSignInPage,
+                  builder: (context, value, child) {
+                    return SizedBox.expand(
+                      child: PageTransitionSwitcher(
+                        reverse: !value,
+                        duration: const Duration(milliseconds: 800),
+                        transitionBuilder:
+                            (child, animation, secondaryAnimation) {
+                          return SharedAxisTransition(
+                            animation: animation,
+                            secondaryAnimation: secondaryAnimation,
+                            transitionType: SharedAxisTransitionType.vertical,
+                            fillColor: Colors.transparent,
+                            child: child,
+                          );
+                        },
+                        child: value
+                            ? SignIn(
+                                key: const ValueKey('SignIn'),
+                                onRegisterClicked: () {
+                                  showSignInPage.value = false;
+                                  _controller.forward();
+                                },
+                              )
+                            : Register(
+                                key: const ValueKey('Register'),
+                                onSignInPressed: () {
+                                  showSignInPage.value = true;
+                                  _controller.reverse();
+                                },
+                              ),
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

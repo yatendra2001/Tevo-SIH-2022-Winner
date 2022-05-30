@@ -23,19 +23,10 @@ class SplashScreen extends StatelessWidget {
         listenWhen: (prevState, state) => prevState.status != state.status,
         listener: (context, state) {
           if (state.status == AuthStatus.unauthenticated) {
+            //Go to login screen
             Navigator.of(context).pushNamed(AuthScreen.routeName);
-          } else if (state.status == AuthStatus.authenticated &&
-              state.isUserExist == false) {
-            Fluttertoast.showToast(
-                msg: "Account doesn't exist",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0);
-          } else if (state.status == AuthStatus.authenticated &&
-              state.isUserExist == true) {
+          } else if (state.status == AuthStatus.authenticated) {
+            //Go to navigation screen
             Navigator.of(context).pushNamed(NavScreen.routeName);
           }
         },

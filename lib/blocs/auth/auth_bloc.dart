@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/utils/session_helper.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
@@ -38,6 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event.user != null) {
       final check =
           await _authRepository.checkUserDataExists(userId: event.user!.uid);
+      SessionHelper.uid = event.user!.uid;
       yield AuthState.authenticated(user: event.user!, check: check);
     } else {
       yield AuthState.unauthenticated();
