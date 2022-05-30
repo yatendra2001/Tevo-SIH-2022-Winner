@@ -40,7 +40,7 @@ class AuthRepository extends BaseAuthRepository {
   @override
   Future<bool> sendOTP({required String phone}) async {
     await _firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phone,
+      phoneNumber: "+91" + phone,
       verificationCompleted: (auth.PhoneAuthCredential credential) {},
       verificationFailed: (auth.FirebaseAuthException e) {},
       codeSent: (String verificationId, int? resendToken) async {

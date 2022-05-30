@@ -6,7 +6,8 @@ abstract class BaseUserRepository {
   Future<List<User>> searchUsers({required String query});
   void followUser({required String userId, required String followUserId});
   void unfollowUser({required String userId, required String unfollowUserId});
-  Future<bool> searchUserbyPhone({required String query});
+  Future<bool> searchUserbyPhone(
+      {required String query, required bool newAccount});
   Future<bool> isFollowing({
     required String userId,
     required String otherUserId,

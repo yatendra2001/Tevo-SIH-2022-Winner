@@ -43,13 +43,20 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
-  final _textEditingController = TextEditingController();
+  late TextEditingController _textEditingController;
   List<Task>? tasks;
 
   @override
   void initState() {
+    _textEditingController = TextEditingController();
     tasks = widget.tasks;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -62,7 +69,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () async {
+            onPressed: () {
               widget.onSubmit(tasks);
               Navigator.of(context).pop();
             },

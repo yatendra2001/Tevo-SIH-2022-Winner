@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'package:tevo/models/user_model.dart';
-import 'package:tevo/repositories/auth/auth_repository.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/widgets/phoneform_widget.dart';
 import 'package:tevo/screens/screens.dart';
@@ -11,6 +9,7 @@ import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:timer_button/timer_button.dart';
 
+import '../../../widgets/widgets.dart';
 import 'decoration_functions.dart';
 import 'sign_in_up_bar.dart';
 import 'title.dart';
@@ -31,7 +30,8 @@ class _RegisterState extends State<Register> {
 
   DateTime? birthDate;
   bool isDateSelected = false;
-  final TextEditingController _phoneNumberController = TextEditingController();
+  bool check = true;
+  late TextEditingController _phoneNumberController;
   final TextEditingController _usernameController = TextEditingController();
 
   void _handleGenderChange(String? value) {
@@ -40,78 +40,10 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  void _otpBottomSheet(context) {
-    String? otp;
-    showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
-        backgroundColor: kPrimaryTealColor,
-        isScrollControlled: true,
-        context: context,
-        builder: (context) {
-          return BlocListener<LoginCubit, LoginState>(
-            listener: (context, state) {
-              if (state.status == LoginStatus.submitting) {
-                const Center(child: CircularProgressIndicator());
-              } else if (state.status == LoginStatus.success) {
-                Navigator.of(context).pushNamed(NavScreen.routeName);
-              }
-            },
-            child: Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: Wrap(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: PinFieldAutoFill(
-                      autoFocus: true,
-                      keyboardType: TextInputType.number,
-                      decoration: const UnderlineDecoration(
-                        textStyle: TextStyle(fontSize: 20, color: Colors.white),
-                        colorBuilder: FixedColorBuilder(Colors.white),
-                        lineStrokeCap: StrokeCap.square,
-                      ),
-                      currentCode: otp,
-                      onCodeSubmitted: (code) {},
-                      onCodeChanged: (code) {
-                        if (code!.length == 6) {
-                          otp = code;
-                          BlocProvider.of<LoginCubit>(context)
-                              .verifyOtp(otp: otp!, json: {
-                            "username": _usernameController.text,
-                            "dateOfBirth": birthDateInString,
-                            "gender": _genderRadioBtnVal,
-                            "phoneNumber": _phoneNumberController.text,
-                            "followers": 0,
-                            "following": 0
-                          });
-
-                          FocusScope.of(context).requestFocus(FocusNode());
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.center,
-                    child: TimerButton(
-                      label: 'Resend',
-                      onPressed: () {
-                        BlocProvider.of<LoginCubit>(context)
-                            .sendOtpOnPhone(phone: SessionHelper.phone!);
-                      },
-                      timeOutInSeconds: 30,
-                      activeTextStyle: const TextStyle(color: Colors.white),
-                      disabledTextStyle:
-                          const TextStyle(color: kPrimaryBlackColor),
-                      color: kPrimaryBlackColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
+  @override
+  void initState() {
+    _phoneNumberController = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -247,10 +179,25 @@ class _RegisterState extends State<Register> {
                   SignUpBar(
                     label: 'Sign up',
                     isLoading: false,
-                    onPressed: () {
-                      BlocProvider.of<LoginCubit>(context)
-                          .sendOtpOnPhone(phone: _phoneNumberController.text);
-                      _otpBottomSheet(context);
+                    onPressed: () async {
+                      if (_phoneNumberController.text.length == 10) {
+                        check = await context.read<LoginCubit>().checkNumber(
+                            _phoneNumberController.text,
+                            newAccount: true);
+                        if (check == false) {
+                          flutterToast(
+                            msg: 'Account Exists',
+                          );
+                        } else {
+                          BlocProvider.of<LoginCubit>(context).sendOtpOnPhone(
+                              phone: _phoneNumberController.text);
+                          _otpBottomSheet(context);
+                          flutterToast(
+                            msg: 'Sending OTP',
+                            position: ToastGravity.CENTER,
+                          );
+                        }
+                      }
                     },
                   ),
                   Align(
@@ -277,5 +224,79 @@ class _RegisterState extends State<Register> {
         ),
       ),
     );
+  }
+
+  void _otpBottomSheet(context) {
+    String? otp;
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        backgroundColor: kPrimaryTealColor,
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return BlocListener<LoginCubit, LoginState>(
+            listener: (context, state) {
+              if (state.status == LoginStatus.submitting) {
+                const Center(child: CircularProgressIndicator());
+              } else if (state.status == LoginStatus.success) {
+                Navigator.of(context).pushNamed(NavScreen.routeName);
+              }
+            },
+            child: Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Wrap(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: PinFieldAutoFill(
+                      autoFocus: true,
+                      keyboardType: TextInputType.number,
+                      decoration: const UnderlineDecoration(
+                        textStyle: TextStyle(fontSize: 20, color: Colors.white),
+                        colorBuilder: FixedColorBuilder(Colors.white),
+                        lineStrokeCap: StrokeCap.square,
+                      ),
+                      currentCode: otp,
+                      onCodeSubmitted: (code) {},
+                      onCodeChanged: (code) {
+                        if (code!.length == 6) {
+                          otp = code;
+                          BlocProvider.of<LoginCubit>(context)
+                              .verifyOtp(otp: otp!, json: {
+                            "username": _usernameController.text,
+                            "dateOfBirth": birthDateInString,
+                            "gender": _genderRadioBtnVal,
+                            "phoneNumber": _phoneNumberController.text,
+                            "followers": 0,
+                            "following": 0
+                          });
+
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.center,
+                    child: TimerButton(
+                      label: 'Resend',
+                      onPressed: () {
+                        BlocProvider.of<LoginCubit>(context)
+                            .sendOtpOnPhone(phone: SessionHelper.phone!);
+                      },
+                      timeOutInSeconds: 30,
+                      activeTextStyle: const TextStyle(color: Colors.white),
+                      disabledTextStyle:
+                          const TextStyle(color: kPrimaryBlackColor),
+                      color: kPrimaryBlackColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
