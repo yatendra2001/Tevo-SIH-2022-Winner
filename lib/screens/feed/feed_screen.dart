@@ -143,6 +143,7 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void initState() {
     super.initState();
+    _textEditingController = TextEditingController();
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.offset >=
