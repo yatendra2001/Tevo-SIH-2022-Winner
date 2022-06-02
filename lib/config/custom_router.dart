@@ -3,6 +3,7 @@ import 'package:tevo/screens/create_post/add_task_screen.dart';
 import 'package:tevo/screens/login/auth_screen.dart';
 import 'package:tevo/screens/report/report_screen.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
 
 class CustomRouter {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -48,6 +49,12 @@ class CustomRouter {
         return CommentsScreen.route(
           args: settings.arguments as CommentsScreenArgs,
         );
+      case ChannelScreen.routeName:
+        return ChannelScreen.route(
+          args: settings.arguments as ChannelScreenArgs,
+        );
+      case StreamChatInbox.routeName:
+        return StreamChatInbox.route();
       default:
         return _errorRoute();
     }
