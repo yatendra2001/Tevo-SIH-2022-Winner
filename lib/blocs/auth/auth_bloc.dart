@@ -39,7 +39,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event.user != null) {
       final check =
           await _authRepository.checkUserDataExists(userId: event.user!.uid);
-      SessionHelper.uid = event.user?.uid ?? "";
+      if (check) {
+        final user =
+            await UserRepository().getUserWithId(userId: event.user!.uid);
+        SessionHelper.uid = user.id;
+        SessionHelper.displayName = user.displayName;
+        SessionHelper.profileImageUrl = user.profileImageUrl;
+        SessionHelper.username = user.username;
+      }
       yield AuthState.authenticated(user: event.user!, check: check);
     } else {
       yield AuthState.unauthenticated();

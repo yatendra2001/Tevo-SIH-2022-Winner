@@ -4,10 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/blocs/simple_bloc_observer.dart';
 import 'package:tevo/config/custom_router.dart';
 import 'package:tevo/cubits/cubits.dart';
+import 'package:tevo/keys.env.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
@@ -18,19 +20,27 @@ import 'screens/create_post/bloc/create_post_bloc.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:sizer/sizer.dart';
 
+import 'screens/stream_chat/bloc/initialize_stream_chat/initialize_stream_chat_cubit.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SimpleBlocObserver();
-  runApp(const MyApp());
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+  final client = StreamChatClient(
+    streamChatApiKey,
+    logLevel: Level.INFO,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +86,16 @@ class MyApp extends StatelessWidget {
                 postRepository: context.read<PostRepository>(),
               ),
             ),
+            BlocProvider(
+              create: (context) => InitializeStreamChatCubit(),
+            ),
           ],
           child: Sizer(
             builder: (context, orientation, deviceType) => MaterialApp(
+              builder: (context, child) => StreamChat(
+                client: client,
+                child: child,
+              ),
               navigatorKey: navigatorKey,
               title: 'Flutter Tevo',
               debugShowCheckedModeBanner: false,
