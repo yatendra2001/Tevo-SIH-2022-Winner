@@ -1,5 +1,5 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:tevo/keys.env.dart';
+import 'package:tevo/keys/key.dart';
 
 class JwtProvider {
   static Future<String> tokenProvider(String id) async {

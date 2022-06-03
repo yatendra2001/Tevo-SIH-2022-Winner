@@ -5,7 +5,8 @@ class Task extends Equatable {
   final Timestamp timestamp;
   final String task;
   final int likes;
-  Task({
+
+  const Task({
     required this.timestamp,
     required this.task,
     required this.likes,

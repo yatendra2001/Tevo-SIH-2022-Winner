@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tevo/blocs/blocs.dart';
+import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/enums/enums.dart';
+import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/screens/create_post/create_post_screen.dart';
+import 'package:tevo/screens/feed/feed_screen.dart';
 import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
-import 'package:tevo/screens/nav/widgets/widgets.dart';
+import 'package:tevo/screens/notifications/bloc/notifications_bloc.dart';
+import 'package:tevo/screens/notifications/notifications_screen.dart';
+
+import '../create_post/bloc/create_post_bloc.dart';
+import '../feed/bloc/feed_bloc.dart';
 
 class NavScreen extends StatelessWidget {
   static const String routeName = '/nav';
@@ -19,14 +28,6 @@ class NavScreen extends StatelessWidget {
       ),
     );
   }
-
-  final Map<BottomNavItem, GlobalKey<NavigatorState>> navigatorKeys = {
-    BottomNavItem.feed: GlobalKey<NavigatorState>(),
-    BottomNavItem.search: GlobalKey<NavigatorState>(),
-    BottomNavItem.create: GlobalKey<NavigatorState>(),
-    BottomNavItem.notifications: GlobalKey<NavigatorState>(),
-    BottomNavItem.profile: GlobalKey<NavigatorState>(),
-  };
 
   final Map<BottomNavItem, dynamic> items = {
     BottomNavItem.feed: Container(
@@ -45,8 +46,9 @@ class NavScreen extends StatelessWidget {
       height: 48,
       width: 48,
       decoration: BoxDecoration(
-          color: Color(0xff009688), borderRadius: BorderRadius.circular(10)),
-      child: Icon(
+          color: const Color(0xff009688),
+          borderRadius: BorderRadius.circular(10)),
+      child: const Icon(
         Icons.add,
         color: Colors.white,
         size: 30,
@@ -67,6 +69,33 @@ class NavScreen extends StatelessWidget {
     )
   };
 
+  final Map<BottomNavItem, dynamic> screens = {
+    BottomNavItem.feed: BlocProvider<FeedBloc>(
+      create: (context) => FeedBloc(
+        postRepository: context.read<PostRepository>(),
+        authBloc: context.read<AuthBloc>(),
+        likedPostsCubit: context.read<LikedPostsCubit>(),
+        userRepository: context.read<UserRepository>(),
+      )..add(FeedFetchPosts()),
+      child: const FeedScreen(),
+    ),
+    BottomNavItem.create: BlocProvider<CreatePostBloc>(
+      create: (context) => CreatePostBloc(
+        userRepository: context.read<UserRepository>(),
+        authBloc: context.read<AuthBloc>(),
+        postRepository: context.read<PostRepository>(),
+      )..add(const GetTaskEvent()),
+      child: const CreatePostScreen(),
+    ),
+    BottomNavItem.notifications: BlocProvider<NotificationsBloc>(
+      create: (context) => NotificationsBloc(
+        notificationRepository: context.read<NotificationRepository>(),
+        authBloc: context.read<AuthBloc>(),
+      ),
+      child: const NotificationsScreen(),
+    ),
+  };
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -75,21 +104,11 @@ class NavScreen extends StatelessWidget {
         builder: (context, state) {
           return SafeArea(
             child: Scaffold(
-              backgroundColor: Color(0xffE5E5E5),
+              backgroundColor: const Color(0xffE5E5E5),
               resizeToAvoidBottomInset: false,
               extendBody: true,
-              body: Stack(
-                children: items
-                    .map((item, _) => MapEntry(
-                          item,
-                          _buildOffstageNavigator(
-                            item,
-                            item == state.selectedItem,
-                          ),
-                        ))
-                    .values
-                    .toList(),
-              ),
+              body:
+                  screens[context.read<BottomNavBarCubit>().state.selectedItem],
               bottomNavigationBar: _customisedBottomNavBar(context, state),
             ),
           );
@@ -101,27 +120,8 @@ class NavScreen extends StatelessWidget {
   void _selectBottomNavItem(
     BuildContext context,
     BottomNavItem selectedItem,
-    bool isSameItem,
   ) {
-    if (isSameItem) {
-      navigatorKeys[selectedItem]!
-          .currentState!
-          .popUntil((route) => route.isFirst);
-    }
     context.read<BottomNavBarCubit>().updateSelectedItem(selectedItem);
-  }
-
-  Widget _buildOffstageNavigator(
-    BottomNavItem currentItem,
-    bool isSelected,
-  ) {
-    return Offstage(
-      offstage: !isSelected,
-      child: TabNavigator(
-        navigatorKey: navigatorKeys[currentItem]!,
-        item: currentItem,
-      ),
-    );
   }
 
   _customisedBottomNavBar(context, state) {
@@ -152,15 +152,15 @@ class NavScreen extends StatelessWidget {
                 Material(
                   type: MaterialType.transparency,
                   child: InkWell(
-                      highlightColor: Colors.grey,
-                      onTap: () {
-                        _selectBottomNavItem(
-                          context,
-                          item,
-                          item == state.selectedItem,
-                        );
-                      },
-                      child: icon),
+                    highlightColor: Colors.grey,
+                    onTap: () {
+                      _selectBottomNavItem(
+                        context,
+                        item,
+                      );
+                    },
+                    child: icon,
+                  ),
                 )))
             .values
             .toList(),
