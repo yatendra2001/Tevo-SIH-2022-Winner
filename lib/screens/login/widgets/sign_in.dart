@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -44,7 +42,8 @@ class _SignInState extends State<SignIn> {
           BlocProvider.of<LoginCubit>(context)
               .sendOtpOnPhone(phone: _phoneNumberController.text);
           _otpBottomSheet(context);
-          flutterToast(msg: 'Sending OTP', position: ToastGravity.CENTER);
+          flutterToast(msg: 'Sending OTP', position: ToastGravity.TOP);
+          flutterToast(msg: 'Please Wait', position: ToastGravity.TOP);
         }
       }
     });
@@ -81,28 +80,14 @@ class _SignInState extends State<SignIn> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: PhoneForm(
                     phoneNumberController: _phoneNumberController,
+                    onSubmit: onSubmit,
                   ),
                 ),
                 const SizedBox(height: 32),
                 SignInBar(
                   isLoading: false,
                   label: "Sign In",
-                  onPressed: () {
-                    if (_phoneNumberController.text.length < 10) {
-                      flutterToast(
-                          msg: 'Invalid Number', position: ToastGravity.CENTER);
-                    } else if (check == false) {
-                      BlocProvider.of<LoginCubit>(context)
-                          .sendOtpOnPhone(phone: _phoneNumberController.text);
-                      _otpBottomSheet(context);
-                      flutterToast(
-                          msg: 'Sending OTP', position: ToastGravity.CENTER);
-                    } else {
-                      flutterToast(
-                          msg: 'Unable to Sign In',
-                          position: ToastGravity.CENTER);
-                    }
-                  },
+                  onPressed: onSubmit,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -127,6 +112,19 @@ class _SignInState extends State<SignIn> {
         ],
       ),
     );
+  }
+
+  onSubmit() {
+    if (_phoneNumberController.text.length < 10) {
+      flutterToast(msg: 'Invalid Number', position: ToastGravity.TOP);
+    } else if (check == false) {
+      BlocProvider.of<LoginCubit>(context)
+          .sendOtpOnPhone(phone: _phoneNumberController.text);
+      _otpBottomSheet(context);
+      flutterToast(msg: 'Sending OTP', position: ToastGravity.CENTER);
+    } else {
+      flutterToast(msg: 'Authentication Failed', position: ToastGravity.TOP);
+    }
   }
 }
 
