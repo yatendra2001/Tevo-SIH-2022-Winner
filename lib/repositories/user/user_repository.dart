@@ -51,13 +51,13 @@ class UserRepository extends BaseUserRepository {
     } on FirebaseException catch (err) {
       if (err.code == 'permission-denied') {
         flutterToast(
-            msg: newAccount ? 'New Account' : 'Account does not exists',
-            position: ToastGravity.CENTER);
+            msg: newAccount ? 'New Account' : 'Account does not exist',
+            position: ToastGravity.TOP);
       } else {
-        flutterToast(msg: 'An Error occured', position: ToastGravity.CENTER);
+        flutterToast(msg: 'An Error occured', position: ToastGravity.TOP);
       }
     } catch (err) {
-      flutterToast(msg: 'An Error occured', position: ToastGravity.CENTER);
+      flutterToast(msg: 'An Error occured', position: ToastGravity.TOP);
     }
     return true;
   }

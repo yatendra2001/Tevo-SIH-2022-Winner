@@ -89,20 +89,27 @@ class _SignInState extends State<SignIn> {
                   label: "Sign In",
                   onPressed: onSubmit,
                 ),
+                const SizedBox(height: 120),
                 Align(
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    splashColor: Colors.white,
-                    onTap: () {
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    onPressed: () {
                       widget.onRegisterClicked?.call();
                     },
-                    child: const Text(
-                      'Sign up',
-                      style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                        color: Palette.darkBlue,
+                    child: Text(
+                      'Create Account',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displaySmall!
+                          .copyWith(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      primary: Colors.black,
                     ),
                   ),
                 ),

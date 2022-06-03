@@ -16,6 +16,12 @@ class AppThemes {
           .textTheme
           .displayLarge!
           .copyWith(fontSize: 32, fontWeight: FontWeight.bold),
+      displaySmall: ThemeData.light()
+          .textTheme
+          .displayLarge!
+          .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+      titleLarge: ThemeData.light().textTheme.titleLarge!.copyWith(
+          fontSize: 18, color: Colors.black, fontWeight: FontWeight.w400),
       titleMedium: ThemeData.light().textTheme.titleLarge!.copyWith(
           fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
       bodyMedium: ThemeData.light()

@@ -136,7 +136,6 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                                   context
                                       .read<CreatePostBloc>()
                                       .add(AddTaskEvent(task: task));
-                                  setState(() {});
                                 });
                               },
                               child: const Text('Add Task'),

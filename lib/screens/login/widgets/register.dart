@@ -87,6 +87,7 @@ class _RegisterState extends State<Register> {
                   PhoneForm(
                     textColor: Colors.white,
                     phoneNumberController: _phoneNumberController,
+                    onSubmit: onSubmit,
                   ),
                   const SizedBox(height: 32),
                   Column(
@@ -179,26 +180,7 @@ class _RegisterState extends State<Register> {
                   SignUpBar(
                     label: 'Sign up',
                     isLoading: false,
-                    onPressed: () async {
-                      if (_phoneNumberController.text.length == 10) {
-                        check = await context.read<LoginCubit>().checkNumber(
-                            _phoneNumberController.text,
-                            newAccount: true);
-                        if (check == false) {
-                          flutterToast(
-                            msg: 'Account Exists',
-                          );
-                        } else {
-                          BlocProvider.of<LoginCubit>(context).sendOtpOnPhone(
-                              phone: _phoneNumberController.text);
-                          _otpBottomSheet(context);
-                          flutterToast(
-                            msg: 'Sending OTP',
-                            position: ToastGravity.CENTER,
-                          );
-                        }
-                      }
-                    },
+                    onPressed: onSubmit,
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -298,5 +280,26 @@ class _RegisterState extends State<Register> {
             ),
           );
         });
+  }
+
+  void onSubmit() async {
+    if (_phoneNumberController.text.length == 10) {
+      check = await context
+          .read<LoginCubit>()
+          .checkNumber(_phoneNumberController.text, newAccount: true);
+      if (check == false) {
+        flutterToast(
+          msg: 'Account Exists',
+        );
+      } else {
+        BlocProvider.of<LoginCubit>(context)
+            .sendOtpOnPhone(phone: _phoneNumberController.text);
+        _otpBottomSheet(context);
+        flutterToast(
+          msg: 'Sending OTP',
+          position: ToastGravity.CENTER,
+        );
+      }
+    }
   }
 }

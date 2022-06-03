@@ -46,9 +46,14 @@ class _AuthScreenState extends State<AuthScreen>
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
-            SizedBox.expand(
+            Positioned(
+              left: 0,
+              bottom: 0,
+              right: 0,
+              top: 0,
               child: CustomPaint(
                 painter: BackgroundPainter(
                   animation: _controller,
@@ -64,7 +69,7 @@ class _AuthScreenState extends State<AuthScreen>
                     return SizedBox.expand(
                       child: PageTransitionSwitcher(
                         reverse: !value,
-                        duration: const Duration(milliseconds: 800),
+                        duration: const Duration(milliseconds: 300),
                         transitionBuilder:
                             (child, animation, secondaryAnimation) {
                           return SharedAxisTransition(
