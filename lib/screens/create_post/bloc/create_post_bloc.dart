@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tevo/blocs/auth/auth_bloc.dart';
 import 'package:tevo/models/models.dart';
@@ -11,6 +14,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   final PostRepository _postRepository;
   final AuthBloc _authBloc;
   final UserRepository _userRepository;
+  StreamSubscription<Future<Post?>>? _postSubscription;
 
   CreatePostBloc({
     required PostRepository postRepository,
@@ -20,6 +24,12 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
         _userRepository = userRepository,
         _authBloc = authBloc,
         super(CreatePostState.initial());
+
+  @override
+  Future<void> close() {
+    _postSubscription?.cancel();
+    return super.close();
+  }
 
   @override
   Stream<CreatePostState> mapEventToState(CreatePostEvent event) async* {
@@ -33,25 +43,50 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       yield* _mapToDeleteTask(event);
     } else if (event is DeletePostEvent) {
       yield* _mapTodeletePost(event);
+    } else if (event is UpdatePost) {
+      yield* _mapToUpdatePost(event);
+    } else if (event is ClearPost) {
+      yield* _mapToClearPost(event);
     }
   }
 
-  Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
-    yield state.copyWith(todoTask: event.task);
-    submit();
+  Stream<CreatePostState> _mapToClearPost(ClearPost event) async* {
+    await _postSubscription?.cancel();
+    yield state.copyWith(
+      completedTask: [],
+      dateTime: null,
+      post: null,
+      todoTask: [],
+    );
   }
 
   Stream<CreatePostState> _mapToGetTaskEvent(GetTaskEvent event) async* {
     final userId = _authBloc.state.user!.uid;
-    final post = await _postRepository.getUserLastPost(userId: userId);
-    if (post != null) {
-      yield state.copyWith(
-        todoTask: post.toDoTask,
-        completedTask: post.completedTask,
-        post: post,
-        dateTime: post.enddate,
-      );
-    }
+    _postSubscription = _postRepository
+        .getUserLastPost(userId: userId)
+        ?.listen((newpost) async {
+      final post = await newpost;
+      if (post != null) {
+        add(UpdatePost(post: post));
+        print("++++++++++++++++++${post.enddate.toDate()}");
+      }
+    });
+  }
+
+  Stream<CreatePostState> _mapToUpdatePost(UpdatePost event) async* {
+    yield state.copyWith(
+      todoTask: event.post.toDoTask,
+      completedTask: event.post.completedTask,
+      post: event.post,
+      dateTime: event.post.enddate,
+    );
+  }
+
+  Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
+    List<Task> toDoTask = List<Task>.from(state.todoTask)
+      ..insert(0, event.task);
+    yield state.copyWith(todoTask: toDoTask);
+    submit();
   }
 
   Stream<CreatePostState> _mapToCompleteTaskEvent(
@@ -72,13 +107,8 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   Stream<CreatePostState> _mapTodeletePost(DeletePostEvent event) async* {
     if (state.post != null) {
       _postRepository.deletePost(postId: state.post!.id!);
+      add(ClearPost());
     }
-    state.copyWith(
-      completedTask: [],
-      dateTime: null,
-      post: null,
-      todoTask: [],
-    );
   }
 
   void submit() async {
@@ -89,7 +119,8 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       author: user,
       toDoTask: state.todoTask,
       completedTask: state.completedTask,
-      enddate: state.dateTime ?? DateTime.now().add(const Duration(hours: 24)),
+      enddate: state.dateTime ??
+          Timestamp(Timestamp.now().seconds + 10, Timestamp.now().nanoseconds),
     );
     if (state.post == null) {
       await _postRepository.createPost(post: post);
@@ -97,8 +128,4 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       _postRepository.updatePost(post: post);
     }
   }
-
-  // Future<Post?> findPost(String postId) async {
-  //   return await _postRepository.getPost(postId);
-  // }
 }

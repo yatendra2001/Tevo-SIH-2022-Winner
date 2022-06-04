@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
@@ -27,6 +28,16 @@ class CreatePostScreen extends StatefulWidget {
 
 class _CreatePostScreenState extends State<CreatePostScreen>
     with SingleTickerProviderStateMixin {
+  final ScrollController _controller = ScrollController();
+  AnimationController? bottomModalSheetController;
+
+  @override
+  void initState() {
+    super.initState();
+    bottomModalSheetController = BottomSheet.createAnimationController(this);
+    bottomModalSheetController!.duration = const Duration(milliseconds: 300);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +47,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           return DefaultTabController(
             length: 2,
             child: NestedScrollView(
+              controller: _controller,
               clipBehavior: Clip.none,
               headerSliverBuilder: (_, __) {
                 return [
@@ -46,7 +58,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     centerTitle: false,
                     pinned: true,
                     elevation: 1,
-                    toolbarHeight: 70,
+                    toolbarHeight: 80,
                     title: const Text(
                       "Today",
                       style: TextStyle(
@@ -57,8 +69,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     ),
                     bottom:
                         const TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Tab(
                         child: Text(
                           "Remaining",
                           style: TextStyle(
@@ -67,12 +78,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Tab(
                         child: Text(
                           "Completed",
                           style: TextStyle(
-                            color: kPrimaryTealColor,
+                            color: kPrimaryRedColor,
                             fontSize: 18,
                           ),
                         ),
@@ -104,15 +114,15 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 children: [
                   AnimatedPadding(
                     duration: const Duration(seconds: 2),
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 15),
+                        SizedBox(height: 16),
                         state.dateTime != null
                             ? _buildRemainingTime(state)
                             : const Text('No Posts Yet'),
-                        SizedBox(height: 15),
+                        SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -125,127 +135,116 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                               style: ElevatedButton.styleFrom(
                                   primary: kPrimaryTealColor),
                               onPressed: () {
-                                // Navigator.of(context).pushNamed(
-                                //   AddTaskScreen.routeName,
-                                //   arguments: AddTaskScreenArgs(
-                                //     onSubmit: (tasks) {
-                                //       context
-                                //           .read<CreatePostBloc>()
-                                //     tasks: todoTask,
-                                //   ),
-                                // );
-
-                                _taskBottomSheet(state);
+                                _taskBottomSheet((task) {
+                                  context
+                                      .read<CreatePostBloc>()
+                                      .add(AddTaskEvent(task: task));
+                                  setState(() {});
+                                });
+                                _scrollDown();
                               },
                               child: const Text('Add Task'),
                             )
                           ],
                         ),
-                        SizedBox(height: 15),
-                        todoTask.isEmpty
-                            ? const Center(child: Text('Add Task Now'))
-                            : state.todoTask.isEmpty
-                                ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(height: 10.h),
-                                      Center(
-                                        child: Image.asset(
-                                          kEmptyTaskImagePath,
-                                          scale: 3,
-                                        ),
-                                      ),
-                                      SizedBox(height: 2.h),
-                                      Text(
-                                        'Drop your 1st task 🎯',
-                                        style: TextStyle(fontSize: 15.sp),
-                                      ),
-                                    ],
-                                  )
-                                : ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (_, index) {
-                                      return Dismissible(
-                                        key: Key(todoTask[index]
-                                            .timestamp
-                                            .toString()),
-                                        onDismissed: (_) {
-                                          context.read<CreatePostBloc>().add(
-                                              CompleteTaskEvent(
-                                                  task: todoTask[index]));
-                                        },
-                                        child: TaskTile(
-                                          isComplete: false,
-                                          task: todoTask[index],
-                                          isDeleted: () => context
-                                              .read<CreatePostBloc>()
-                                              .add(
-                                                DeleteTaskEvent(
-                                                  task: state.todoTask[index],
-                                                ),
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                    itemCount: todoTask.length,
+                        SizedBox(height: 16),
+                        state.todoTask.isEmpty
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 10.h),
+                                  Center(
+                                    child: Image.asset(
+                                      kEmptyTaskImagePath,
+                                      scale: 3,
+                                    ),
                                   ),
+                                  SizedBox(height: 2.h),
+                                  Text(
+                                    'Drop your 1st task 🎯',
+                                    style: TextStyle(fontSize: 15.sp),
+                                  ),
+                                ],
+                              )
+                            : Expanded(
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (_, index) {
+                                    return Dismissible(
+                                      key: Key(
+                                          todoTask[index].dateTime.toString()),
+                                      onDismissed: (_) {
+                                        context.read<CreatePostBloc>().add(
+                                            CompleteTaskEvent(
+                                                task: todoTask[index]));
+                                      },
+                                      child: TaskTile(
+                                        isComplete: false,
+                                        task: todoTask[index],
+                                        isDeleted: () =>
+                                            context.read<CreatePostBloc>().add(
+                                                  DeleteTaskEvent(
+                                                    task: state.todoTask[index],
+                                                  ),
+                                                ),
+                                      ),
+                                    );
+                                  },
+                                  itemCount: todoTask.length,
+                                ),
+                              ),
                       ],
                     ),
                   ),
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 15),
-                          state.dateTime != null
-                              ? _buildRemainingTime(state)
-                              : const Text('No Tasks Yet'),
-                          const SizedBox(height: 15),
-                          const Text(
-                            "Completed",
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.w500),
-                          ),
-                          const SizedBox(height: 15),
-                          state.completedTask.isEmpty
-                              ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(height: 10.h),
-                                    Center(
-                                      child: Image.asset(
-                                        kEmptyCompleteImagePath,
-                                        scale: 3,
-                                      ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 15),
+                        state.dateTime != null
+                            ? _buildRemainingTime(state)
+                            : const Text('No Tasks Yet'),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Completed",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 15),
+                        state.completedTask.isEmpty
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 10.h),
+                                  Center(
+                                    child: Image.asset(
+                                      kEmptyCompleteImagePath,
+                                      scale: 3,
                                     ),
-                                    SizedBox(height: 2.h),
-                                    Text(
-                                      'Complete your 1st task 🚀',
-                                      style: TextStyle(fontSize: 15.sp),
-                                    ),
-                                  ],
-                                )
-                              : ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (_, index) => TaskTile(
-                                    task: state.completedTask[index],
-                                    isComplete: true,
                                   ),
-                                  itemCount: state.completedTask.length,
+                                  SizedBox(height: 2.h),
+                                  Text(
+                                    'Complete your 1st task 🚀',
+                                    style: TextStyle(fontSize: 15.sp),
+                                  ),
+                                ],
+                              )
+                            : ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (_, index) => TaskTile(
+                                  task: state.completedTask[index],
+                                  isComplete: true,
                                 ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      ),
+                                itemCount: state.completedTask.length,
+                              ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -257,18 +256,32 @@ class _CreatePostScreenState extends State<CreatePostScreen>
     );
   }
 
-  void _taskBottomSheet(CreatePostState state) {
-    final todoTask = state.todoTask;
+  void _scrollDown() {
+    _controller.animateTo(
+      _controller.position.maxScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
+  void _taskBottomSheet(Function(Task) onSubmit) {
     final _taskTextEditingController = TextEditingController();
     final _descriptionTextEditingController = TextEditingController();
+
     showModalBottomSheet(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0))),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      transitionAnimationController: bottomModalSheetController,
       context: context,
-      builder: (context) => Padding(
-        padding: MediaQuery.of(context).viewInsets,
+      builder: (context) => Container(
+        margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 10,
+            right: 10),
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         child: Wrap(
           children: [
             Padding(
@@ -298,7 +311,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 decoration: InputDecoration(
-                  hintText: 'Description',
+                  hintText: 'Description\n\n\n',
                   hintStyle: TextStyle(
                     color: Colors.grey,
                     fontSize: 15.sp,
@@ -311,19 +324,16 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               alignment: Alignment.centerRight,
               child: IconButton(
                   onPressed: () {
-                    context.read<CreatePostBloc>().add(
-                          AddTaskEvent(
-                            task: todoTask
-                              ..add(
-                                Task(
-                                    timestamp: Timestamp.now(),
-                                    task: _taskTextEditingController.text,
-                                    likes: 0),
-                              ),
-                          ),
-                        );
+                    onSubmit(
+                      Task(
+                        title: _taskTextEditingController.text,
+                        priority: 0,
+                        dateTime: DateTime.now(),
+                        description: _descriptionTextEditingController.text,
+                      ),
+                    );
                     _taskTextEditingController.clear();
-                    Navigator.pop(context);
+                    _descriptionTextEditingController.clear();
                   },
                   icon: CircleAvatar(
                     backgroundColor: kPrimaryTealColor,
@@ -343,19 +353,38 @@ class _CreatePostScreenState extends State<CreatePostScreen>
   }
 
   _buildRemainingTime(CreatePostState state) {
-    int endTime = state.dateTime!.millisecondsSinceEpoch;
     return Center(
       child: CountdownTimer(
-        endTime: endTime,
+        endTime: state.dateTime!.millisecondsSinceEpoch,
+        onEnd: () {
+          context.read<CreatePostBloc>().add(ClearPost());
+          _buildDialog();
+        },
         widgetBuilder: (_, time) {
           if (time == null) {
-            return const Text('Game over');
+            return const Text('Time Up');
           }
           return Text(
             'Resets in ${time.hours} hrs ${time.min} min ${time.sec} sec',
           );
         },
       ),
+    );
+  }
+
+  _buildDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            'Your Time is Up',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        );
+      },
     );
   }
 }
