@@ -88,13 +88,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               controller: _textEditingController,
               decoration: const InputDecoration(label: Text('Enter Task')),
               onSubmitted: (_) {
-                tasks!.add(
-                  Task(
-                    timestamp: Timestamp.now(),
-                    task: _textEditingController.text,
-                    likes: 0,
-                  ),
-                );
+                tasks!.add(Task(
+                  title: _textEditingController.text,
+                  priority: 0,
+                  dateTime: DateTime.now(),
+                ));
                 setState(() {});
                 _textEditingController.clear();
               },

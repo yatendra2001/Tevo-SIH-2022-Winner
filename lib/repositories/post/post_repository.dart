@@ -88,15 +88,25 @@ class PostRepository extends BasePostRepository {
         .map((snap) => snap.docs.map((doc) => Post.fromDocument(doc)).toList());
   }
 
-  Future<Post?> getUserLastPost({required String userId}) async {
+  Stream<Future<Post?>>? getUserLastPost({required String userId}) {
     final authorRef = _firebaseFirestore.collection(Paths.users).doc(userId);
-    final currentTimeStamp = Timestamp.now();
-    final post = await _firebaseFirestore
+    final date = Timestamp.now().microsecondsSinceEpoch;
+    return _firebaseFirestore
         .collection(Paths.posts)
         .where('author', isEqualTo: authorRef)
-        .where('enddate', isGreaterThan: currentTimeStamp)
-        .get();
-    return post.docs.isNotEmpty ? Post.fromDocument(post.docs.single) : null;
+        .where('enddate', isGreaterThan: date)
+        .snapshots()
+        .map(
+          (snap) => snap.docs
+              .map((doc) {
+                print('+++++++++++++++++++++$doc');
+                return Post.fromDocument(doc);
+              })
+              .toList()
+              .first,
+        );
+
+    //TODO Logic needs to be improved in this
   }
 
   @override

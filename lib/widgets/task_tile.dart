@@ -29,7 +29,7 @@ class _TaskTileState extends State<TaskTile> {
         height: 53,
         width: 347.4,
         child: Text(
-          widget.task.task,
+          widget.task.title,
           style: const TextStyle(fontSize: 16),
         ),
         decoration: BoxDecoration(

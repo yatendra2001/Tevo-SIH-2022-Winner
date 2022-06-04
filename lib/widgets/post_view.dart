@@ -222,7 +222,7 @@ class _PostViewState extends State<PostView> {
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                               Text(
-                                "Posted ${widget.post.enddate.timeAgo()}",
+                                "",
                                 style: TextStyle(fontWeight: FontWeight.w300),
                               )
                             ],
