@@ -11,8 +11,10 @@ class PostRepository extends BasePostRepository {
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   @override
-  Future<void> createPost({required Post post}) async {
-    await _firebaseFirestore.collection(Paths.posts).add(post.toDocument());
+  Future<String> createPost({required Post post}) async {
+    final ref =
+        await _firebaseFirestore.collection(Paths.posts).add(post.toDocument());
+    return ref.id;
   }
 
   @override
@@ -88,25 +90,16 @@ class PostRepository extends BasePostRepository {
         .map((snap) => snap.docs.map((doc) => Post.fromDocument(doc)).toList());
   }
 
-  Stream<Future<Post?>>? getUserLastPost({required String userId}) {
+  Future<Post?> getUserLastPost({required String userId}) async {
     final authorRef = _firebaseFirestore.collection(Paths.users).doc(userId);
-    final date = Timestamp.now().microsecondsSinceEpoch;
-    return _firebaseFirestore
+    final currentTimeStamp = Timestamp.now();
+    final post = await _firebaseFirestore
         .collection(Paths.posts)
         .where('author', isEqualTo: authorRef)
-        .where('enddate', isGreaterThan: date)
-        .snapshots()
-        .map(
-          (snap) => snap.docs
-              .map((doc) {
-                print('+++++++++++++++++++++$doc');
-                return Post.fromDocument(doc);
-              })
-              .toList()
-              .first,
-        );
-
-    //TODO Logic needs to be improved in this
+        .where('enddate',
+            isGreaterThan: currentTimeStamp.microsecondsSinceEpoch)
+        .get();
+    return post.docs.isNotEmpty ? Post.fromDocument(post.docs.single) : null;
   }
 
   @override
@@ -205,7 +198,7 @@ class PostRepository extends BasePostRepository {
         .update(post.toDocument());
   }
 
-  void deletePost({required String postId}) {
-    _firebaseFirestore.collection(Paths.posts).doc(postId).delete();
+  Future<void> deletePost({required String postId}) async {
+    await _firebaseFirestore.collection(Paths.posts).doc(postId).delete();
   }
 }

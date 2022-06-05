@@ -271,17 +271,23 @@ class _PostViewState extends State<PostView> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      if (index < widget.post.completedTask.length) {
-                        return TaskTile(
-                          task: tasks![index],
-                          isComplete: true,
-                        );
-                      } else {
-                        return TaskTile(
-                          task: tasks![index],
-                          isComplete: false,
-                        );
-                      }
+                      // if (index < widget.post.completedTask.length) {
+                      //   return TaskTile(
+                      //     task: tasks![index],
+                      //     isComplete: true,
+                      //     isDeleted: () => context.read<CreatePostBloc>().add(
+                      //         DeleteTaskEvent(
+                      //             task: state.completedTask[index])),
+                      //   );
+                      // } else {
+                      //   return TaskTile(
+                      //     task: tasks![index],
+                      //     isComplete: false,
+                      //     isDeleted: () => context.read<CreatePostBloc>().add(
+                      //         DeleteTaskEvent(
+                      //             task: state.completedTask[index])),
+                      //   );
+                      return SizedBox.shrink();
                     },
                     itemCount: tasks!.length,
                   ),

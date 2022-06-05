@@ -14,7 +14,6 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   final PostRepository _postRepository;
   final AuthBloc _authBloc;
   final UserRepository _userRepository;
-  StreamSubscription<Future<Post?>>? _postSubscription;
 
   CreatePostBloc({
     required PostRepository postRepository,
@@ -27,7 +26,6 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
 
   @override
   Future<void> close() {
-    _postSubscription?.cancel();
     return super.close();
   }
 
@@ -43,50 +41,38 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       yield* _mapToDeleteTask(event);
     } else if (event is DeletePostEvent) {
       yield* _mapTodeletePost(event);
-    } else if (event is UpdatePost) {
-      yield* _mapToUpdatePost(event);
+    } else if (event is UpdateTask) {
+      yield* _mapToUpdateTask(event);
     } else if (event is ClearPost) {
       yield* _mapToClearPost(event);
+    } else if (event is SubmitPost) {
+      yield* _mapToSubmitPost(event);
     }
   }
 
   Stream<CreatePostState> _mapToClearPost(ClearPost event) async* {
-    await _postSubscription?.cancel();
-    yield state.copyWith(
-      completedTask: [],
-      dateTime: null,
-      post: null,
-      todoTask: [],
-    );
+    yield state.empty();
   }
 
   Stream<CreatePostState> _mapToGetTaskEvent(GetTaskEvent event) async* {
     final userId = _authBloc.state.user!.uid;
-    _postSubscription = _postRepository
-        .getUserLastPost(userId: userId)
-        ?.listen((newpost) async {
-      final post = await newpost;
-      if (post != null) {
-        add(UpdatePost(post: post));
-        print("++++++++++++++++++${post.enddate.toDate()}");
-      }
-    });
-  }
-
-  Stream<CreatePostState> _mapToUpdatePost(UpdatePost event) async* {
-    yield state.copyWith(
-      todoTask: event.post.toDoTask,
-      completedTask: event.post.completedTask,
-      post: event.post,
-      dateTime: event.post.enddate,
-    );
+    final post = await _postRepository.getUserLastPost(userId: userId);
+    if (post != null) {
+      yield state.copyWith(
+        todoTask: post.toDoTask,
+        completedTask: post.completedTask,
+        post: post,
+        dateTime: post.enddate,
+      );
+    }
   }
 
   Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
     List<Task> toDoTask = List<Task>.from(state.todoTask)
-      ..insert(0, event.task);
+      ..insert(event.index, event.task);
+
     yield state.copyWith(todoTask: toDoTask);
-    submit();
+    add(const SubmitPost());
   }
 
   Stream<CreatePostState> _mapToCompleteTaskEvent(
@@ -95,13 +81,15 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       ..add(event.task);
     List<Task> toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
     yield state.copyWith(todoTask: toDoTask, completedTask: completeTask);
-    submit();
+    add(const SubmitPost());
   }
 
   Stream<CreatePostState> _mapToDeleteTask(DeleteTaskEvent event) async* {
     List<Task> toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
-    yield state.copyWith(todoTask: toDoTask);
-    submit();
+    List<Task> completeTask = List<Task>.from(state.completedTask)
+      ..remove(event.task);
+    yield state.copyWith(todoTask: toDoTask, completedTask: completeTask);
+    add(const SubmitPost());
   }
 
   Stream<CreatePostState> _mapTodeletePost(DeletePostEvent event) async* {
@@ -111,19 +99,37 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     }
   }
 
-  void submit() async {
+  Stream<CreatePostState> _mapToUpdateTask(UpdateTask event) async* {
+    List<Task> toDoTask = List<Task>.from(state.todoTask);
+    toDoTask[event.index] = event.task;
+    yield state.copyWith(todoTask: toDoTask);
+    add(const SubmitPost());
+  }
+
+  Stream<CreatePostState> _mapToSubmitPost(SubmitPost event) async* {
     final userId = _authBloc.state.user!.uid;
     final user = await _userRepository.getUserWithId(userId: userId);
-    final post = Post(
+
+    Post post = Post(
       id: state.post != null ? state.post!.id : null,
       author: user,
       toDoTask: state.todoTask,
       completedTask: state.completedTask,
       enddate: state.dateTime ??
-          Timestamp(Timestamp.now().seconds + 10, Timestamp.now().nanoseconds),
+          Timestamp.fromDate(
+            DateTime.now().add(
+              const Duration(hours: 24),
+            ),
+          ),
     );
+
     if (state.post == null) {
-      await _postRepository.createPost(post: post);
+      final id = await _postRepository.createPost(post: post);
+      Post newPost = post.copyWith(id: id);
+      yield state.copyWith(
+        post: newPost,
+        dateTime: post.enddate,
+      );
     } else {
       _postRepository.updatePost(post: post);
     }

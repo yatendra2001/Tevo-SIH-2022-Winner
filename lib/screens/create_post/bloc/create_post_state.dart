@@ -25,6 +25,16 @@ class CreatePostState extends Equatable {
     );
   }
 
+  CreatePostState empty() {
+    return const CreatePostState(
+      post: null,
+      todoTask: [],
+      completedTask: [],
+      dateTime: null,
+      failure: Failure(),
+    );
+  }
+
   CreatePostState copyWith({
     Post? post,
     List<Task>? todoTask,

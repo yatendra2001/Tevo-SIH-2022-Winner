@@ -14,7 +14,7 @@ class Post extends Equatable {
   final int likes;
   final Timestamp enddate;
 
-  Post({
+  const Post({
     this.id,
     required this.author,
     required this.toDoTask,
@@ -78,9 +78,9 @@ class Post extends Equatable {
   }
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
-      id!,
+      id,
       author,
       toDoTask,
       completedTask,
