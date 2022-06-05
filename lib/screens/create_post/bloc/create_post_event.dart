@@ -8,8 +8,10 @@ abstract class CreatePostEvent extends Equatable {
 }
 
 class AddTaskEvent extends CreatePostEvent {
-  final List<Task> task;
+  final Task task;
+  final int index;
   const AddTaskEvent({
+    this.index = 0,
     required this.task,
   });
   @override
@@ -44,6 +46,31 @@ class DeleteTaskEvent extends CreatePostEvent {
 
 class DeletePostEvent extends CreatePostEvent {
   const DeletePostEvent();
+  @override
+  List<Object> get props => [];
+}
+
+class UpdateTask extends CreatePostEvent {
+  final Task task;
+  final int index;
+
+  const UpdateTask({
+    required this.task,
+    required this.index,
+  });
+
+  @override
+  List<Object> get props => [task, index];
+}
+
+class ClearPost extends CreatePostEvent {
+  const ClearPost();
+  @override
+  List<Object> get props => [];
+}
+
+class SubmitPost extends CreatePostEvent {
+  const SubmitPost();
   @override
   List<Object> get props => [];
 }
