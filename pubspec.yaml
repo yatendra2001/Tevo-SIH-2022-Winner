@@ -65,6 +65,10 @@ dependencies:
   fluttertoast: ^8.0.9
   sizer: ^2.0.15
   connectivity: ^3.0.6
+  stream_chat_flutter: ^3.0.0
+  dart_jsonwebtoken: ^2.4.1
+  percent_indicator: ^4.2.2
+  flutter_timer_countdown: ^1.0.3
 
 dev_dependencies:
   flutter_test:

@@ -37,7 +37,7 @@ class _AnimatedTaskTileState extends State<AnimatedTaskTile> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              widget.task.task,
+              widget.task.title,
               style: const TextStyle(fontSize: 16),
             ),
             Row(

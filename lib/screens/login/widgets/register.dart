@@ -264,12 +264,13 @@ class _RegisterState extends State<Register> {
                           otp = code;
                           BlocProvider.of<LoginCubit>(context)
                               .verifyOtp(otp: otp!, json: {
+                            "uid": SessionHelper.uid,
                             "username": _usernameController.text,
                             "dateOfBirth": birthDateInString,
                             "gender": _genderRadioBtnVal,
-                            "phoneNumber": _phoneNumberController.text,
+                            "phoneNumber": "+91" + _phoneNumberController.text,
                             "followers": 0,
-                            "following": 0
+                            "following": 0,
                           });
 
                           FocusScope.of(context).requestFocus(FocusNode());

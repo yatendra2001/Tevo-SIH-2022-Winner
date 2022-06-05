@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/screens/login/auth_screen.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/screens/stream_chat/bloc/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 
 class SplashScreen extends StatelessWidget {
   static const String routeName = '/splash';
@@ -27,6 +28,8 @@ class SplashScreen extends StatelessWidget {
             Navigator.of(context).pushNamed(AuthScreen.routeName);
           } else if (state.status == AuthStatus.authenticated) {
             //Go to navigation screen
+            BlocProvider.of<InitializeStreamChatCubit>(context)
+                .initializeStreamChat(context);
             Navigator.of(context).pushNamed(NavScreen.routeName);
           }
         },

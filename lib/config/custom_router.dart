@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tevo/screens/create_post/add_task_screen.dart';
-import 'package:tevo/screens/login/auth_screen.dart';
-import 'package:tevo/screens/report/report_screen.dart';
+
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
 
 class CustomRouter {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -19,25 +18,11 @@ class CustomRouter {
         return AuthScreen.route();
       case NavScreen.routeName:
         return NavScreen.route();
-      // case ReportScreen.routeName:
-      //   return ReportScreen.route();
-
-      default:
-        return _errorRoute();
-    }
-  }
-
-  static Route onGenerateNestedRoute(RouteSettings settings) {
-    print('Nested Route: ${settings.name}');
-    switch (settings.name) {
       case ProfileScreen.routeName:
         return ProfileScreen.route(
           args: settings.arguments as ProfileScreenArgs,
         );
-      case AddTaskScreen.routeName:
-        return AddTaskScreen.route(
-          args: settings.arguments as AddTaskScreenArgs,
-        );
+
       case EditProfileScreen.routeName:
         return EditProfileScreen.route(
           args: settings.arguments as EditProfileScreenArgs,
@@ -48,6 +33,12 @@ class CustomRouter {
         return CommentsScreen.route(
           args: settings.arguments as CommentsScreenArgs,
         );
+      case ChannelScreen.routeName:
+        return ChannelScreen.route(
+          args: settings.arguments as ChannelScreenArgs,
+        );
+      case StreamChatInbox.routeName:
+        return StreamChatInbox.route();
       default:
         return _errorRoute();
     }

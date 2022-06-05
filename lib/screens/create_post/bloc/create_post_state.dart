@@ -4,7 +4,7 @@ class CreatePostState extends Equatable {
   final Post? post;
   final List<Task> todoTask;
   final List<Task> completedTask;
-  final DateTime? dateTime;
+  final Timestamp? dateTime;
   final Failure failure;
 
   const CreatePostState({
@@ -25,11 +25,21 @@ class CreatePostState extends Equatable {
     );
   }
 
+  CreatePostState empty() {
+    return const CreatePostState(
+      post: null,
+      todoTask: [],
+      completedTask: [],
+      dateTime: null,
+      failure: Failure(),
+    );
+  }
+
   CreatePostState copyWith({
     Post? post,
     List<Task>? todoTask,
     List<Task>? completedTask,
-    DateTime? dateTime,
+    Timestamp? dateTime,
     Failure? failure,
   }) {
     return CreatePostState(
