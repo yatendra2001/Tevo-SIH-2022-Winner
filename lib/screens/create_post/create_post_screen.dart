@@ -179,6 +179,12 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                                 context
                                     .read<CreatePostBloc>()
                                     .add(UpdateTask(task: task, index: index));
+                                _taskBottomSheet((task) {
+                                  context
+                                      .read<CreatePostBloc>()
+                                      .add(AddTaskEvent(task: task));
+                                  setState(() {});
+                                });
                               },
                               task: todoTask[index],
                             );
