@@ -62,10 +62,40 @@ class UserRepository extends BaseUserRepository {
     return true;
   }
 
+  void requestUser({
+    required String userId,
+    required String followUserId,
+  }) {
+    final notification = Notif(
+      type: NotifType.request,
+      fromUser: User.empty.copyWith(id: userId),
+      date: DateTime.now(),
+    );
+
+    _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(followUserId)
+        .collection(Paths.userRequests)
+        .add(notification.toDocument());
+  }
+
+  void deleteRequest({
+    required String requestId,
+    required String followUserId,
+  }) {
+    _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(followUserId)
+        .collection(Paths.userRequests)
+        .doc(requestId)
+        .delete();
+  }
+
   @override
   void followUser({
     required String userId,
     required String followUserId,
+    required String requestId,
   }) {
     // Add followUser to user's userFollowing.
     _firebaseFirestore
@@ -74,6 +104,7 @@ class UserRepository extends BaseUserRepository {
         .collection(Paths.userFollowing)
         .doc(followUserId)
         .set({});
+
     // Add user to followUser's userFollowers.
     _firebaseFirestore
         .collection(Paths.followers)
@@ -93,6 +124,8 @@ class UserRepository extends BaseUserRepository {
         .doc(followUserId)
         .collection(Paths.userNotifications)
         .add(notification.toDocument());
+
+    deleteRequest(requestId: requestId, followUserId: followUserId);
   }
 
   @override
@@ -129,5 +162,41 @@ class UserRepository extends BaseUserRepository {
         .doc(otherUserId)
         .get();
     return otherUserDoc.exists;
+  }
+
+  @override
+  Future<bool> isRequesting({
+    required String userId,
+    required String otherUserId,
+  }) async {
+    // is otherUser in user's requesting
+    final authref = _firebaseFirestore.collection(Paths.users).doc(userId);
+    final otherUserDoc = await _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(otherUserId)
+        .collection(Paths.userRequests)
+        .where("fromUser", isEqualTo: authref)
+        .get();
+    return otherUserDoc.docs.isNotEmpty;
+  }
+
+  void deleteRequested({
+    //Person sending request is deleting the request sent
+    required String userId,
+    required String otherUserId,
+  }) async {
+    // is otherUser in user's requesting
+    final authref = _firebaseFirestore.collection(Paths.users).doc(userId);
+    _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(otherUserId)
+        .collection(Paths.userRequests)
+        .where("fromUser", isEqualTo: authref)
+        .get()
+        .then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs) {
+        ds.reference.delete();
+      }
+    });
   }
 }

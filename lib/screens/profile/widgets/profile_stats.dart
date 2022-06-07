@@ -4,6 +4,7 @@ import 'package:tevo/screens/profile/widgets/widgets.dart';
 class ProfileStats extends StatelessWidget {
   final bool isCurrentUser;
   final bool isFollowing;
+  final bool isRequesting;
   final int posts;
   final int followers;
   final int following;
@@ -12,6 +13,7 @@ class ProfileStats extends StatelessWidget {
     Key? key,
     required this.isCurrentUser,
     required this.isFollowing,
+    required this.isRequesting,
     required this.posts,
     required this.followers,
     required this.following,
@@ -35,6 +37,7 @@ class ProfileStats extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: ProfileButton(
+              isRequesting: isRequesting,
               isCurrentUser: isCurrentUser,
               isFollowing: isFollowing,
             ),

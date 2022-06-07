@@ -119,6 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             profileImageUrl: state.user.profileImageUrl,
                           ),
                           ProfileStats(
+                            isRequesting: state.isRequesting,
                             isCurrentUser: state.isCurrentUser,
                             isFollowing: state.isFollowing,
                             posts: state.posts.length,
