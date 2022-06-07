@@ -21,4 +21,17 @@ class NotificationRepository extends BaseNotificationRepository {
           (snap) => snap.docs.map((doc) => Notif.fromDocument(doc)).toList(),
         );
   }
+
+  @override
+  Stream<List<Future<Notif?>>> getUserRequests({required String userId}) {
+    return _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(userId)
+        .collection(Paths.userRequests)
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map(
+          (snap) => snap.docs.map((doc) => Notif.fromDocument(doc)).toList(),
+        );
+  }
 }

@@ -90,6 +90,7 @@ class NavScreen extends StatelessWidget {
     BottomNavItem.notifications: BlocProvider<NotificationsBloc>(
       create: (context) => NotificationsBloc(
         notificationRepository: context.read<NotificationRepository>(),
+        userRepository: context.read<UserRepository>(),
         authBloc: context.read<AuthBloc>(),
       ),
       child: const NotificationsScreen(),
