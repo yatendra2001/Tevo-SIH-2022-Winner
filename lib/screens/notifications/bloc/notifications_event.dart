@@ -27,7 +27,8 @@ class NotificationsUpdateRequests extends NotificationsEvent {
 
 class NotificationAcceptFollowRequest extends NotificationsEvent {
   final Notif request;
-  NotificationAcceptFollowRequest({
+
+  const NotificationAcceptFollowRequest({
     required this.request,
   });
 
@@ -37,7 +38,8 @@ class NotificationAcceptFollowRequest extends NotificationsEvent {
 
 class NotificationIgnoreFollowRequest extends NotificationsEvent {
   final Notif request;
-  NotificationIgnoreFollowRequest({
+
+  const NotificationIgnoreFollowRequest({
     required this.request,
   });
 

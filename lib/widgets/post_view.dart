@@ -1,12 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:tevo/extensions/extensions.dart';
 import 'package:tevo/models/models.dart';
-import 'package:tevo/screens/report/report_screen.dart';
 import 'package:tevo/screens/screens.dart';
-import 'package:tevo/widgets/task_tile.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class PostView extends StatefulWidget {
@@ -16,7 +11,7 @@ class PostView extends StatefulWidget {
   // final VoidCallback onLike;
   // final bool recentlyLiked;
 
-  PostView({
+  const PostView({
     Key? key,
     required this.post,
     this.onPressed,
@@ -176,8 +171,8 @@ class _PostViewState extends State<PostView> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: Color(0xffFFFFFF),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: const Color(0xffFFFFFF),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -207,7 +202,7 @@ class _PostViewState extends State<PostView> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.only(right: 8),
                             child: UserProfileImage(
                               radius: 20,
                               profileImageUrl:
@@ -221,7 +216,7 @@ class _PostViewState extends State<PostView> {
                                 widget.post.author.username,
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
-                              Text(
+                              const Text(
                                 "",
                                 style: TextStyle(fontWeight: FontWeight.w300),
                               )
@@ -230,64 +225,65 @@ class _PostViewState extends State<PostView> {
                         ],
                       ),
                       ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    content: Text('Are you sure to unfollow ?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          // widget.onPressed!();
-                                          // Navigator.of(context).popAndPushNamed(
-                                          //     ReportScreen.routeName);
-                                        },
-                                        child: const Text('Report'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          widget.onPressed!();
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Unfollow'),
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
-                          child: const Text(
-                            'Following',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Color(0xff009688),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                          ))
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Text('Are you sure to unfollow ?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        // widget.onPressed!();
+                                        // Navigator.of(context).popAndPushNamed(
+                                        //     ReportScreen.routeName);
+                                      },
+                                      child: const Text('Report'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        widget.onPressed!();
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Unfollow'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                        child: const Text(
+                          'Following',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: const Color(0xff009688),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                        ),
+                      )
                     ],
                   ),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      // if (index < widget.post.completedTask.length) {
-                      //   return TaskTile(
-                      //     task: tasks![index],
-                      //     isComplete: true,
-                      //     isDeleted: () => context.read<CreatePostBloc>().add(
-                      //         DeleteTaskEvent(
-                      //             task: state.completedTask[index])),
-                      //   );
-                      // } else {
-                      //   return TaskTile(
-                      //     task: tasks![index],
-                      //     isComplete: false,
-                      //     isDeleted: () => context.read<CreatePostBloc>().add(
-                      //         DeleteTaskEvent(
-                      //             task: state.completedTask[index])),
-                      //   );
-                      return SizedBox.shrink();
+                      if (index < widget.post.completedTask.length) {
+                        return TaskTile(
+                          task: tasks![index],
+                          view: TaskTileView.feedScreen,
+                          isComplete: true,
+                          isDeleted: () {},
+                          isEditing: () {},
+                        );
+                      } else {
+                        return TaskTile(
+                          task: tasks![index],
+                          view: TaskTileView.feedScreen,
+                          isComplete: false,
+                          isDeleted: () {},
+                          isEditing: () {},
+                        );
+                      }
                     },
                     itemCount: tasks!.length,
                   ),
