@@ -40,7 +40,7 @@ class AuthRepository extends BaseAuthRepository {
   @override
   Future<bool> sendOTP({required String phone}) async {
     await _firebaseAuth.verifyPhoneNumber(
-      phoneNumber: "+91" + phone,
+      phoneNumber: phone,
       verificationCompleted: (auth.PhoneAuthCredential credential) {},
       verificationFailed: (auth.FirebaseAuthException e) {},
       codeSent: (String verificationId, int? resendToken) async {
@@ -50,7 +50,7 @@ class AuthRepository extends BaseAuthRepository {
       timeout: const Duration(seconds: 25),
       forceResendingToken: _resendToken,
       codeAutoRetrievalTimeout: (String verificationId) {
-        verificationId = _verificationId;
+        _verificationId = verificationId;
       },
     );
     debugPrint("_verificationId: $_verificationId");
@@ -63,12 +63,6 @@ class AuthRepository extends BaseAuthRepository {
     auth.PhoneAuthCredential credential = auth.PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: otp);
     final credentials = await _firebaseAuth.signInWithCredential(credential);
-    if (json != null && credentials.user != null) {
-      _firebaseFirestore
-          .collection(Paths.users)
-          .doc(credentials.user?.uid)
-          .set(json);
-    }
 
     return credentials;
   }

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,10 +32,27 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
+  Future<void> setUser({required User user}) async {
+    await _firebaseFirestore
+        .collection(Paths.users)
+        .doc(user.id)
+        .set(user.toDocument());
+  }
+
+  @override
   Future<List<User>> searchUsers({required String query}) async {
     final userSnap = await _firebaseFirestore
         .collection(Paths.users)
         .where('username', isGreaterThanOrEqualTo: query)
+        .get();
+    return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+  }
+
+  @override
+  Future<List<User>> getUsersByFollowers() async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.users)
+        .orderBy(Paths.followers, descending: true)
         .get();
     return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
   }
@@ -60,6 +78,22 @@ class UserRepository extends BaseUserRepository {
       flutterToast(msg: 'An Error occured', position: ToastGravity.CENTER);
     }
     return true;
+  }
+
+  @override
+  Future<bool> searchUserbyUsername({required String query}) async {
+    try {
+      final QuerySnapshot users = await _firebaseFirestore
+          .collection(Paths.users)
+          .where(Paths.usernameLower, isEqualTo: query.toLowerCase())
+          .get();
+      return users.size == 0;
+    } on FirebaseException catch (err) {
+      log(err.message!);
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
   }
 
   void requestUser({
@@ -198,5 +232,18 @@ class UserRepository extends BaseUserRepository {
         ds.reference.delete();
       }
     });
+  }
+
+  Future<bool> checkUsernameAvailability(String username) async {
+    try {
+      var result = await _firebaseFirestore
+          .collection(Paths.username)
+          .doc(username)
+          .get();
+      return result.exists;
+    } catch (e) {
+      log(e.toString());
+    }
+    return true;
   }
 }

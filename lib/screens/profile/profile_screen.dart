@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     context.read<AuthBloc>().add(AuthLogoutRequested());
                     context.read<LikedPostsCubit>().clearAllLikedPosts();
                     MyApp.navigatorKey.currentState!
-                        .pushReplacementNamed(AuthScreen.routeName);
+                        .pushReplacementNamed(WelcomeScreen.routeName);
                   },
                 ),
             ],
