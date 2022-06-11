@@ -1,22 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tevo/screens/comments/comments_screen.dart';
-import 'package:tevo/screens/feed/feed_screen.dart';
 import 'package:tevo/screens/profile/profile_screen.dart';
 import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
-
 import '../../models/models.dart';
-
 import 'bloc/create_post_bloc.dart';
 
 class CreatePostScreen extends StatefulWidget {
@@ -75,7 +68,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text(
+                      title: const Text(
                         'Delete Post',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -173,6 +166,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         },
                         child: TaskTile(
                           isComplete: false,
+                          view: TaskTileView.createScreenView,
                           isEditing: () {
                             _taskBottomSheet(
                               onSubmit: (task) {
@@ -237,6 +231,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (_, index) => TaskTile(
+                    view: TaskTileView.createScreenView,
                     isEditing: () {},
                     task: state.completedTask[index],
                     isComplete: true,
@@ -337,9 +332,12 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             right: 10),
         padding: const EdgeInsets.all(8),
         decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+          ),
+        ),
         child: Wrap(
           children: [
             Padding(
@@ -347,8 +345,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               child: const Center(
                   child: Text(
                 "Add Task",
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
               )),
             ),
             Padding(
@@ -357,11 +354,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 autofocus: true,
                 controller: _taskTextEditingController,
                 decoration: const InputDecoration(
-                    hintText: 'Read Chapter of "Zero to One"',
-                    hintStyle:
-                        const TextStyle(color: Colors.grey, fontSize: 20),
-                    border: InputBorder.none,
-                    focusColor: Colors.grey),
+                  hintText: 'Read Chapter of "Zero to One"',
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 20),
+                  border: InputBorder.none,
+                  focusColor: Colors.grey,
+                ),
                 textInputAction: TextInputAction.next,
                 onSubmitted: (_) {
                   _focusNode.requestFocus();
@@ -400,28 +397,29 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             Align(
               alignment: Alignment.centerRight,
               child: IconButton(
-                  onPressed: () {
-                    onSubmit(
-                      Task(
-                        title: _taskTextEditingController.text,
-                        priority: 0,
-                        dateTime: DateTime.now(),
-                        description: _descriptionTextEditingController.text,
-                      ),
-                    );
-                    _taskTextEditingController.clear();
-                    _descriptionTextEditingController.clear();
-                  },
-                  icon: CircleAvatar(
-                    backgroundColor: kPrimaryTealColor,
-                    child: Center(
-                      child: Icon(
-                        FontAwesomeIcons.arrowUp,
-                        color: Colors.white,
-                        size: 1.8.h,
-                      ),
+                onPressed: () {
+                  onSubmit(
+                    Task(
+                      title: _taskTextEditingController.text,
+                      priority: 0,
+                      dateTime: DateTime.now(),
+                      description: _descriptionTextEditingController.text,
                     ),
-                  )),
+                  );
+                  _taskTextEditingController.clear();
+                  _descriptionTextEditingController.clear();
+                },
+                icon: CircleAvatar(
+                  backgroundColor: kPrimaryTealColor,
+                  child: Center(
+                    child: Icon(
+                      FontAwesomeIcons.arrowUp,
+                      color: Colors.white,
+                      size: 1.8.h,
+                    ),
+                  ),
+                ),
+              ),
             )
           ],
         ),

@@ -3,4 +3,5 @@ enum NotifType {
   comment,
   follow,
   request,
+  requestAccepted,
 }
