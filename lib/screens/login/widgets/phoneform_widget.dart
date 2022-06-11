@@ -1,16 +1,22 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
+import 'package:tevo/utils/theme_constants.dart';
 
 class PhoneForm extends StatefulWidget {
   const PhoneForm({
     Key? key,
     this.textColor,
-    required this.phoneNumberController,
+    required this.textEditingController,
   }) : super(key: key);
 
   final Color? textColor;
-  final TextEditingController phoneNumberController;
+  final TextEditingController textEditingController;
 
   @override
   State<PhoneForm> createState() => _PhoneFormState();
@@ -30,41 +36,58 @@ class _PhoneFormState extends State<PhoneForm> {
     return Form(
       key: _formKey,
       child: IntlPhoneField(
+        controller: widget.textEditingController,
+        autofocus: true,
         textAlignVertical: TextAlignVertical.center,
-        style: TextStyle(color: widget.textColor ?? Colors.black),
+        style: TextStyle(color: widget.textColor ?? kPrimaryBlackColor),
         dropdownIcon: Icon(
           Icons.arrow_drop_down,
-          color: widget.textColor ?? Colors.black,
+          color: widget.textColor ?? kPrimaryBlackColor,
         ),
         showCountryFlag: widget.textColor == null,
-        dropdownTextStyle:
-            TextStyle(fontSize: 15, color: widget.textColor ?? Colors.black),
+        dropdownTextStyle: TextStyle(
+            fontSize: 12.sp, color: widget.textColor ?? kPrimaryBlackColor),
         initialCountryCode: 'IN',
         disableLengthCheck: true,
-        controller: widget.phoneNumberController,
         validator: (val) {
           if (val == null || val.number.isEmpty) {
-            return "Please enter your phone number";
+            return "Enter phone number";
+          } else if (val.number.length == 10) {
+            context.read<LoginCubit>().phone = val.completeNumber;
           }
           return null;
         },
         decoration: InputDecoration(
-          enabledBorder: UnderlineInputBorder(
+          border: OutlineInputBorder(
             borderSide: BorderSide(
-              color: widget.textColor ?? Colors.black,
+              color: widget.textColor ?? kPrimaryBlackColor,
               style: BorderStyle.solid,
             ),
           ),
-          focusedBorder: UnderlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: widget.textColor ?? Colors.black,
+              color: widget.textColor ?? kPrimaryBlackColor,
+              style: BorderStyle.solid,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: widget.textColor ?? kPrimaryBlackColor,
+              style: BorderStyle.solid,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: widget.textColor ?? kPrimaryBlackColor,
               style: BorderStyle.solid,
             ),
           ),
           filled: true,
           hintText: "Phone Number",
           hintStyle: TextStyle(
-              fontSize: 15.0, color: widget.textColor ?? Colors.black),
+              fontSize: 12.sp,
+              color: widget.textColor ?? kPrimaryBlackColor,
+              fontWeight: FontWeight.w500),
         ),
       ),
     );

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/blocs/blocs.dart';
-import 'package:tevo/screens/login/auth_screen.dart';
+import 'package:tevo/screens/login/onboarding/registration_screen.dart';
+import 'package:tevo/screens/login/welcome_screen.dart';
 import 'package:tevo/screens/screens.dart';
-import 'package:tevo/screens/stream_chat/bloc/initialize_stream_chat/initialize_stream_chat_cubit.dart';
+import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 
 class SplashScreen extends StatelessWidget {
   static const String routeName = '/splash';
@@ -24,13 +25,17 @@ class SplashScreen extends StatelessWidget {
         listenWhen: (prevState, state) => prevState.status != state.status,
         listener: (context, state) {
           if (state.status == AuthStatus.unauthenticated) {
-            //Go to login screen
-            Navigator.of(context).pushNamed(AuthScreen.routeName);
-          } else if (state.status == AuthStatus.authenticated) {
+            //Go to welcome screen
+            Navigator.of(context).pushNamed(WelcomeScreen.routeName);
+          } else if (state.status == AuthStatus.authenticated &&
+              state.isUserExist == true) {
             //Go to navigation screen
             BlocProvider.of<InitializeStreamChatCubit>(context)
                 .initializeStreamChat(context);
             Navigator.of(context).pushNamed(NavScreen.routeName);
+          } else if (state.status == AuthStatus.authenticated &&
+              state.isUserExist == false) {
+            Navigator.of(context).pushNamed(RegistrationScreen.routeName);
           }
         },
         child: const Scaffold(

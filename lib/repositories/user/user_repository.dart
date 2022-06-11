@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,10 +32,27 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
+  Future<void> setUser({required User user}) async {
+    await _firebaseFirestore
+        .collection(Paths.users)
+        .doc(user.id)
+        .set(user.toDocument());
+  }
+
+  @override
   Future<List<User>> searchUsers({required String query}) async {
     final userSnap = await _firebaseFirestore
         .collection(Paths.users)
         .where('username', isGreaterThanOrEqualTo: query)
+        .get();
+    return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+  }
+
+  @override
+  Future<List<User>> getUsersByFollowers() async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.users)
+        .orderBy(Paths.followers, descending: true)
         .get();
     return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
   }
@@ -63,9 +81,55 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
+  Future<bool> searchUserbyUsername({required String query}) async {
+    try {
+      final QuerySnapshot users = await _firebaseFirestore
+          .collection(Paths.users)
+          .where(Paths.usernameLower, isEqualTo: query.toLowerCase())
+          .get();
+      return users.size == 0;
+    } on FirebaseException catch (err) {
+      log(err.message!);
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+
+  void requestUser({
+    required String userId,
+    required String followUserId,
+  }) {
+    final notification = Notif(
+      type: NotifType.request,
+      fromUser: User.empty.copyWith(id: userId),
+      date: DateTime.now(),
+    );
+
+    _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(followUserId)
+        .collection(Paths.userRequests)
+        .add(notification.toDocument());
+  }
+
+  void deleteRequest({
+    required String requestId,
+    required String followUserId,
+  }) {
+    _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(followUserId)
+        .collection(Paths.userRequests)
+        .doc(requestId)
+        .delete();
+  }
+
+  @override
   void followUser({
     required String userId,
     required String followUserId,
+    required String requestId,
   }) {
     // Add followUser to user's userFollowing.
     _firebaseFirestore
@@ -74,6 +138,7 @@ class UserRepository extends BaseUserRepository {
         .collection(Paths.userFollowing)
         .doc(followUserId)
         .set({});
+
     // Add user to followUser's userFollowers.
     _firebaseFirestore
         .collection(Paths.followers)
@@ -93,6 +158,8 @@ class UserRepository extends BaseUserRepository {
         .doc(followUserId)
         .collection(Paths.userNotifications)
         .add(notification.toDocument());
+
+    deleteRequest(requestId: requestId, followUserId: followUserId);
   }
 
   @override
@@ -129,5 +196,54 @@ class UserRepository extends BaseUserRepository {
         .doc(otherUserId)
         .get();
     return otherUserDoc.exists;
+  }
+
+  @override
+  Future<bool> isRequesting({
+    required String userId,
+    required String otherUserId,
+  }) async {
+    // is otherUser in user's requesting
+    final authref = _firebaseFirestore.collection(Paths.users).doc(userId);
+    final otherUserDoc = await _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(otherUserId)
+        .collection(Paths.userRequests)
+        .where("fromUser", isEqualTo: authref)
+        .get();
+    return otherUserDoc.docs.isNotEmpty;
+  }
+
+  void deleteRequested({
+    //Person sending request is deleting the request sent
+    required String userId,
+    required String otherUserId,
+  }) async {
+    // is otherUser in user's requesting
+    final authref = _firebaseFirestore.collection(Paths.users).doc(userId);
+    _firebaseFirestore
+        .collection(Paths.requests)
+        .doc(otherUserId)
+        .collection(Paths.userRequests)
+        .where("fromUser", isEqualTo: authref)
+        .get()
+        .then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs) {
+        ds.reference.delete();
+      }
+    });
+  }
+
+  Future<bool> checkUsernameAvailability(String username) async {
+    try {
+      var result = await _firebaseFirestore
+          .collection(Paths.username)
+          .doc(username)
+          .get();
+      return result.exists;
+    } catch (e) {
+      log(e.toString());
+    }
+    return true;
   }
 }

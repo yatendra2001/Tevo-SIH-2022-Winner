@@ -1,6 +1,8 @@
 class Paths {
   // Top level collections.
   static const String users = 'users';
+  static const String username = 'username';
+  static const String usernameLower = 'username_lower';
   static const String posts = 'posts';
   static const String likes = 'likes';
   static const String comments = 'comments';
@@ -8,6 +10,7 @@ class Paths {
   static const String following = 'following';
   static const String feeds = 'feeds';
   static const String notifications = 'notifications';
+  static const String requests = 'requests';
 
   // Subcollections
   static const String postLikes = 'postLikes';
@@ -16,4 +19,5 @@ class Paths {
   static const String userFollowing = 'userFollowing';
   static const String userFeed = 'userFeed';
   static const String userNotifications = 'userNotifications';
+  static const String userRequests = 'userRequests';
 }

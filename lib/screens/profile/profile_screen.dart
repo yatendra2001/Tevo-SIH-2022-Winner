@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     context.read<AuthBloc>().add(AuthLogoutRequested());
                     context.read<LikedPostsCubit>().clearAllLikedPosts();
                     MyApp.navigatorKey.currentState!
-                        .pushReplacementNamed(AuthScreen.routeName);
+                        .pushReplacementNamed(WelcomeScreen.routeName);
                   },
                 ),
             ],
@@ -119,6 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             profileImageUrl: state.user.profileImageUrl,
                           ),
                           ProfileStats(
+                            isRequesting: state.isRequesting,
                             isCurrentUser: state.isCurrentUser,
                             isFollowing: state.isFollowing,
                             posts: state.posts.length,

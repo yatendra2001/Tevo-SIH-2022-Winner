@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tevo/enums/enums.dart';
-
 import 'package:tevo/models/models.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/widgets/widgets.dart';
@@ -83,7 +81,6 @@ class NotificationTile extends StatelessWidget {
         height: 60.0,
         width: 60.0,
         child: Icon(Icons.person_add),
-        
       );
     }
     return const SizedBox.shrink();

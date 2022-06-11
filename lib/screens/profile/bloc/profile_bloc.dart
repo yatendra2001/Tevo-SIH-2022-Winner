@@ -49,6 +49,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield* _mapProfileFollowUserToState();
     } else if (event is ProfileUnfollowUser) {
       yield* _mapProfileUnfollowUserToState();
+    } else if (event is ProfileDeleteRequest) {
+      yield* _mapToDeleteRequest(event);
     }
   }
 
@@ -65,6 +67,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         otherUserId: event.userId,
       );
 
+      final isRequesting = await _userRepository.isRequesting(
+        userId: _authBloc.state.user!.uid,
+        otherUserId: event.userId,
+      );
+
       _postsSubscription?.cancel();
       _postsSubscription = _postRepository
           .getUserPosts(userId: event.userId)
@@ -77,6 +84,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         user: user,
         isCurrentUser: isCurrentUser,
         isFollowing: isFollowing,
+        otherUserId: event.userId,
+        isRequesting: isRequesting,
         status: ProfileStatus.loaded,
       );
     } catch (err) {
@@ -85,6 +94,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         failure: const Failure(message: 'We were unable to load this profile.'),
       );
     }
+  }
+
+  Stream<ProfileState> _mapToDeleteRequest(ProfileDeleteRequest event) async* {
+    _userRepository.deleteRequested(
+        userId: _authBloc.state.user!.uid, otherUserId: state.otherUserId!);
+    yield state.copyWith(isRequesting: false);
   }
 
   Stream<ProfileState> _mapProfileToggleGridViewToState(
@@ -106,13 +121,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> _mapProfileFollowUserToState() async* {
     try {
-      _userRepository.followUser(
-        userId: _authBloc.state.user!.uid,
-        followUserId: state.user.id,
-      );
-      final updatedUser =
-          state.user.copyWith(followers: state.user.followers + 1);
-      yield state.copyWith(user: updatedUser, isFollowing: true);
+      _userRepository.requestUser(
+          userId: _authBloc.state.user!.uid, followUserId: state.user.id);
+
+      // _userRepository.followUser(
+      //   userId: _authBloc.state.user!.uid,
+      //   followUserId: state.user.id,
+      // );
+      // final updatedUser =
+      //     state.user.copyWith(followers: state.user.followers + 1);
+      yield state.copyWith(isRequesting: true);
     } catch (err) {
       yield state.copyWith(
         status: ProfileStatus.error,

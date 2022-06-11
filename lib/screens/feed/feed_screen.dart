@@ -7,7 +7,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
 import 'package:tevo/screens/screens.dart';
-import 'package:tevo/screens/stream_chat/bloc/initialize_stream_chat/initialize_stream_chat_cubit.dart';
+import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
