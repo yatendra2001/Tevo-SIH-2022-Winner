@@ -16,7 +16,7 @@ import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/app_themes.dart';
 import 'screens/create_post/bloc/create_post_bloc.dart';
 import 'package:sizer/sizer.dart';
-import 'screens/stream_chat/bloc/initialize_stream_chat/initialize_stream_chat_cubit.dart';
+import 'screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -124,7 +124,6 @@ class MyApp extends StatelessWidget {
               onGenerateRoute: CustomRouter.onGenerateRoute,
               initialRoute: SplashScreen.routeName,
             ),
-
           ),
         ),
       ),

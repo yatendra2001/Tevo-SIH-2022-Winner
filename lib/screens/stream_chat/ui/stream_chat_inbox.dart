@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tevo/screens/stream_chat/bloc/initialize_stream_chat/initialize_stream_chat_cubit.dart';
+import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/ui/widgets/dm_inbox.dart';
 import 'package:tevo/screens/stream_chat/ui/widgets/groups_inbox.dart';
 import 'package:tevo/utils/session_helper.dart';

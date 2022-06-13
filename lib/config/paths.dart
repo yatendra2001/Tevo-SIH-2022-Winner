@@ -1,6 +1,8 @@
 class Paths {
   // Top level collections.
   static const String users = 'users';
+  static const String username = 'username';
+  static const String usernameLower = 'username_lower';
   static const String posts = 'posts';
   static const String likes = 'likes';
   static const String comments = 'comments';

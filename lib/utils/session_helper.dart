@@ -1,11 +1,12 @@
 class SessionHelper {
   static String? displayName;
+  static String? firstName;
+  static String? lastName;
 
   static String? username;
   static String? phone;
-  static String? dob;
+  static String? age;
   static String? uid;
-  static String? gender;
   static String? profileImageUrl;
   static int totalUnreadMessagesCount = 0;
 }

@@ -5,7 +5,8 @@ class User extends Equatable {
   final String id;
   final String username;
   final String displayName;
-  final String email;
+  final String age;
+  final String phone;
   final String profileImageUrl;
   final int followers;
   final int following;
@@ -15,7 +16,8 @@ class User extends Equatable {
     required this.id,
     required this.username,
     required this.displayName,
-    required this.email,
+    required this.age,
+    required this.phone,
     required this.profileImageUrl,
     required this.followers,
     required this.following,
@@ -26,7 +28,8 @@ class User extends Equatable {
     id: '',
     username: '',
     displayName: '',
-    email: '',
+    age: '',
+    phone: '',
     profileImageUrl: '',
     followers: 0,
     following: 0,
@@ -38,7 +41,8 @@ class User extends Equatable {
         id,
         username,
         displayName,
-        email,
+        age,
+        phone,
         profileImageUrl,
         followers,
         following,
@@ -49,7 +53,8 @@ class User extends Equatable {
     String? id,
     String? username,
     String? displayName,
-    String? email,
+    String? age,
+    String? phone,
     String? profileImageUrl,
     int? followers,
     int? following,
@@ -59,7 +64,8 @@ class User extends Equatable {
       id: id ?? this.id,
       username: username ?? this.username,
       displayName: displayName ?? this.displayName,
-      email: email ?? this.email,
+      age: age ?? this.age,
+      phone: phone ?? this.phone,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       followers: followers ?? this.followers,
       following: following ?? this.following,
@@ -69,9 +75,12 @@ class User extends Equatable {
 
   Map<String, dynamic> toDocument() {
     return {
+      'id': id,
       'username': username,
+      'username_lower': username.toLowerCase(),
       'displayName': displayName,
-      'email': email,
+      'age': age,
+      'phone': phone,
       'profileImageUrl': profileImageUrl,
       'followers': followers,
       'following': following,
@@ -85,7 +94,8 @@ class User extends Equatable {
       id: doc.id,
       username: data['username'] ?? '',
       displayName: data['displayName'] ?? '',
-      email: data['email'] ?? '',
+      age: data['age'] ?? '',
+      phone: data['phone'] ?? '',
       profileImageUrl: data['profileImageUrl'] ?? '',
       followers: (data['followers'] ?? 0).toInt(),
       following: (data['following'] ?? 0).toInt(),

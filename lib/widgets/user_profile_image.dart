@@ -31,7 +31,7 @@ class UserProfileImage extends StatelessWidget {
         shape: BoxShape.circle,
         image: DecorationImage(
             image: profileImage != null
-                ? FileImage(profileImage!) as ImageProvider
+                ? FileImage(profileImage!)
                 : profileImageUrl.isNotEmpty
                     ? CachedNetworkImageProvider(profileImageUrl)
                     : null as ImageProvider,
