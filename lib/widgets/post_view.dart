@@ -7,156 +7,22 @@ import 'package:tevo/widgets/widgets.dart';
 class PostView extends StatefulWidget {
   final Post post;
   final Function()? onPressed;
-  // final bool isLiked;
-  // final VoidCallback onLike;
-  // final bool recentlyLiked;
+  final bool isLiked;
+  final VoidCallback onLike;
+  final bool recentlyLiked;
 
   const PostView({
     Key? key,
     required this.post,
     this.onPressed,
-    // required this.isLiked,
-    // required this.onLike,
-    // this.recentlyLiked = false,
+    required this.isLiked,
+    required this.onLike,
+    this.recentlyLiked = false,
   }) : super(key: key);
 
   @override
   State<PostView> createState() => _PostViewState();
 }
-
-// class _PostViewState extends State<PostView> {
-//   List<Task>? tasks;
-
-//   @override
-//   void initState() {
-//     tasks = List.from(widget.post.completedTask);
-//     tasks!.addAll(List.from(widget.post.toDoTask));
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: Card(
-//         elevation: 5,
-//         shape: RoundedRectangleBorder(
-//           side: const BorderSide(color: Colors.white70, width: 1),
-//           borderRadius: BorderRadius.circular(10),
-//         ),
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: Column(
-//             children: [
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Row(
-//                     children: [
-//                       widget.post.author.profileImageUrl == ''
-//                           ? const Icon(
-//                               Icons.person,
-//                               size: 50,
-//                             )
-//                           : CachedNetworkImage(
-//                               imageUrl: widget.post.author.profileImageUrl,
-//                             ),
-//                       Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(widget.post.author.username,
-//                               style: const TextStyle(
-//                                   fontSize: 18, fontWeight: FontWeight.bold)),
-//                           Text(DateFormat().format(widget.post.enddate))
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                   DropdownButton<String>(
-//                     underline: const SizedBox.shrink(),
-//                     icon: const Icon(Icons.more_vert_outlined),
-//                     items: <String>["Unfollow", "Report"].map((String value) {
-//                       return DropdownMenuItem<String>(
-//                         value: value,
-//                         child: Text(value),
-//                       );
-//                     }).toList(),
-//                     onChanged: (_) {},
-//                   )
-//                 ],
-//               ),
-//               const SizedBox(
-//                 height: 10,
-//               ),
-//               ListView.builder(
-//                 shrinkWrap: true,
-//                 physics: NeverScrollableScrollPhysics(),
-//                 itemBuilder: (context, index) {
-//                   if (index < widget.post.completedTask.length) {
-//                     return TaskTile(
-//                       index: index + 1,
-//                       task: tasks![index],
-//                       isComplete: true,
-//                     );
-//                   } else {
-//                     return TaskTile(
-//                       index: index + 1,
-//                       task: tasks![index],
-//                       isComplete: false,
-//                     );
-//                   }
-//                 },
-//                 itemCount: tasks!.length,
-//               ),
-//               SizedBox(
-//                 height: 20,
-//               ),
-//               _buildCommentTile(context, widget.post),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   _buildCommentTile(BuildContext context, Post post) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         SizedBox(
-//           width: 300,
-//           child: TextField(
-//             onTap: () => Navigator.of(context).pushNamed(
-//                 CommentsScreen.routeName,
-//                 arguments: CommentsScreenArgs(post: post)),
-//             readOnly: true,
-//             decoration: InputDecoration(
-//               disabledBorder: OutlineInputBorder(
-//                 borderSide: const BorderSide(color: Colors.grey),
-//                 borderRadius: BorderRadius.circular(25.0),
-//               ),
-//               enabledBorder: OutlineInputBorder(
-//                 borderSide: const BorderSide(color: Colors.grey),
-//                 borderRadius: BorderRadius.circular(25.0),
-//               ),
-//               filled: true,
-//               hintText: "Add Comment",
-//               hintStyle: TextStyle(fontSize: 12),
-//               fillColor: Colors.white,
-//               focusedBorder: OutlineInputBorder(
-//                 borderSide: const BorderSide(color: Colors.grey),
-//                 borderRadius: BorderRadius.circular(25.0),
-//               ),
-//               isDense: true, // Added this
-//               contentPadding: EdgeInsets.all(12),
-//             ),
-//           ),
-//         ),
-//         Icon(Icons.send)
-//       ],
-//     );
-//   }
-// }
 
 class _PostViewState extends State<PostView> {
   List<Task>? tasks;
@@ -287,7 +153,7 @@ class _PostViewState extends State<PostView> {
                     },
                     itemCount: tasks!.length,
                   ),
-                  _buildFavoriteCommentTitle(widget.post),
+                  _buildFavoriteCommentTitle(widget),
                 ],
               ),
             ),
@@ -297,7 +163,10 @@ class _PostViewState extends State<PostView> {
     );
   }
 
-  _buildFavoriteCommentTitle(Post post) {
+  _buildFavoriteCommentTitle(widget) {
+    int likes =
+        widget.recentlyLiked ? widget.post.likes + 1 : widget.post.likes;
+    String likeText = (likes == 1) ? '$likes Person' : '$likes People';
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
@@ -309,45 +178,39 @@ class _PostViewState extends State<PostView> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.favorite_border_outlined,
-                  size: 30,
-                ),
+                onPressed: widget.onLike,
+                icon: widget.isLiked
+                    ? const Icon(Icons.favorite, color: Colors.pink)
+                    : const Icon(Icons.favorite_outline),
               ),
               IconButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(
                     CommentsScreen.routeName,
-                    arguments: CommentsScreenArgs(post: post),
+                    arguments: CommentsScreenArgs(post: widget.post),
                   );
                 },
                 icon: FaIcon(FontAwesomeIcons.comment),
               ),
+              //TODO plane
               IconButton(
                   onPressed: () {}, icon: Icon(FontAwesomeIcons.paperPlane))
             ],
           ),
-          RichText(
-              text: TextSpan(
-                  text: "Liked by",
-                  style: TextStyle(color: Colors.black),
-                  children: [
-                TextSpan(
-                    text: " Tanmay",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: " and"),
-                TextSpan(
-                    text: " 19", style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: " others"),
-              ])),
+          (widget.post.likes != 0 || widget.recentlyLiked)
+              ? RichText(
+                  text: TextSpan(
+                      text: "Liked by ",
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                      TextSpan(
+                          text: likeText,
+                          style: TextStyle(fontWeight: FontWeight.bold))
+                    ]))
+              : SizedBox.shrink(),
           SizedBox(
             height: 2,
           ),
-          Text(
-            '10 comments',
-            style: TextStyle(fontWeight: FontWeight.w300),
-          )
         ],
       ),
     );

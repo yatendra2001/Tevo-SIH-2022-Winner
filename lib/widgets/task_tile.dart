@@ -48,26 +48,28 @@ class _TaskTileState extends State<TaskTile> {
                   widget.task.title,
                   style: const TextStyle(fontSize: 16),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.repeat),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.edit),
-                      onPressed: widget.isEditing,
-                    ),
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.delete),
-                      onPressed: widget.isDeleted,
-                    ),
-                  ],
-                )
+                (widget.view == TaskTileView.createScreenView)
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.repeat),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.edit),
+                            onPressed: widget.isEditing,
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.delete),
+                            onPressed: widget.isDeleted,
+                          ),
+                        ],
+                      )
+                    : SizedBox.shrink()
               ],
             ),
             showDesc
