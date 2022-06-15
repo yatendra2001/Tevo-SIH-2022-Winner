@@ -148,15 +148,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final post = state.posts[index];
-                    return GestureDetector(
-                      onTap: () => Navigator.of(context).pushNamed(
-                        CommentsScreen.routeName,
-                        arguments: CommentsScreenArgs(post: post!),
-                      ),
-                      child: PostView(
-                        onPressed: null,
-                        post: post!,
-                      ),
+                    final likedPostsState =
+                        context.watch<LikedPostsCubit>().state;
+                    final isLiked =
+                        likedPostsState.likedPostIds.contains(post!.id);
+                    return PostView(
+                      post: post,
+                      isLiked: isLiked,
+                      onLike: () {
+                        if (isLiked) {
+                          context
+                              .read<LikedPostsCubit>()
+                              .unlikePost(post: post);
+                        } else {
+                          context.read<LikedPostsCubit>().likePost(post: post);
+                        }
+                      },
+                      onPressed: null,
                     );
                   },
                   childCount: state.posts.length,

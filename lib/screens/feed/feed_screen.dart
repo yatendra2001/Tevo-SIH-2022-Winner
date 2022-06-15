@@ -225,14 +225,23 @@ class _FeedScreenState extends State<FeedScreen> {
             itemCount: state.posts.length,
             itemBuilder: (BuildContext context, int index) {
               final post = state.posts[index];
-              // final likedPostsState = context.watch<LikedPostsCubit>().state;
-              // final isLiked = likedPostsState.likedPostIds.contains(post!.id);
-              // final recentlyLiked =
-              //     likedPostsState.recentlyLikedPostIds.contains(post.id);
+              final likedPostsState = context.watch<LikedPostsCubit>().state;
+              final isLiked = likedPostsState.likedPostIds.contains(post!.id);
+              final recentlyLiked =
+                  likedPostsState.recentlyLikedPostIds.contains(post.id);
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: PostView(
-                  post: post!,
+                  isLiked: isLiked,
+                  onLike: () {
+                    if (isLiked) {
+                      context.read<LikedPostsCubit>().unlikePost(post: post);
+                    } else {
+                      context.read<LikedPostsCubit>().likePost(post: post);
+                    }
+                  },
+                  recentlyLiked: recentlyLiked,
+                  post: post,
                   onPressed: () {
                     context.read<FeedBloc>().add(
                         FeedToUnfollowUser(unfollowUserId: post.author.id));

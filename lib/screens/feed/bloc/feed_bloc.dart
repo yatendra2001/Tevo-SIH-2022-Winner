@@ -43,7 +43,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     try {
       final posts =
           await _postRepository.getUserFeed(userId: _authBloc.state.user!.uid);
-
       _likedPostsCubit.clearAllLikedPosts();
 
       final likedPostIds = await _postRepository.getLikedPostIds(
@@ -51,7 +50,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         posts: posts,
       );
       _likedPostsCubit.updateLikedPosts(postIds: likedPostIds);
-
+      print('+++++++++++++++++$posts');
       yield state.copyWith(posts: posts, status: FeedStatus.loaded);
     } catch (err) {
       yield state.copyWith(

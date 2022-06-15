@@ -123,13 +123,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       _userRepository.requestUser(
           userId: _authBloc.state.user!.uid, followUserId: state.user.id);
-
-      // _userRepository.followUser(
-      //   userId: _authBloc.state.user!.uid,
-      //   followUserId: state.user.id,
-      // );
-      // final updatedUser =
-      //     state.user.copyWith(followers: state.user.followers + 1);
       yield state.copyWith(isRequesting: true);
     } catch (err) {
       yield state.copyWith(
