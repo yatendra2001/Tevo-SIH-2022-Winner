@@ -6,7 +6,6 @@ enum LoginStatus {
   otpSent,
   otpVerifying,
   success,
-
   error,
 }
 

@@ -48,8 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
       appBar: AppBar(elevation: 0, backgroundColor: Colors.grey[50]),
       body: SafeArea(
         child: Center(
@@ -68,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 2.h),
                     Container(
-                      height: 5.h,
+                      height: 6.h,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 2.w),
                         child: DefaultTextStyle(
@@ -81,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 8.h),
                     PhoneForm(textEditingController: _textEditingController),
                     SizedBox(height: 1.3.h),
                     _termsAndPrivacyPolicy(),
