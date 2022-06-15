@@ -1,12 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
 import 'package:tevo/models/models.dart';
-import 'package:tevo/models/user_model.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/widgets/widgets.dart';
 
@@ -152,6 +150,18 @@ class UserRepository extends BaseUserRepository {
       fromUser: User.empty.copyWith(id: userId),
       date: DateTime.now(),
     );
+
+    final notificationRequestAccepted = Notif(
+      type: NotifType.requestAccepted,
+      fromUser: User.empty.copyWith(id: followUserId),
+      date: DateTime.now(),
+    );
+
+    _firebaseFirestore
+        .collection(Paths.notifications)
+        .doc(userId)
+        .collection(Paths.userNotifications)
+        .add(notificationRequestAccepted.toDocument());
 
     _firebaseFirestore
         .collection(Paths.notifications)

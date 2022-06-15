@@ -125,7 +125,7 @@ class PostRepository extends BasePostRepository {
           .collection(Paths.feeds)
           .doc(userId)
           .collection(Paths.userFeed)
-          .orderBy('enddate', descending: true)
+          .orderBy('enddate')
           .limit(3)
           .get();
     } else {
@@ -144,7 +144,7 @@ class PostRepository extends BasePostRepository {
           .collection(Paths.feeds)
           .doc(userId)
           .collection(Paths.userFeed)
-          .orderBy('enddate', descending: true)
+          .where('enddate')
           .startAfterDocument(lastPostDoc)
           .limit(3)
           .get();

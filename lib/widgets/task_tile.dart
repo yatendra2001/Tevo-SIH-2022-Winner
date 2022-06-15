@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:tevo/models/task_model.dart';
 
+enum TaskTileView { profileView, feedScreen, createScreenView }
+
 class TaskTile extends StatefulWidget {
   final Task task;
   final bool isComplete;
+  final TaskTileView view;
   final Function() isDeleted;
   final Function() isEditing;
 
@@ -12,6 +15,7 @@ class TaskTile extends StatefulWidget {
     Key? key,
     required this.task,
     required this.isComplete,
+    required this.view,
     required this.isDeleted,
     required this.isEditing,
   }) : super(key: key);
@@ -44,26 +48,28 @@ class _TaskTileState extends State<TaskTile> {
                   widget.task.title,
                   style: const TextStyle(fontSize: 16),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.repeat),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.edit),
-                      onPressed: widget.isEditing,
-                    ),
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.delete),
-                      onPressed: widget.isDeleted,
-                    ),
-                  ],
-                )
+                (widget.view == TaskTileView.createScreenView)
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.repeat),
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.edit),
+                            onPressed: widget.isEditing,
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.delete),
+                            onPressed: widget.isDeleted,
+                          ),
+                        ],
+                      )
+                    : SizedBox.shrink()
               ],
             ),
             showDesc
@@ -75,10 +81,11 @@ class _TaskTileState extends State<TaskTile> {
           ],
         ),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: widget.isComplete
-                ? Color(0xff009688).withOpacity(0.3)
-                : Color(0xffE01A4F).withOpacity(0.3)),
+          borderRadius: BorderRadius.circular(10),
+          color: widget.isComplete
+              ? Color(0xff009688).withOpacity(0.3)
+              : Color(0xffE01A4F).withOpacity(0.3),
+        ),
       ),
     );
   }
