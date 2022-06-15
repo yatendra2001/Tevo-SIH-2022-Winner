@@ -67,4 +67,8 @@ class LoginCubit extends Cubit<LoginState> {
       emit(state.copyWith(failure: err, status: LoginStatus.error));
     }
   }
+
+  void logoutRequested() {
+    emit(state.copyWith(status: LoginStatus.initial));
+  }
 }

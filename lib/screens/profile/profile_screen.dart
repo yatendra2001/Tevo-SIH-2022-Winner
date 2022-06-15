@@ -4,6 +4,7 @@ import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/main.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/screens/screens.dart';
@@ -69,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              state.user.username,
+              state.user.displayName,
               style: const TextStyle(color: Colors.black),
             ),
             actions: [
@@ -81,6 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                   onPressed: () {
                     context.read<AuthBloc>().add(AuthLogoutRequested());
+                    context.read<LoginCubit>().logoutRequested();
                     context.read<LikedPostsCubit>().clearAllLikedPosts();
                     MyApp.navigatorKey.currentState!
                         .pushReplacementNamed(WelcomeScreen.routeName);
