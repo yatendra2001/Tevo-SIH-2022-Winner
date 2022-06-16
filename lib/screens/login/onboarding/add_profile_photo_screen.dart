@@ -7,9 +7,13 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/helpers/image_helper.dart';
+import 'package:tevo/models/user_model.dart';
+import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
 import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
+import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 
 class AddProfilePhotoScreen extends StatefulWidget {
@@ -17,9 +21,19 @@ class AddProfilePhotoScreen extends StatefulWidget {
   static const String routeName = '/add-profile-photo-screen';
   static Route route() {
     return PageTransition(
-        settings: const RouteSettings(name: routeName),
-        type: PageTransitionType.rightToLeft,
-        child: const AddProfilePhotoScreen());
+      settings: const RouteSettings(name: routeName),
+      type: PageTransitionType.rightToLeft,
+      child: Builder(builder: (context) {
+        return BlocProvider<EditProfileCubit>(
+          create: (context) => EditProfileCubit(
+            userRepository: context.read<UserRepository>(),
+            storageRepository: context.read<StorageRepository>(),
+            profileBloc: context.read<ProfileBloc>(),
+          ),
+          child: AddProfilePhotoScreen(),
+        );
+      }),
+    );
   }
 
   @override
@@ -99,7 +113,27 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
                     children: [
                       StandardElevatedButton(
                         labelText: "Continue →",
-                        onTap: () {
+                        onTap: () async {
+                          if (profileImage != null) {
+                            SessionHelper.profileImageUrl =
+                                await StorageRepository().uploadProfileImage(
+                              url: "",
+                              image: profileImage!,
+                            );
+                          }
+
+                          await UserRepository().updateUser(
+                              user: User(
+                                  id: SessionHelper.uid ?? "",
+                                  username: SessionHelper.username ?? "",
+                                  displayName: SessionHelper.displayName ?? "",
+                                  profileImageUrl:
+                                      SessionHelper.profileImageUrl ?? '',
+                                  age: SessionHelper.age ?? '',
+                                  phone: SessionHelper.phone ?? '',
+                                  followers: 0,
+                                  following: 0,
+                                  bio: ""));
                           Navigator.of(context)
                               .pushNamed(FollowUsersScreen.routeName);
                           context.read<EditProfileCubit>().submit();
