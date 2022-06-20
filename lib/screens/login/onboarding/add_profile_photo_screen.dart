@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:tevo/helpers/image_helper.dart';
 import 'package:tevo/models/user_model.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
+import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
 import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
@@ -92,21 +94,32 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
                     "Add a profile picture!",
                     style: TextStyle(fontSize: 20.sp),
                   ),
-                  GestureDetector(
-                    onTap: () => _selectProfileImage(context),
-                    child: Card(
-                        elevation: profileImage == null ? 5 : 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          side: const BorderSide(
-                              color: kPrimaryBlackColor, width: 1.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(40.sp),
-                          child: profileImage == null
-                              ? Icon(FontAwesomeIcons.photoFilm, size: 45.sp)
-                              : Image(image: FileImage(profileImage!)),
-                        )),
+                  BlocListener<LoginCubit, LoginState>(
+                    listener: (context, state) {
+                      if (state.profilePhotoStatus ==
+                          ProfilePhotoStatus.photoUploading) {
+                        Center(
+                            child: Platform.isIOS
+                                ? const CupertinoActivityIndicator()
+                                : const CircularProgressIndicator());
+                      }
+                    },
+                    child: GestureDetector(
+                      onTap: () => _selectProfileImage(context),
+                      child: Card(
+                          elevation: profileImage == null ? 5 : 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            side: const BorderSide(
+                                color: kPrimaryBlackColor, width: 1.0),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(40.sp),
+                            child: profileImage == null
+                                ? Icon(FontAwesomeIcons.photoFilm, size: 45.sp)
+                                : Image(image: FileImage(profileImage!)),
+                          )),
+                    ),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,29 +127,10 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
                       StandardElevatedButton(
                         labelText: "Continue →",
                         onTap: () async {
-                          if (profileImage != null) {
-                            SessionHelper.profileImageUrl =
-                                await StorageRepository().uploadProfileImage(
-                              url: "",
-                              image: profileImage!,
-                            );
-                          }
-
-                          await UserRepository().updateUser(
-                              user: User(
-                                  id: SessionHelper.uid ?? "",
-                                  username: SessionHelper.username ?? "",
-                                  displayName: SessionHelper.displayName ?? "",
-                                  profileImageUrl:
-                                      SessionHelper.profileImageUrl ?? '',
-                                  age: SessionHelper.age ?? '',
-                                  phone: SessionHelper.phone ?? '',
-                                  followers: 0,
-                                  following: 0,
-                                  bio: ""));
+                          BlocProvider.of<LoginCubit>(context)
+                              .updateProfilePhoto(profileImage);
                           Navigator.of(context)
                               .pushNamed(FollowUsersScreen.routeName);
-                          context.read<EditProfileCubit>().submit();
                         },
                         isButtonNull: isButtonNotActive,
                       ),

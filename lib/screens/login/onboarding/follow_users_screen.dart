@@ -12,6 +12,7 @@ import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/onboarding/dob_screen.dart';
 import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/user_profile_image.dart';
 
@@ -31,12 +32,15 @@ class FollowUsersScreen extends StatefulWidget {
 
 class _FollowUsersScreenState extends State<FollowUsersScreen> {
   List<User> topFollowingUsersList = [];
-  bool isFollowing = false;
+  List<bool> isFollowingList = [];
 
   _getTopFollowingUser() async {
-    return await UserRepository()
-        .getUsersByFollowers()
-        .then((value) => topFollowingUsersList = value);
+    return await UserRepository().getUsersByFollowers().then((value) {
+      topFollowingUsersList = value;
+      for (var i = 0; i < topFollowingUsersList.length; i++) {
+        isFollowingList.add(false);
+      }
+    });
   }
 
   @override
@@ -69,20 +73,19 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
               ListView(
                 padding: EdgeInsets.fromLTRB(4.w, 15.h, 4.w, 5.h),
                 children: [
-                  // UpcomingRooms(upcomingRooms: upcomingRoomsList),
-                  // ...roomsList.map((e) => RoomCard(room: e)),
-                  ...topFollowingUsersList.map(
-                    (e) => Padding(
+                  ListView.builder(
+                    itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
                         leading: ClipRRect(
                           child: UserProfileImage(
-                            profileImageUrl: e.profileImageUrl,
+                            profileImageUrl:
+                                topFollowingUsersList[index].profileImageUrl,
                             radius: 18.sp,
                           ),
                         ),
                         title: Text(
-                          e.username,
+                          topFollowingUsersList[index].username,
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w500,
@@ -92,17 +95,50 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                         trailing: GestureDetector(
                             onTap: () {
                               setState(() {
-                                isFollowing = isFollowing ? false : true;
+                                isFollowingList[index] =
+                                    isFollowingList[index] ? false : true;
                               });
                             },
-                            child: isFollowing
-                                ? const Icon(Icons.add,
-                                    color: kPrimaryBlackColor)
-                                : const Icon(Icons.check,
-                                    color: kPrimaryTealColor)),
+                            child: isFollowingList[index]
+                                ? const Icon(Icons.check,
+                                    color: kPrimaryTealColor)
+                                : const Icon(Icons.add,
+                                    color: kPrimaryBlackColor)),
                       ),
                     ),
                   ),
+                  // ...topFollowingUsersList.map(
+                  //   (e) => Padding(
+                  //     padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  //     child: ListTile(
+                  //       leading: ClipRRect(
+                  //         child: UserProfileImage(
+                  //           profileImageUrl: e.profileImageUrl,
+                  //           radius: 18.sp,
+                  //         ),
+                  //       ),
+                  //       title: Text(
+                  //         e.username,
+                  //         style: TextStyle(
+                  //           fontSize: 10.sp,
+                  //           fontWeight: FontWeight.w500,
+                  //           color: kPrimaryBlackColor,
+                  //         ),
+                  //       ),
+                  //       trailing: GestureDetector(
+                  //           onTap: () {
+                  //             setState(() {
+                  //               isFollowing = isFollowing ? false : true;
+                  //             });
+                  //           },
+                  //           child: isFollowing
+                  //               ? const Icon(Icons.check,
+                  //                   color: kPrimaryTealColor)
+                  //               : const Icon(Icons.add,
+                  //                   color: kPrimaryBlackColor)),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               Positioned(
@@ -129,6 +165,11 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                 child: StandardElevatedButton(
                   labelText: "Follow →",
                   onTap: () {
+                    for (int i = 0; i < isFollowingList.length; i++) {
+                      UserRepository().requestUser(
+                          userId: SessionHelper.uid!,
+                          followUserId: topFollowingUsersList[i].id);
+                    }
                     Navigator.of(context).pushNamed(NavScreen.routeName);
                   },
                 ),
