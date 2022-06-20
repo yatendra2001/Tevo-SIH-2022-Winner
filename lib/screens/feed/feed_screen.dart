@@ -116,8 +116,10 @@ class _FeedScreenState extends State<FeedScreen> {
                             horizontal: 16, vertical: 8),
                         child: TextField(
                           onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(SearchScreen.routeName);
+                            Navigator.of(context).pushNamed(
+                                SearchScreen.routeName,
+                                arguments: SearchScreenArgs(
+                                    type: SearchScreenType.profile));
                           },
                           readOnly: true,
                           decoration: InputDecoration(
@@ -146,12 +148,19 @@ class _FeedScreenState extends State<FeedScreen> {
                       ),
                       preferredSize: Size(double.infinity, 77)),
                   actions: [
-                    const Padding(
+                    Padding(
                         padding: EdgeInsets.only(right: 16),
-                        child: UserProfileImage(
-                          radius: 16,
-                          profileImageUrl:
-                              'https://www.htplonline.com/wp-content/uploads/2020/01/Awesome-Profile-Pictures-for-Guys-look-away2.jpg',
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                ProfileScreen.routeName,
+                                arguments: ProfileScreenArgs(
+                                    userId: SessionHelper.uid!));
+                          },
+                          child: UserProfileImage(
+                            radius: 16,
+                            profileImageUrl: SessionHelper.profileImageUrl!,
+                          ),
                         )),
                     BlocBuilder<InitializeStreamChatCubit,
                         InitializeStreamChatState>(

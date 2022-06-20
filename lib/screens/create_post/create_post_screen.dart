@@ -38,10 +38,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<CreatePostBloc, CreatePostState>(
-        builder: (context, state) {
-          return DefaultTabController(
+    return BlocBuilder<CreatePostBloc, CreatePostState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: DefaultTabController(
             length: 2,
             child: NestedScrollView(
               controller: _controller,
@@ -56,40 +56,42 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 ],
               ),
             ),
-          );
-        },
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 70.0),
-        child: FloatingActionButton(
-            backgroundColor: Colors.black,
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text(
-                        'Delete Post',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      actions: [
-                        OutlinedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Cancel')),
-                        OutlinedButton(
-                            onPressed: () {
-                              _buildDeletePost();
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Yes'))
-                      ],
-                    );
-                  });
-            },
-            child: Icon(Icons.delete_outline_sharp)),
-      ),
+          ),
+          floatingActionButton: state.post != null
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 70.0),
+                  child: FloatingActionButton(
+                      backgroundColor: Colors.black,
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text(
+                                  'Delete Post',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                actions: [
+                                  OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel')),
+                                  OutlinedButton(
+                                      onPressed: () {
+                                        _buildDeletePost();
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Yes'))
+                                ],
+                              );
+                            });
+                      },
+                      child: Icon(Icons.delete_outline_sharp)),
+                )
+              : null,
+        );
+      },
     );
   }
 
@@ -99,154 +101,163 @@ class _CreatePostScreenState extends State<CreatePostScreen>
 
   _buildRemaining(CreatePostState state) {
     final todoTask = state.todoTask;
-    return AnimatedPadding(
-      duration: const Duration(seconds: 2),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          state.dateTime != null
-              ? _buildRemainingTime(state)
-              : const Text('No Posts Yet'),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Tasks",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: kPrimaryTealColor),
-                onPressed: () {
-                  _taskBottomSheet(onSubmit: (task) {
-                    context
-                        .read<CreatePostBloc>()
-                        .add(AddTaskEvent(task: task));
-                  });
-                  _scrollDown();
-                },
-                child: const Text('Add Task'),
-              )
-            ],
-          ),
-          const SizedBox(height: 16),
-          state.todoTask.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+    return state.status == CreatePostStateStatus.loading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : AnimatedPadding(
+            duration: const Duration(seconds: 2),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                state.dateTime != null
+                    ? _buildRemainingTime(state)
+                    : const Text('No Posts Yet'),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(height: 10.h),
-                    Center(
-                      child: Image.asset(
-                        kEmptyTaskImagePath,
-                        scale: 3,
-                      ),
+                    const Text(
+                      "Tasks",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                     ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      state.dateTime == null
-                          ? 'Drop your 1st task 🎯'
-                          : 'Winning 🎉',
-                      style: TextStyle(fontSize: 15.sp),
-                    ),
-                  ],
-                )
-              : Expanded(
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (_, index) {
-                      return Dismissible(
-                        key: Key(todoTask[index].dateTime.toString()),
-                        onDismissed: (_) {
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(primary: kPrimaryTealColor),
+                      onPressed: () {
+                        _taskBottomSheet(onSubmit: (task) {
                           context
                               .read<CreatePostBloc>()
-                              .add(CompleteTaskEvent(task: todoTask[index]));
-                        },
-                        child: TaskTile(
-                          isComplete: false,
-                          view: TaskTileView.createScreenView,
-                          isEditing: () {
-                            _taskBottomSheet(
-                              onSubmit: (task) {
-                                context
-                                    .read<CreatePostBloc>()
-                                    .add(UpdateTask(task: task, index: index));
+                              .add(AddTaskEvent(task: task));
+                        });
+                        _scrollDown();
+                      },
+                      child: const Text('Add Task'),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 16),
+                state.todoTask.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 10.h),
+                          Center(
+                            child: Image.asset(
+                              kEmptyTaskImagePath,
+                              scale: 3,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            state.dateTime == null
+                                ? 'Drop your 1st task 🎯'
+                                : 'Winning 🎉',
+                            style: TextStyle(fontSize: 15.sp),
+                          ),
+                        ],
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (_, index) {
+                            return Dismissible(
+                              key: Key(todoTask[index].dateTime.toString()),
+                              onDismissed: (_) {
+                                context.read<CreatePostBloc>().add(
+                                    CompleteTaskEvent(task: todoTask[index]));
                               },
-                              task: todoTask[index],
+                              child: TaskTile(
+                                isComplete: false,
+                                view: TaskTileView.createScreenView,
+                                isEditing: () {
+                                  _taskBottomSheet(
+                                    onSubmit: (task) {
+                                      context.read<CreatePostBloc>().add(
+                                          UpdateTask(task: task, index: index));
+                                    },
+                                    task: todoTask[index],
+                                  );
+                                },
+                                task: todoTask[index],
+                                isDeleted: () =>
+                                    context.read<CreatePostBloc>().add(
+                                          DeleteTaskEvent(
+                                            task: state.todoTask[index],
+                                          ),
+                                        ),
+                              ),
                             );
                           },
-                          task: todoTask[index],
-                          isDeleted: () => context.read<CreatePostBloc>().add(
-                                DeleteTaskEvent(
-                                  task: state.todoTask[index],
-                                ),
-                              ),
+                          itemCount: todoTask.length,
                         ),
-                      );
-                    },
-                    itemCount: todoTask.length,
-                  ),
-                ),
-        ],
-      ),
-    );
+                      ),
+              ],
+            ),
+          );
   }
 
   _buildCompleted(CreatePostState state) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          state.post != null
-              ? _buildRemainingTime(state)
-              : const Text('No Tasks Yet'),
-          const Text(
-            "Completed",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 15),
-          state.completedTask.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 10.h),
-                    Center(
-                      child: Image.asset(
-                        kEmptyCompleteImagePath,
-                        scale: 3,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      'Complete your 1st task 🚀',
-                      style: TextStyle(fontSize: 15.sp),
-                    ),
-                  ],
-                )
-              : ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (_, index) => TaskTile(
-                    view: TaskTileView.createScreenView,
-                    isEditing: () {},
-                    task: state.completedTask[index],
-                    isComplete: true,
-                    isDeleted: () => context
-                        .read<CreatePostBloc>()
-                        .add(DeleteTaskEvent(task: state.completedTask[index])),
-                  ),
-                  itemCount: state.completedTask.length,
+    return state.status == CreatePostStateStatus.loading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                state.post != null
+                    ? _buildRemainingTime(state)
+                    : const Text('No Tasks Yet'),
+                const Text(
+                  "Completed",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                 ),
-          const SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
-    );
+                const SizedBox(height: 15),
+                state.completedTask.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 10.h),
+                          Center(
+                            child: Image.asset(
+                              kEmptyCompleteImagePath,
+                              scale: 3,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            'Complete your 1st task 🚀',
+                            style: TextStyle(fontSize: 15.sp),
+                          ),
+                        ],
+                      )
+                    : ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (_, index) => TaskTile(
+                          view: TaskTileView.createScreenView,
+                          isEditing: () {},
+                          task: state.completedTask[index],
+                          isComplete: true,
+                          isDeleted: () => context.read<CreatePostBloc>().add(
+                              DeleteTaskEvent(
+                                  task: state.completedTask[index])),
+                        ),
+                        itemCount: state.completedTask.length,
+                      ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          );
   }
 
   _buildAppBar() {
@@ -293,15 +304,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 arguments: ProfileScreenArgs(userId: SessionHelper.uid!));
           }),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Image.asset(
-                kBaseProfileImagePath,
-                scale: 0.8,
-              ),
-            ),
-          ),
+              padding: const EdgeInsets.all(16.0),
+              child: UserProfileImage(
+                radius: 30,
+                profileImageUrl: SessionHelper.profileImageUrl!,
+              )),
         )
       ],
     );

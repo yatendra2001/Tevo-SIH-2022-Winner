@@ -39,11 +39,21 @@ class UserRepository extends BaseUserRepository {
 
   @override
   Future<List<User>> searchUsers({required String query}) async {
-    final userSnap = await _firebaseFirestore
+    List<User> list;
+
+    final userNameSnap = await _firebaseFirestore
+        .collection(Paths.users)
+        .where('name', isGreaterThanOrEqualTo: query)
+        .get();
+    list = userNameSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+
+    final nameSnap = await _firebaseFirestore
         .collection(Paths.users)
         .where('username', isGreaterThanOrEqualTo: query)
         .get();
-    return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+
+    list.addAll(nameSnap.docs.map((doc) => User.fromDocument(doc)).toList());
+    return list;
   }
 
   @override

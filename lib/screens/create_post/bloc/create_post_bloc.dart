@@ -55,6 +55,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   }
 
   Stream<CreatePostState> _mapToGetTaskEvent(GetTaskEvent event) async* {
+    yield state.copyWith(status: CreatePostStateStatus.loading);
     final userId = _authBloc.state.user!.uid;
     final post = await _postRepository.getUserLastPost(userId: userId);
     if (post != null) {
@@ -62,8 +63,11 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
         todoTask: post.toDoTask,
         completedTask: post.completedTask,
         post: post,
+        status: CreatePostStateStatus.loaded,
         dateTime: post.enddate,
       );
+    } else {
+      yield state.copyWith(status: CreatePostStateStatus.initial);
     }
   }
 
