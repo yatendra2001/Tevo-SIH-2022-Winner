@@ -137,7 +137,7 @@ class UserRepository extends BaseUserRepository {
   void followUser({
     required String userId,
     required String followUserId,
-    required String requestId,
+    required String? requestId,
   }) {
     // Add followUser to user's userFollowing.
     _firebaseFirestore
@@ -161,25 +161,27 @@ class UserRepository extends BaseUserRepository {
       date: DateTime.now(),
     );
 
-    final notificationRequestAccepted = Notif(
-      type: NotifType.requestAccepted,
-      fromUser: User.empty.copyWith(id: followUserId),
-      date: DateTime.now(),
-    );
+    if (requestId != null) {
+      final notificationRequestAccepted = Notif(
+        type: NotifType.requestAccepted,
+        fromUser: User.empty.copyWith(id: followUserId),
+        date: DateTime.now(),
+      );
 
-    _firebaseFirestore
-        .collection(Paths.notifications)
-        .doc(userId)
-        .collection(Paths.userNotifications)
-        .add(notificationRequestAccepted.toDocument());
+      _firebaseFirestore
+          .collection(Paths.notifications)
+          .doc(userId)
+          .collection(Paths.userNotifications)
+          .add(notificationRequestAccepted.toDocument());
 
-    _firebaseFirestore
-        .collection(Paths.notifications)
-        .doc(followUserId)
-        .collection(Paths.userNotifications)
-        .add(notification.toDocument());
+      _firebaseFirestore
+          .collection(Paths.notifications)
+          .doc(followUserId)
+          .collection(Paths.userNotifications)
+          .add(notification.toDocument());
 
-    deleteRequest(requestId: requestId, followUserId: followUserId);
+      deleteRequest(requestId: requestId, followUserId: followUserId);
+    }
   }
 
   @override

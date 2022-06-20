@@ -75,6 +75,14 @@ class _ProfileScreenState extends State<ProfileScreen>
             ),
             actions: [
               if (state.isCurrentUser)
+                Switch(
+                    value: state.user.isPrivate,
+                    onChanged: (val) {
+                      context
+                          .read<ProfileBloc>()
+                          .add(ProfileToUpdateUser(isPrivate: val));
+                    }),
+              if (state.isCurrentUser)
                 IconButton(
                   icon: const Icon(
                     Icons.exit_to_app,

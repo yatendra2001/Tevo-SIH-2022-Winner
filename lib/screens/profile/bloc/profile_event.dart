@@ -39,3 +39,13 @@ class ProfileFollowUser extends ProfileEvent {}
 class ProfileUnfollowUser extends ProfileEvent {}
 
 class ProfileDeleteRequest extends ProfileEvent {}
+
+class ProfileToUpdateUser extends ProfileEvent {
+  final bool isPrivate;
+  const ProfileToUpdateUser({
+    required this.isPrivate,
+  });
+
+  @override
+  List<Object?> get props => [isPrivate];
+}

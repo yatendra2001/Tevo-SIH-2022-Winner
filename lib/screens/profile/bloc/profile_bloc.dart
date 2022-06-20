@@ -51,6 +51,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield* _mapProfileUnfollowUserToState();
     } else if (event is ProfileDeleteRequest) {
       yield* _mapToDeleteRequest(event);
+    } else if (event is ProfileToUpdateUser) {
+      yield* _mapToUpdateUser(event);
     }
   }
 
@@ -121,9 +123,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> _mapProfileFollowUserToState() async* {
     try {
-      _userRepository.requestUser(
-          userId: _authBloc.state.user!.uid, followUserId: state.user.id);
-      yield state.copyWith(isRequesting: true);
+      if (state.user.isPrivate) {
+        _userRepository.requestUser(
+            userId: _authBloc.state.user!.uid, followUserId: state.user.id);
+        yield state.copyWith(isRequesting: true);
+      } else {
+        _userRepository.followUser(
+            userId: _authBloc.state.user!.uid,
+            followUserId: state.user.id,
+            requestId: null);
+        final updatedUser =
+            state.user.copyWith(followers: state.user.followers + 1);
+        yield state.copyWith(isFollowing: true, user: updatedUser);
+      }
     } catch (err) {
       yield state.copyWith(
         status: ProfileStatus.error,
@@ -149,5 +161,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             const Failure(message: 'Something went wrong! Please try again.'),
       );
     }
+  }
+
+  Stream<ProfileState> _mapToUpdateUser(ProfileToUpdateUser event) async* {
+    final User user = state.user.copyWith(isPrivate: event.isPrivate);
+    _userRepository.updateUser(user: user);
+    yield state.copyWith(user: user);
   }
 }
