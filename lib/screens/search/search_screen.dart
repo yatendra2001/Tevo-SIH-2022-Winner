@@ -151,15 +151,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ? Navigator.of(context)
                                       .pushNamed(ChannelScreen.routeName,
                                           arguments: ChannelScreenArgs(
-                                            user: context
-                                                .read<ProfileBloc>()
-                                                .state
-                                                .user,
-                                            profileImage: context
-                                                .read<ProfileBloc>()
-                                                .state
-                                                .user
-                                                .profileImageUrl,
+                                            user: user,
+                                            profileImage: user.profileImageUrl,
                                             chatType: ChatType.oneOnOne,
                                           ))
                                   : Navigator.of(context).pushNamed(

@@ -1,9 +1,13 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/auth/auth_repository.dart';
+import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/utils/session_helper.dart';
 
@@ -65,6 +69,47 @@ class LoginCubit extends Cubit<LoginState> {
       }
     } on Failure catch (err) {
       emit(state.copyWith(failure: err, status: LoginStatus.error));
+    }
+  }
+
+  void updateProfilePhoto(File? profileImage) async {
+    try {
+      emit(state.copyWith(profilePhotoStatus: ProfilePhotoStatus.uploading));
+      if (profileImage != null) {
+        SessionHelper.profileImageUrl =
+            await StorageRepository().uploadProfileImage(
+          url: "",
+          image: profileImage,
+        );
+      }
+      await _userRepository.updateUser(
+          user: User(
+              id: SessionHelper.uid ?? "",
+              username: SessionHelper.username ?? "",
+              displayName: SessionHelper.displayName ?? "",
+              profileImageUrl: SessionHelper.profileImageUrl ?? '',
+              age: SessionHelper.age ?? '',
+              phone: SessionHelper.phone ?? '',
+              followers: 0,
+              following: 0,
+              bio: ""));
+      emit(state.copyWith(profilePhotoStatus: ProfilePhotoStatus.uploaded));
+    } on Failure catch (err) {
+      emit(state.copyWith(
+          failure: err, profilePhotoStatus: ProfilePhotoStatus.error));
+    }
+  }
+
+  Future<void> fetchTopFollowers() async {
+    try {
+      emit(state.copyWith(topFollowersStatus: TopFollowersStatus.loading));
+      final accounts = await _userRepository.getUsersByFollowers();
+      emit(state.copyWith(
+          topFollowersStatus: TopFollowersStatus.loaded,
+          topFollowersAccount: accounts));
+    } on Failure catch (err) {
+      emit(state.copyWith(
+          failure: err, topFollowersStatus: TopFollowersStatus.error));
     }
   }
 

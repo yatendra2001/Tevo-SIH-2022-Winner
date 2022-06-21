@@ -6,6 +6,7 @@ import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class UserRepository extends BaseUserRepository {
@@ -61,8 +62,12 @@ class UserRepository extends BaseUserRepository {
     final userSnap = await _firebaseFirestore
         .collection(Paths.users)
         .orderBy(Paths.followers, descending: true)
+        .where("isPrivate", isEqualTo: false)
         .get();
-    return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+
+    final followersList =
+        userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+    return followersList;
   }
 
   @override
