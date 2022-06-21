@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/search/cubit/search_cubit.dart';
+import 'package:tevo/screens/stream_chat/models/chat_type.dart';
 import 'package:tevo/widgets/widgets.dart';
+
+import '../profile/bloc/profile_bloc.dart';
+
+enum SearchScreenType { profile, message }
+
+class SearchScreenArgs {
+  final SearchScreenType type;
+  SearchScreenArgs({
+    required this.type,
+  });
+}
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = '/search';
+  final SearchScreenType type;
 
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({
+    Key? key,
+    required this.type,
+  }) : super(key: key);
 
-  static Route route() {
+  static Route route({required SearchScreenArgs args}) {
     return PageRouteBuilder(
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
@@ -28,7 +45,9 @@ class SearchScreen extends StatefulWidget {
       pageBuilder: (_, __, ___) => BlocProvider<SearchCubit>(
         create: (context) =>
             SearchCubit(userRepository: context.read<UserRepository>()),
-        child: SearchScreen(),
+        child: SearchScreen(
+          type: args.type,
+        ),
       ),
     );
   }
@@ -50,92 +69,109 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        appBar: PreferredSize(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: TextField(
-              controller: _textController,
-              autofocus: true,
-              decoration: InputDecoration(
-                focusColor: Colors.black,
-                fillColor: const Color(0xffF5F5F5),
-                filled: true,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 1.0),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 1.0),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                hintText: 'Search Users @ John',
-                prefixIcon: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.black38,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: PreferredSize(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: _textController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  focusColor: Colors.black,
+                  fillColor: const Color(0xffF5F5F5),
+                  filled: true,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        const BorderSide(color: Colors.white, width: 1.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        const BorderSide(color: Colors.white, width: 1.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
+                  hintText: 'Search Users @ John',
+                  prefixIcon: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.black38,
+                    ),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.black38,
+                    ),
+                    onPressed: () {
+                      context.read<SearchCubit>().clearSearch();
+                      _textController.clear();
+                    },
                   ),
                 ),
-                suffixIcon: IconButton(
-                  icon: const Icon(
-                    Icons.clear,
-                    color: Colors.black38,
-                  ),
-                  onPressed: () {
-                    context.read<SearchCubit>().clearSearch();
-                    _textController.clear();
-                  },
-                ),
+                textInputAction: TextInputAction.search,
+                textAlignVertical: TextAlignVertical.center,
+                onSubmitted: (value) {
+                  if (value.trim().isNotEmpty) {
+                    context.read<SearchCubit>().searchUsers(value.trim());
+                  }
+                },
               ),
-              textInputAction: TextInputAction.search,
-              textAlignVertical: TextAlignVertical.center,
-              onSubmitted: (value) {
-                if (value.trim().isNotEmpty) {
-                  context.read<SearchCubit>().searchUsers(value.trim());
-                }
-              },
             ),
+            preferredSize: Size(100, 100),
           ),
-          preferredSize: Size(100, 100),
-        ),
-        body: BlocBuilder<SearchCubit, SearchState>(
-          builder: (context, state) {
-            switch (state.status) {
-              case SearchStatus.error:
-                return CenteredText(text: state.failure.message);
-              case SearchStatus.loading:
-                return const Center(child: CircularProgressIndicator());
-              case SearchStatus.loaded:
-                return state.users.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: state.users.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final user = state.users[index];
-                          return ListTile(
-                            leading: UserProfileImage(
-                              radius: 22.0,
-                              profileImageUrl: user.profileImageUrl,
-                            ),
-                            title: Text(
-                              user.username,
-                              style: const TextStyle(fontSize: 16.0),
-                            ),
-                            onTap: () => Navigator.of(context).pushNamed(
-                              ProfileScreen.routeName,
-                              arguments: ProfileScreenArgs(userId: user.id),
-                            ),
-                          );
-                        },
-                      )
-                    : const CenteredText(text: 'No users found');
-              default:
-                return Center(child: Text('So Whom To Stalk....'));
-            }
-          },
+          body: BlocBuilder<SearchCubit, SearchState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case SearchStatus.error:
+                  return CenteredText(text: state.failure.message);
+                case SearchStatus.loading:
+                  return const Center(child: CircularProgressIndicator());
+                case SearchStatus.loaded:
+                  return state.users.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: state.users.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final user = state.users[index];
+                            return ListTile(
+                              leading: UserProfileImage(
+                                radius: 22.0,
+                                profileImageUrl: user.profileImageUrl,
+                              ),
+                              title: Text(
+                                user.username,
+                                style: const TextStyle(fontSize: 16.0),
+                              ),
+                              onTap: () => widget.type ==
+                                      SearchScreenType.message
+                                  ? Navigator.of(context)
+                                      .pushNamed(ChannelScreen.routeName,
+                                          arguments: ChannelScreenArgs(
+                                            user: user,
+                                            profileImage: user.profileImageUrl,
+                                            chatType: ChatType.oneOnOne,
+                                          ))
+                                  : Navigator.of(context).pushNamed(
+                                      ProfileScreen.routeName,
+                                      arguments:
+                                          ProfileScreenArgs(userId: user.id),
+                                    ),
+                            );
+                          },
+                        )
+                      : const CenteredText(text: 'No users found');
+                default:
+                  return Center(
+                      child: Text(widget.type == SearchScreenType.profile
+                          ? 'So Whom To Stalk....'
+                          : 'So Whom you wanna chat with'));
+              }
+            },
+          ),
         ),
       ),
     );

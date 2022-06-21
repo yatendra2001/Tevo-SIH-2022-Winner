@@ -97,7 +97,7 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
                   BlocListener<LoginCubit, LoginState>(
                     listener: (context, state) {
                       if (state.profilePhotoStatus ==
-                          ProfilePhotoStatus.photoUploading) {
+                          ProfilePhotoStatus.uploading) {
                         Center(
                             child: Platform.isIOS
                                 ? const CupertinoActivityIndicator()

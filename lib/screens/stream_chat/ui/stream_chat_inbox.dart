@@ -11,6 +11,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../search/search_screen.dart';
 import 'channel_screen.dart';
 
 class StreamChatInboxArgs {
@@ -84,6 +85,15 @@ class _StreamChatInboxState extends State<StreamChatInbox> {
             GroupsInbox(),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(SearchScreen.routeName,
+                  arguments: SearchScreenArgs(type: SearchScreenType.message));
+            },
+            child: Icon(
+              Icons.add,
+              size: 30,
+            )),
       ),
     );
   }

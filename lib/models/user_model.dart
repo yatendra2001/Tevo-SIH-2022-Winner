@@ -11,6 +11,7 @@ class User extends Equatable {
   final int followers;
   final int following;
   final String bio;
+  final bool isPrivate;
 
   const User({
     required this.id,
@@ -18,6 +19,7 @@ class User extends Equatable {
     required this.displayName,
     required this.age,
     required this.phone,
+    this.isPrivate = false,
     required this.profileImageUrl,
     required this.followers,
     required this.following,
@@ -41,6 +43,7 @@ class User extends Equatable {
         id,
         username,
         displayName,
+        isPrivate,
         age,
         phone,
         profileImageUrl,
@@ -56,6 +59,7 @@ class User extends Equatable {
     String? age,
     String? phone,
     String? profileImageUrl,
+    bool? isPrivate,
     int? followers,
     int? following,
     String? bio,
@@ -65,6 +69,7 @@ class User extends Equatable {
       username: username ?? this.username,
       displayName: displayName ?? this.displayName,
       age: age ?? this.age,
+      isPrivate: isPrivate ?? this.isPrivate,
       phone: phone ?? this.phone,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       followers: followers ?? this.followers,
@@ -81,6 +86,7 @@ class User extends Equatable {
       'displayName': displayName,
       'age': age,
       'phone': phone,
+      'isPrivate': isPrivate,
       'profileImageUrl': profileImageUrl,
       'followers': followers,
       'following': following,
@@ -96,6 +102,7 @@ class User extends Equatable {
       displayName: data['displayName'] ?? '',
       age: data['age'] ?? '',
       phone: data['phone'] ?? '',
+      isPrivate: data["isPrivate"] ?? false,
       profileImageUrl: data['profileImageUrl'] ?? '',
       followers: (data['followers'] ?? 0).toInt(),
       following: (data['following'] ?? 0).toInt(),

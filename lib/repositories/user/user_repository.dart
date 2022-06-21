@@ -6,6 +6,7 @@ import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class UserRepository extends BaseUserRepository {
@@ -39,11 +40,21 @@ class UserRepository extends BaseUserRepository {
 
   @override
   Future<List<User>> searchUsers({required String query}) async {
-    final userSnap = await _firebaseFirestore
+    List<User> list;
+
+    final userNameSnap = await _firebaseFirestore
+        .collection(Paths.users)
+        .where('name', isGreaterThanOrEqualTo: query)
+        .get();
+    list = userNameSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+
+    final nameSnap = await _firebaseFirestore
         .collection(Paths.users)
         .where('username', isGreaterThanOrEqualTo: query)
         .get();
-    return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+
+    list.addAll(nameSnap.docs.map((doc) => User.fromDocument(doc)).toList());
+    return list;
   }
 
   @override
@@ -51,8 +62,12 @@ class UserRepository extends BaseUserRepository {
     final userSnap = await _firebaseFirestore
         .collection(Paths.users)
         .orderBy(Paths.followers, descending: true)
+        .where("isPrivate", isEqualTo: false)
         .get();
-    return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+
+    final followersList =
+        userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+    return followersList;
   }
 
   @override
@@ -127,7 +142,7 @@ class UserRepository extends BaseUserRepository {
   void followUser({
     required String userId,
     required String followUserId,
-    required String requestId,
+    required String? requestId,
   }) {
     // Add followUser to user's userFollowing.
     _firebaseFirestore
@@ -151,25 +166,27 @@ class UserRepository extends BaseUserRepository {
       date: DateTime.now(),
     );
 
-    final notificationRequestAccepted = Notif(
-      type: NotifType.requestAccepted,
-      fromUser: User.empty.copyWith(id: followUserId),
-      date: DateTime.now(),
-    );
+    if (requestId != null) {
+      final notificationRequestAccepted = Notif(
+        type: NotifType.requestAccepted,
+        fromUser: User.empty.copyWith(id: followUserId),
+        date: DateTime.now(),
+      );
 
-    _firebaseFirestore
-        .collection(Paths.notifications)
-        .doc(userId)
-        .collection(Paths.userNotifications)
-        .add(notificationRequestAccepted.toDocument());
+      _firebaseFirestore
+          .collection(Paths.notifications)
+          .doc(userId)
+          .collection(Paths.userNotifications)
+          .add(notificationRequestAccepted.toDocument());
 
-    _firebaseFirestore
-        .collection(Paths.notifications)
-        .doc(followUserId)
-        .collection(Paths.userNotifications)
-        .add(notification.toDocument());
+      _firebaseFirestore
+          .collection(Paths.notifications)
+          .doc(followUserId)
+          .collection(Paths.userNotifications)
+          .add(notification.toDocument());
 
-    deleteRequest(requestId: requestId, followUserId: followUserId);
+      deleteRequest(requestId: requestId, followUserId: followUserId);
+    }
   }
 
   @override

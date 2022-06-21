@@ -165,6 +165,7 @@ class _DobScreenState extends State<DobScreen> {
                                         phone: SessionHelper.phone ?? '',
                                         followers: 0,
                                         following: 0,
+                                        isPrivate: false,
                                         bio: ""));
                                 Navigator.of(context)
                                     .pushNamed(AddProfilePhotoScreen.routeName);

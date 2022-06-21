@@ -47,7 +47,9 @@ class CustomRouter {
           args: settings.arguments as EditProfileScreenArgs,
         );
       case SearchScreen.routeName:
-        return SearchScreen.route();
+        return SearchScreen.route(
+          args: settings.arguments as SearchScreenArgs,
+        );
       case CommentsScreen.routeName:
         return CommentsScreen.route(
           args: settings.arguments as CommentsScreenArgs,

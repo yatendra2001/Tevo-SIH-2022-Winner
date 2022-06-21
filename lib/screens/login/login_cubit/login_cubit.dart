@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -73,8 +74,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   void updateProfilePhoto(File? profileImage) async {
     try {
-      emit(state.copyWith(
-          profilePhotoStatus: ProfilePhotoStatus.photoUploading));
+      emit(state.copyWith(profilePhotoStatus: ProfilePhotoStatus.uploading));
       if (profileImage != null) {
         SessionHelper.profileImageUrl =
             await StorageRepository().uploadProfileImage(
@@ -82,7 +82,7 @@ class LoginCubit extends Cubit<LoginState> {
           image: profileImage,
         );
       }
-      await UserRepository().updateUser(
+      await _userRepository.updateUser(
           user: User(
               id: SessionHelper.uid ?? "",
               username: SessionHelper.username ?? "",
@@ -93,11 +93,23 @@ class LoginCubit extends Cubit<LoginState> {
               followers: 0,
               following: 0,
               bio: ""));
-      emit(
-          state.copyWith(profilePhotoStatus: ProfilePhotoStatus.photoUploaded));
+      emit(state.copyWith(profilePhotoStatus: ProfilePhotoStatus.uploaded));
     } on Failure catch (err) {
       emit(state.copyWith(
-          failure: err, profilePhotoStatus: ProfilePhotoStatus.photoError));
+          failure: err, profilePhotoStatus: ProfilePhotoStatus.error));
+    }
+  }
+
+  Future<void> fetchTopFollowers() async {
+    try {
+      emit(state.copyWith(topFollowersStatus: TopFollowersStatus.loading));
+      final accounts = await _userRepository.getUsersByFollowers();
+      emit(state.copyWith(
+          topFollowersStatus: TopFollowersStatus.loaded,
+          topFollowersAccount: accounts));
+    } on Failure catch (err) {
+      emit(state.copyWith(
+          failure: err, topFollowersStatus: TopFollowersStatus.error));
     }
   }
 

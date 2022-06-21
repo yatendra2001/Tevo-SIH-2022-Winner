@@ -27,6 +27,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         super(NotificationsState.initial()) {
     _notificationsSubscription?.cancel();
     _requestsSubscription?.cancel();
+    state.copyWith(status: NotificationsStatus.loading);
     _notificationsSubscription = _notificationRepository
         .getUserNotifications(userId: _authBloc.state.user!.uid)
         .listen((notifications) async {
