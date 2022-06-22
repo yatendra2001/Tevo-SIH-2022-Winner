@@ -43,7 +43,10 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
       resizeToAvoidBottomInset: false,
       body: BlocBuilder<LoginCubit, LoginState>(
         builder: (context, state) {
-          int len = state.topFollowersAccount.length;
+          int len = BlocProvider.of<LoginCubit>(context)
+              .state
+              .topFollowersAccount
+              .length;
           for (int i = 0; i < len; i++) {
             isFollowingList.add(false);
           }
@@ -163,9 +166,13 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                   labelText: "Follow →",
                   onTap: () {
                     for (int i = 0; i < state.topFollowersAccount.length; i++) {
-                      UserRepository().requestUser(
-                          userId: SessionHelper.uid!,
-                          followUserId: state.topFollowersAccount[i].id);
+                      if (isFollowingList[i]) {
+                        log("yeh kitni baar chlrha hai");
+                        UserRepository().followUser(
+                            userId: SessionHelper.uid!,
+                            followUserId: state.topFollowersAccount[i].id,
+                            requestId: null);
+                      }
                     }
                     Navigator.of(context).pushNamed(NavScreen.routeName);
                   },
