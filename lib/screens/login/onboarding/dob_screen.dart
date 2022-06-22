@@ -153,6 +153,8 @@ class _DobScreenState extends State<DobScreen> {
                           TextButton(
                               onPressed: () async {
                                 SessionHelper.age = _ageController.text;
+                                Navigator.of(context)
+                                    .pushNamed(AddProfilePhotoScreen.routeName);
                                 await UserRepository().setUser(
                                     user: User(
                                         id: SessionHelper.uid ?? "",
@@ -167,8 +169,6 @@ class _DobScreenState extends State<DobScreen> {
                                         following: 0,
                                         isPrivate: false,
                                         bio: ""));
-                                Navigator.of(context)
-                                    .pushNamed(AddProfilePhotoScreen.routeName);
                               },
                               child: Text(
                                 "YES, I'M ${_ageController.text}",

@@ -64,10 +64,18 @@ class UserRepository extends BaseUserRepository {
         .orderBy(Paths.followers, descending: true)
         .where("isPrivate", isEqualTo: false)
         .get();
+    // log(SessionHelper.uid!);
+    log(SessionHelper.uid ?? " null hai value");
 
     final followersList =
         userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
-    return followersList;
+    List<User> topFollowersList = [];
+    for (var element in followersList) {
+      if (element.id != SessionHelper.uid) {
+        topFollowersList.add(element);
+      }
+    }
+    return topFollowersList;
   }
 
   @override
@@ -144,6 +152,8 @@ class UserRepository extends BaseUserRepository {
     required String followUserId,
     required String? requestId,
   }) {
+    log("han yeh bhi");
+
     // Add followUser to user's userFollowing.
     _firebaseFirestore
         .collection(Paths.following)
