@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tevo/models/task_model.dart';
+import 'package:tevo/utils/theme_constants.dart';
 
 enum TaskTileView { profileView, feedScreen, createScreenView }
 
@@ -82,9 +83,10 @@ class _TaskTileState extends State<TaskTile> {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: widget.isComplete
-              ? Color(0xff009688).withOpacity(0.3)
-              : Color(0xffE01A4F).withOpacity(0.3),
+          border: Border.all(color: kPrimaryBlackColor),
+          color: widget.isComplete ? kPrimaryBlackColor : kPrimaryWhiteColor,
+          // ? Color(0xff009688).withOpacity(0.3)
+          // : Color(0xffE01A4F).withOpacity(0.3),
         ),
       ),
     );

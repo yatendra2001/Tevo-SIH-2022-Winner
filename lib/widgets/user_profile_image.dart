@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tevo/utils/theme_constants.dart';
 
 class UserProfileImage extends StatelessWidget {
   final double radius;
@@ -44,7 +45,7 @@ class UserProfileImage extends StatelessWidget {
     if (profileImage == null && profileImageUrl.isEmpty) {
       return Icon(
         Icons.account_circle,
-        color: Colors.grey[400],
+        color: kPrimaryBlackColor.withOpacity(0.3),
         size: radius * 2,
       );
     }

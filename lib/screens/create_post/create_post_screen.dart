@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
@@ -119,14 +120,49 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // NeumorphicText(
+                    //   "Tasks",
+                    //   textStyle: NeumorphicTextStyle(fontSize: 18.sp),
+                    // ),
                     const Text(
                       "Tasks",
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                     ),
+                    // NeumorphicButton(
+                    //   onPressed: () {
+                    //     _taskBottomSheet(onSubmit: (task) {
+                    //       context
+                    //           .read<CreatePostBloc>()
+                    //           .add(AddTaskEvent(task: task));
+                    //     });
+                    //     _scrollDown();
+                    //   },
+                    //   style: NeumorphicStyle(
+                    //     border: NeumorphicBorder(
+                    //       color: kPrimaryBlackColor,
+                    //       width: 0.8,
+                    //     ),
+                    //     depth: 8,
+                    //     lightSource: LightSource.top,
+                    //     color: Colors.white,
+                    //     shape: NeumorphicShape.flat,
+                    //     boxShape: NeumorphicBoxShape.roundRect(
+                    //         BorderRadius.circular(5)),
+                    //   ),
+                    //   padding: EdgeInsets.symmetric(
+                    //       vertical: 1.5.h, horizontal: 4.w),
+                    //   child: const Text('Add Task'
+                    //       // style: TextStyle(color: Colors.white),
+                    //       ),
+                    // ),
                     ElevatedButton(
-                      style:
-                          ElevatedButton.styleFrom(primary: kPrimaryTealColor),
+                      style: ElevatedButton.styleFrom(
+                          primary: kPrimaryWhiteColor,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: kPrimaryBlackColor),
+                              borderRadius: BorderRadius.circular(5))),
                       onPressed: () {
                         _taskBottomSheet(onSubmit: (task) {
                           context
@@ -135,7 +171,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         });
                         _scrollDown();
                       },
-                      child: const Text('Add Task'),
+                      child: const Text(
+                        'Add Task',
+                        style: TextStyle(color: kPrimaryBlackColor),
+                      ),
                     )
                   ],
                 ),
@@ -282,7 +321,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           child: Text(
             "Remaining",
             style: TextStyle(
-              color: kPrimaryRedColor,
+              color: kPrimaryBlackColor,
               fontSize: 18,
             ),
           ),
@@ -291,7 +330,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           child: Text(
             "Completed",
             style: TextStyle(
-              color: kPrimaryRedColor,
+              color: kPrimaryBlackColor,
               fontSize: 18,
             ),
           ),

@@ -87,10 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 StandardElevatedButton(
                     labelText: "Continue →",
                     onTap: () {
+                      Navigator.pushNamed(context, OtpScreen.routeName);
                       BlocProvider.of<LoginCubit>(context).sendOtpOnPhone(
                           phone: context.read<LoginCubit>().phone);
                       SessionHelper.phone = context.read<LoginCubit>().phone;
-                      Navigator.pushNamed(context, OtpScreen.routeName);
                     },
                     isButtonNull: isButtonNotActive),
                 Padding(

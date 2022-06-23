@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/enums/enums.dart';
@@ -9,6 +11,7 @@ import 'package:tevo/screens/feed/feed_screen.dart';
 import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:tevo/screens/notifications/notifications_screen.dart';
+import 'package:tevo/utils/theme_constants.dart';
 
 import '../create_post/bloc/create_post_bloc.dart';
 import '../feed/bloc/feed_bloc.dart';
@@ -31,40 +34,40 @@ class NavScreen extends StatelessWidget {
 
   final Map<BottomNavItem, dynamic> items = {
     BottomNavItem.feed: Container(
-      height: 38,
-      width: 38,
+      height: 42,
+      width: 42,
       decoration: BoxDecoration(
-          color: const Color(0xffD8F3F1),
-          borderRadius: BorderRadius.circular(8)),
+          border: Border.all(color: kPrimaryBlackColor),
+          borderRadius: BorderRadius.circular(10)),
       child: const Icon(
         Icons.home_outlined,
         size: 23,
-        color: Color(0xff009688),
+        color: kPrimaryBlackColor,
       ),
     ),
     BottomNavItem.create: Container(
-      height: 48,
-      width: 48,
+      height: 42,
+      width: 42,
       decoration: BoxDecoration(
-          color: const Color(0xff009688),
+          border: Border.all(color: kPrimaryBlackColor),
           borderRadius: BorderRadius.circular(10)),
       child: const Icon(
         Icons.add,
-        color: Colors.white,
-        size: 30,
+        color: kPrimaryBlackColor,
+        size: 23,
       ),
     ),
     BottomNavItem.notifications: Container(
-      height: 38,
-      width: 38,
+      height: 42,
+      width: 42,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          color: const Color(0xffD8F3F1),
-          borderRadius: BorderRadius.circular(8)),
+          border: Border.all(color: kPrimaryBlackColor),
+          borderRadius: BorderRadius.circular(10)),
       child: const Icon(
         Icons.notifications_none_outlined,
         size: 23,
-        color: Color(0xff009688),
+        color: kPrimaryBlackColor,
       ),
     )
   };
@@ -110,7 +113,8 @@ class NavScreen extends StatelessWidget {
               extendBody: true,
               body:
                   screens[context.read<BottomNavBarCubit>().state.selectedItem],
-              bottomNavigationBar: _customisedBottomNavBar(context, state),
+              bottomNavigationBar:
+                  _customisedGoogleBottomNavBar(context, state),
             ),
           );
         },
@@ -125,15 +129,84 @@ class NavScreen extends StatelessWidget {
     context.read<BottomNavBarCubit>().updateSelectedItem(selectedItem);
   }
 
-  _customisedBottomNavBar(context, state) {
+  _customisedGoogleBottomNavBar(context, state) {
     return Container(
-      height: 76,
+      height: 9.4.h,
       decoration: const BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.black38,
             spreadRadius: 0,
-            blurRadius: 10,
+            blurRadius: 8,
+          ),
+        ],
+        color: Color(0xffFFFFFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+          bottomLeft: Radius.zero,
+          bottomRight: Radius.zero,
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 6.3.w, vertical: 1.h),
+        child: GNav(
+          haptic: true, // haptic feedback
+          tabBorderRadius: 10,
+          tabActiveBorder: Border.all(
+              color: kPrimaryBlackColor, width: 1), // tab button border
+          tabBorder:
+              Border.all(color: Colors.grey, width: 1), // tab button border
+          curve: Curves.easeOutExpo, // tab animation curves
+          duration: Duration(milliseconds: 300), // tab animation duration
+          gap: 8, // the tab button gap between icon and text
+          color: Colors.grey[800], // unselected icon color
+          activeColor: kPrimaryWhiteColor, // selected icon and text color
+          iconSize: 20.sp, // tab button icon size
+          textSize: 30.sp,
+          tabBackgroundColor:
+              kPrimaryBlackColor, // selected tab background color
+          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+          tabs: const [
+            GButton(
+              icon: Icons.home_outlined,
+              text: 'Home',
+            ),
+            GButton(
+              icon: Icons.add,
+              text: 'Create',
+            ),
+            GButton(
+              icon: Icons.notifications_none_outlined,
+              text: 'Notification',
+            ),
+          ],
+          onTabChange: (index) {
+            if (index == 0) {
+              BlocProvider.of<BottomNavBarCubit>(context)
+                  .updateSelectedItem(BottomNavItem.feed);
+            } else if (index == 1) {
+              BlocProvider.of<BottomNavBarCubit>(context)
+                  .updateSelectedItem(BottomNavItem.create);
+            } else if (index == 2) {
+              BlocProvider.of<BottomNavBarCubit>(context)
+                  .updateSelectedItem(BottomNavItem.notifications);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  _customisedBottomNavBar(context, state) {
+    return Container(
+      height: 9.4.h,
+      decoration: const BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            spreadRadius: 0,
+            blurRadius: 8,
           ),
         ],
         color: Color(0xffFFFFFF),
@@ -153,7 +226,7 @@ class NavScreen extends StatelessWidget {
                 Material(
                   type: MaterialType.transparency,
                   child: InkWell(
-                    highlightColor: Colors.grey,
+                    highlightColor: kPrimaryBlackColor,
                     onTap: () {
                       _selectBottomNavItem(
                         context,

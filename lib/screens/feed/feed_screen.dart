@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -12,6 +13,7 @@ import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
+import 'package:fluttericon/linecons_icons.dart';
 
 class FeedScreen extends StatefulWidget {
   static const String routeName = '/feed';
@@ -167,8 +169,8 @@ class _FeedScreenState extends State<FeedScreen> {
                       builder: (context, state) {
                         if (state is StreamChatInitializedState) {
                           return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 8),
                             child: Stack(
                               children: [
                                 if (SessionHelper.totalUnreadMessagesCount > 0)
@@ -186,7 +188,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                     ),
                                   ),
                                 IconButton(
-                                  icon: Icon(FontAwesomeIcons.comments),
+                                  icon: Icon(Linecons.paper_plane),
                                   onPressed: () {
                                     Navigator.pushNamed(
                                         context, StreamChatInbox.routeName);
@@ -199,7 +201,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: IconButton(
-                            icon: Icon(FontAwesomeIcons.message),
+                            icon: Icon(Linecons.paper_plane),
                             onPressed: () {
                               Navigator.pushNamed(
                                   context, StreamChatInbox.routeName);
