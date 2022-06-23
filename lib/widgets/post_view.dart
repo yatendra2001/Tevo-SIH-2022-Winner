@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class PostView extends StatefulWidget {
@@ -38,11 +39,11 @@ class _PostViewState extends State<PostView> {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: const Color(0xffFFFFFF),
+      color: kPrimaryWhiteColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 5,
+          borderRadius: BorderRadius.circular(10),
+          side: const BorderSide(color: kPrimaryBlackColor)),
+      elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
