@@ -9,7 +9,7 @@ class AppThemes {
     fontFamily: FontFamily.workSans,
     brightness: Brightness.light,
   ).copyWith(
-    primaryColor: kPrimaryTealColor,
+    primaryColor: kPrimaryBlackColor,
     scaffoldBackgroundColor: Colors.grey[50],
     textTheme: TextTheme(
       displayLarge: ThemeData.light()

@@ -39,8 +39,9 @@ class _TaskTileState extends State<TaskTile> {
       },
       child: Container(
         margin: const EdgeInsets.all(8),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +50,8 @@ class _TaskTileState extends State<TaskTile> {
                   widget.task.title,
                   style: const TextStyle(fontSize: 16),
                 ),
-                (widget.view == TaskTileView.createScreenView)
+                (widget.view == TaskTileView.createScreenView &&
+                        !widget.isComplete)
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -70,9 +72,12 @@ class _TaskTileState extends State<TaskTile> {
                           ),
                         ],
                       )
-                    : SizedBox.shrink()
+                    : widget.isComplete
+                        ? Icon(Icons.check_circle, color: kPrimaryBlackColor)
+                        : Icon(Icons.punch_clock, color: kPrimaryBlackColor),
               ],
             ),
+            if (showDesc) SizedBox(height: 8),
             showDesc
                 ? Text(
                     widget.task.description!,
@@ -82,9 +87,9 @@ class _TaskTileState extends State<TaskTile> {
           ],
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(color: kPrimaryBlackColor),
-          color: widget.isComplete ? kPrimaryBlackColor : kPrimaryWhiteColor,
+          color: kPrimaryWhiteColor,
           // ? Color(0xff009688).withOpacity(0.3)
           // : Color(0xffE01A4F).withOpacity(0.3),
         ),
