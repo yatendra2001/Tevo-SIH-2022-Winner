@@ -1,6 +1,6 @@
 import 'package:flutter/painting.dart';
 
-const kPrimaryTealColor = Color(0xff07020D);
+const kPrimaryTealColor = Color(0xff009688);
 const kPrimaryWhiteColor = Color.fromARGB(255, 255, 255, 255);
 const kPrimaryRedColor = Color(0xffE01A4F);
 const kPrimaryBlackColor = Color(0xff07020D);

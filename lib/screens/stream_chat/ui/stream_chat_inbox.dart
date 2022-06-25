@@ -86,6 +86,7 @@ class _StreamChatInboxState extends State<StreamChatInbox> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+            backgroundColor: kPrimaryBlackColor,
             onPressed: () {
               Navigator.of(context).pushNamed(SearchScreen.routeName,
                   arguments: SearchScreenArgs(type: SearchScreenType.message));

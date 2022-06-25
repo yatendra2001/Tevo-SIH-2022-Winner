@@ -8,6 +8,7 @@ import 'package:tevo/screens/stream_chat/models/chat_type.dart';
 import 'package:tevo/screens/stream_chat/models/inbox_utils.dart';
 import 'package:tevo/screens/stream_chat/ui/widgets/members_list_sheet.dart';
 import 'package:tevo/utils/session_helper.dart';
+import 'package:tevo/utils/theme_constants.dart';
 
 class ChannelScreenArgs {
   final userModel.User? user;
@@ -70,6 +71,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
               'u2': widget.user!.username,
               'u1id': SessionHelper.uid,
               'u2id': widget.user!.id,
+              'image': widget.user?.profileImageUrl
             },
             id: generateChannelId(SessionHelper.uid!, widget.user!.id),
           );
@@ -108,18 +110,25 @@ class _ChannelScreenState extends State<ChannelScreen> {
             onBackPressed: () => Navigator.popUntil(context, (route) => false),
             actions: [
               if (channel.extraData['chat_type'] == ChatType.oneOnOne)
-                Container(
-                  width: 44,
-                  height: 44,
-                  margin: EdgeInsets.only(right: 8),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.cyan,
-                      image: DecorationImage(
-                          image: NetworkImage((isOneOnOne
-                                  ? widget.profileImage
-                                  : channel.image) ??
-                              'https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png'))),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pushNamed(
+                      ProfileScreen.routeName,
+                      arguments:
+                          ProfileScreenArgs(userId: widget.user!.id ?? '')),
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    margin: EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: kPrimaryBlackColor,
+                        image: DecorationImage(
+                            image: NetworkImage((isOneOnOne
+                                    ? (widget.profileImage ??
+                                        'https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png')
+                                    : channel.image) ??
+                                'https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png'))),
+                  ),
                 ),
               if (channel.extraData['chat_type'] != ChatType.oneOnOne)
                 SizedBox(

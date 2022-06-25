@@ -60,30 +60,46 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           ),
           floatingActionButton: state.post != null
               ? Padding(
-                  padding: const EdgeInsets.only(bottom: 70.0),
+                  padding: EdgeInsets.only(bottom: 10.h),
                   child: FloatingActionButton(
-                      backgroundColor: Colors.black,
+                      backgroundColor: kPrimaryBlackColor,
                       onPressed: () {
                         showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  side: BorderSide(
+                                      color: kPrimaryBlackColor, width: 2.0),
+                                ),
                                 title: const Text(
-                                  'Delete Post',
-                                  style: TextStyle(color: Colors.black),
+                                  'Delete today\'s post?',
+                                  style: TextStyle(color: kPrimaryBlackColor),
+                                ),
+                                content: Text(
+                                  'This will permanently delete all today\'s targets and can\'t be undone?',
+                                  style: TextStyle(
+                                      color:
+                                          kPrimaryBlackColor.withOpacity(0.6),
+                                      fontWeight: FontWeight.w400),
                                 ),
                                 actions: [
                                   OutlinedButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text('Cancel')),
+                                      child: Text('Cancel',
+                                          style: TextStyle(
+                                              color: kPrimaryBlackColor))),
                                   OutlinedButton(
                                       onPressed: () {
                                         _buildDeletePost();
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text('Yes'))
+                                      child: Text('Yes',
+                                          style: TextStyle(
+                                              color: kPrimaryBlackColor)))
                                 ],
                               );
                             });
@@ -140,25 +156,26 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     //   },
                     //   style: NeumorphicStyle(
                     //     border: NeumorphicBorder(
-                    //       color: kPrimaryBlackColor,
+                    //       color: kPrimaryWhiteColor,
                     //       width: 0.8,
                     //     ),
                     //     depth: 8,
                     //     lightSource: LightSource.top,
-                    //     color: Colors.white,
+                    //     color: kPrimaryBlackColor,
                     //     shape: NeumorphicShape.flat,
                     //     boxShape: NeumorphicBoxShape.roundRect(
                     //         BorderRadius.circular(5)),
                     //   ),
                     //   padding: EdgeInsets.symmetric(
                     //       vertical: 1.5.h, horizontal: 4.w),
-                    //   child: const Text('Add Task'
-                    //       // style: TextStyle(color: Colors.white),
-                    //       ),
+                    //   child: const Text(
+                    //     'Add Task',
+                    //     style: TextStyle(color: Colors.white),
+                    //   ),
                     // ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          primary: kPrimaryWhiteColor,
+                          primary: kPrimaryBlackColor,
                           elevation: 3,
                           shape: RoundedRectangleBorder(
                               side: const BorderSide(color: kPrimaryBlackColor),
@@ -173,7 +190,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                       },
                       child: const Text(
                         'Add Task',
-                        style: TextStyle(color: kPrimaryBlackColor),
+                        style: TextStyle(color: kPrimaryWhiteColor),
                       ),
                     )
                   ],
@@ -246,7 +263,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             child: CircularProgressIndicator(),
           )
         : Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -321,18 +338,18 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           child: Text(
             "Remaining",
             style: TextStyle(
-              color: kPrimaryBlackColor,
-              fontSize: 18,
-            ),
+                color: kPrimaryBlackColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
           ),
         ),
         Tab(
           child: Text(
             "Completed",
             style: TextStyle(
-              color: kPrimaryBlackColor,
-              fontSize: 18,
-            ),
+                color: kPrimaryBlackColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
           ),
         ),
       ]),
@@ -488,17 +505,17 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           return TimerCountdown(
               format: CountDownTimerFormat.hoursMinutesSeconds,
               timeTextStyle: const TextStyle(
-                color: Colors.teal,
+                color: kPrimaryBlackColor,
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
               ),
               colonsTextStyle: const TextStyle(
-                color: Colors.teal,
+                color: kPrimaryBlackColor,
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
               ),
               descriptionTextStyle: const TextStyle(
-                color: Colors.red,
+                color: kPrimaryBlackColor,
                 fontSize: 10,
               ),
               spacerWidth: 20,

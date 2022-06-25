@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
@@ -41,7 +42,7 @@ class _PostViewState extends State<PostView> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: kPrimaryWhiteColor,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           side: const BorderSide(color: kPrimaryBlackColor)),
       elevation: 0,
       child: Padding(
@@ -91,43 +92,44 @@ class _PostViewState extends State<PostView> {
                           ),
                         ],
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: Text('Are you sure to unfollow ?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        // widget.onPressed!();
-                                        // Navigator.of(context).popAndPushNamed(
-                                        //     ReportScreen.routeName);
-                                      },
-                                      child: const Text('Report'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        widget.onPressed!();
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Unfollow'),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        child: const Text(
-                          'Following',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: const Color(0xff009688),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                        ),
-                      )
+                      if (widget.post.author.id != SessionHelper.uid)
+                        ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Text('Are you sure to unfollow ?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          // widget.onPressed!();
+                                          // Navigator.of(context).popAndPushNamed(
+                                          //     ReportScreen.routeName);
+                                        },
+                                        child: const Text('Report'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          widget.onPressed!();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Unfollow'),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: const Text(
+                            'Following',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: kPrimaryBlackColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                        )
                     ],
                   ),
                   ListView.builder(
