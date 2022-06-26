@@ -24,11 +24,19 @@ class PhoneForm extends StatefulWidget {
 
 class _PhoneFormState extends State<PhoneForm> {
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
+    _focusNode.requestFocus();
     SmsAutoFill().listenForCode();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,7 +45,7 @@ class _PhoneFormState extends State<PhoneForm> {
       key: _formKey,
       child: IntlPhoneField(
         controller: widget.textEditingController,
-        autofocus: true,
+        focusNode: _focusNode,
         textAlignVertical: TextAlignVertical.center,
         style: TextStyle(color: widget.textColor ?? kPrimaryBlackColor),
         dropdownIcon: Icon(

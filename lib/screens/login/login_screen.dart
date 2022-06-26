@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
+
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/otp_screen.dart';
 import 'package:tevo/screens/login/widgets/phoneform_widget.dart';
@@ -16,14 +17,11 @@ import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-  static const String routeName = '/login-screen';
-  static Route route() {
-    return PageTransition(
-        settings: const RouteSettings(name: routeName),
-        type: PageTransitionType.rightToLeft,
-        child: const LoginScreen());
-  }
+  final PageController controller;
+  const LoginScreen({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -46,58 +44,57 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(elevation: 0, backgroundColor: Colors.grey[50]),
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    SizedBox(height: 4.h),
-                    Text(
-                      "Sign in with your phone number",
-                      style: TextStyle(fontSize: 20.sp),
-                    ),
-                    SizedBox(height: 2.h),
-                    Container(
-                      height: 6.h,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 2.w),
-                        child: DefaultTextStyle(
-                          style: TextStyle(
-                            color: kPrimaryBlackColor,
-                            fontSize: 10.sp,
-                          ),
-                          textAlign: TextAlign.center,
-                          child: _animatedQuotedTextsMethod(),
+    return SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  SizedBox(height: 4.h),
+                  Text(
+                    "Sign in with your phone number",
+                    style: TextStyle(fontSize: 20.sp),
+                  ),
+                  SizedBox(height: 2.h),
+                  Container(
+                    height: 6.h,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2.w),
+                      child: DefaultTextStyle(
+                        style: TextStyle(
+                          color: kPrimaryBlackColor,
+                          fontSize: 10.sp,
                         ),
+                        textAlign: TextAlign.center,
+                        child: _animatedQuotedTextsMethod(),
                       ),
                     ),
-                    SizedBox(height: 8.h),
-                    PhoneForm(textEditingController: _textEditingController),
-                    SizedBox(height: 1.3.h),
-                    _termsAndPrivacyPolicy(),
-                  ],
-                ),
-                StandardElevatedButton(
-                    labelText: "Continue →",
-                    onTap: () {
-                      Navigator.pushNamed(context, OtpScreen.routeName);
-                      BlocProvider.of<LoginCubit>(context).sendOtpOnPhone(
-                          phone: context.read<LoginCubit>().phone);
-                      SessionHelper.phone = context.read<LoginCubit>().phone;
-                    },
-                    isButtonNull: isButtonNotActive),
-                Padding(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom)),
-              ],
-            ),
+                  ),
+                  SizedBox(height: 8.h),
+                  PhoneForm(textEditingController: _textEditingController),
+                  SizedBox(height: 1.3.h),
+                  _termsAndPrivacyPolicy(),
+                ],
+              ),
+              SizedBox(height: 2.h),
+              StandardElevatedButton(
+                  labelText: "Continue →",
+                  onTap: () {
+                    widget.controller.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn);
+                    BlocProvider.of<LoginCubit>(context).sendOtpOnPhone(
+                        phone: context.read<LoginCubit>().phone);
+                    SessionHelper.phone = context.read<LoginCubit>().phone;
+                  },
+                  isButtonNull: isButtonNotActive),
+              Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom)),
+            ],
           ),
         ),
       ),

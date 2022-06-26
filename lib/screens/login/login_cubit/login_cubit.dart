@@ -49,8 +49,10 @@ class LoginCubit extends Cubit<LoginState> {
       SessionHelper.uid = userCredential.user?.uid;
       SessionHelper.phone = userCredential.user?.phoneNumber;
       emit(state.copyWith(status: LoginStatus.success));
-    } on Failure catch (err) {
-      emit(state.copyWith(failure: err, status: LoginStatus.error));
+    } catch (err) {
+      emit(state.copyWith(
+          failure: Failure(message: "Unable to verify otp"),
+          status: LoginStatus.error));
     }
   }
 

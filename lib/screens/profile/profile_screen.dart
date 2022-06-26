@@ -5,6 +5,7 @@ import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/main.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
+import 'package:tevo/screens/login/pageview.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/screens/screens.dart';
@@ -93,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     context.read<LoginCubit>().logoutRequested();
                     context.read<LikedPostsCubit>().clearAllLikedPosts();
                     MyApp.navigatorKey.currentState!
-                        .pushReplacementNamed(WelcomeScreen.routeName);
+                        .pushReplacementNamed(LoginPageView.routeName);
                   },
                 ),
             ],
