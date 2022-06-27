@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:tevo/models/task_model.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -73,8 +75,10 @@ class _TaskTileState extends State<TaskTile> {
                         ],
                       )
                     : widget.isComplete
-                        ? Icon(Icons.check_circle, color: kPrimaryBlackColor)
-                        : Icon(Icons.punch_clock, color: kPrimaryBlackColor),
+                        ? Icon(FontAwesome5.check_circle,
+                            color: kPrimaryBlackColor)
+                        : Icon(FontAwesomeIcons.clock,
+                            color: kPrimaryBlackColor),
               ],
             ),
             if (showDesc) SizedBox(height: 8),

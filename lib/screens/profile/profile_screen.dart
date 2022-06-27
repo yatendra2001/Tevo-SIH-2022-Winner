@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/main.dart';
@@ -8,6 +10,7 @@ import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class ProfileScreenArgs {
@@ -69,10 +72,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(
-              state.user.displayName,
-              style: const TextStyle(color: Colors.black),
-            ),
+            elevation: 0,
+            backgroundColor: Colors.grey[50],
             actions: [
               if (state.isCurrentUser)
                 Switch(
@@ -86,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 IconButton(
                   icon: const Icon(
                     Icons.exit_to_app,
-                    color: Colors.black,
+                    color: kPrimaryBlackColor,
                   ),
                   onPressed: () {
                     context.read<AuthBloc>().add(AuthLogoutRequested());
@@ -119,35 +120,53 @@ class _ProfileScreenState extends State<ProfileScreen>
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 32.0, 24.0, 0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           UserProfileImage(
                             radius: 40.0,
                             profileImageUrl: state.user.profileImageUrl,
                           ),
-                          ProfileStats(
-                            isRequesting: state.isRequesting,
-                            isCurrentUser: state.isCurrentUser,
-                            isFollowing: state.isFollowing,
-                            posts: state.posts.length,
-                            followers: state.user.followers,
-                            following: state.user.following,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 30.0,
+                                vertical: 10.0,
+                              ),
+                              child: ProfileInfo(
+                                username: state.user.username,
+                                bio: state.user.bio,
+                                displayName: state.user.displayName,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 10.0,
-                      ),
-                      child: ProfileInfo(
-                        username: state.user.username,
-                        bio: state.user.bio,
-                      ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ProfileStats(
+                      isRequesting: state.isRequesting,
+                      isCurrentUser: state.isCurrentUser,
+                      isFollowing: state.isFollowing,
+                      posts: state.posts.length,
+                      followers: state.user.followers,
+                      following: state.user.following,
+                    ),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    Divider(
+                      color: kPrimaryBlackColor,
+                    ),
+                    const SizedBox(
+                      height: 32,
                     ),
                   ],
                 ),
@@ -156,23 +175,39 @@ class _ProfileScreenState extends State<ProfileScreen>
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final post = state.posts[index];
+                    final date = state.posts[index]!.toDoTask[0].dateTime;
                     final likedPostsState =
                         context.watch<LikedPostsCubit>().state;
                     final isLiked =
                         likedPostsState.likedPostIds.contains(post!.id);
-                    return PostView(
-                      post: post,
-                      isLiked: isLiked,
-                      onLike: () {
-                        if (isLiked) {
-                          context
-                              .read<LikedPostsCubit>()
-                              .unlikePost(post: post);
-                        } else {
-                          context.read<LikedPostsCubit>().likePost(post: post);
-                        }
-                      },
-                      onPressed: null,
+                    return Column(
+                      children: [
+                        Text(
+                          DateFormat("EEEE, MMMM d, y").format(date),
+                          style: TextStyle(
+                              color: kPrimaryBlackColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18.sp),
+                        ),
+                        SizedBox(height: 8),
+                        PostView(
+                          post: post,
+                          isLiked: isLiked,
+                          onLike: () {
+                            if (isLiked) {
+                              context
+                                  .read<LikedPostsCubit>()
+                                  .unlikePost(post: post);
+                            } else {
+                              context
+                                  .read<LikedPostsCubit>()
+                                  .likePost(post: post);
+                            }
+                          },
+                          onPressed: null,
+                        ),
+                        SizedBox(height: 32),
+                      ],
                     );
                   },
                   childCount: state.posts.length,
