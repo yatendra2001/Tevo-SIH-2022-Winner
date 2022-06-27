@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -6,11 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:tevo/models/models.dart';
-import 'package:tevo/repositories/auth/auth_repository.dart';
 import 'package:tevo/repositories/repositories.dart';
-import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/utils/session_helper.dart';
-
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -49,8 +45,10 @@ class LoginCubit extends Cubit<LoginState> {
       SessionHelper.uid = userCredential.user?.uid;
       SessionHelper.phone = userCredential.user?.phoneNumber;
       emit(state.copyWith(status: LoginStatus.success));
-    } on Failure catch (err) {
-      emit(state.copyWith(failure: err, status: LoginStatus.error));
+    } catch (err) {
+      emit(state.copyWith(
+          failure: const Failure(message: "Unable to verify otp"),
+          status: LoginStatus.error));
     }
   }
 
@@ -61,11 +59,17 @@ class LoginCubit extends Cubit<LoginState> {
 
   void checkUsername(String username) async {
     try {
-      final check = await _userRepository.searchUserbyUsername(query: username);
-      if (check == false) {
+      if (username.length < 4) {
         emit(state.copyWith(usernameStatus: UsernameStatus.usernameExists));
-      } else if (check == true) {
-        emit(state.copyWith(usernameStatus: UsernameStatus.usernameAvailable));
+      } else {
+        final check =
+            await _userRepository.searchUserbyUsername(query: username);
+        if (check == false) {
+          emit(state.copyWith(usernameStatus: UsernameStatus.usernameExists));
+        } else if (check == true) {
+          emit(
+              state.copyWith(usernameStatus: UsernameStatus.usernameAvailable));
+        }
       }
     } on Failure catch (err) {
       emit(state.copyWith(failure: err, status: LoginStatus.error));

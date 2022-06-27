@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/blocs/blocs.dart';
+import 'package:tevo/screens/login/onboarding/onboarding_pageview.dart';
 import 'package:tevo/screens/login/onboarding/registration_screen.dart';
+import 'package:tevo/screens/login/pageview.dart';
 import 'package:tevo/screens/login/welcome_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
@@ -26,7 +28,7 @@ class SplashScreen extends StatelessWidget {
         listener: (context, state) {
           if (state.status == AuthStatus.unauthenticated) {
             //Go to welcome screen
-            Navigator.of(context).pushNamed(WelcomeScreen.routeName);
+            Navigator.of(context).pushNamed(LoginPageView.routeName);
           } else if (state.status == AuthStatus.authenticated &&
               state.isUserExist == true) {
             //Go to navigation screen
@@ -35,7 +37,7 @@ class SplashScreen extends StatelessWidget {
             Navigator.of(context).pushNamed(NavScreen.routeName);
           } else if (state.status == AuthStatus.authenticated &&
               state.isUserExist == false) {
-            Navigator.of(context).pushNamed(RegistrationScreen.routeName);
+            Navigator.of(context).pushNamed(Onboardingpageview.routeName);
           }
         },
         child: const Scaffold(

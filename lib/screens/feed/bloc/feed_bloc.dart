@@ -50,7 +50,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         posts: posts,
       );
       _likedPostsCubit.updateLikedPosts(postIds: likedPostIds);
-      print('+++++++++++++++++$posts');
       yield state.copyWith(posts: posts, status: FeedStatus.loaded);
     } catch (err) {
       yield state.copyWith(
