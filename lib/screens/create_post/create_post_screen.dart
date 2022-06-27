@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/screens/profile/profile_screen.dart';
@@ -270,10 +271,6 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 state.post != null
                     ? _buildRemainingTime(state)
                     : const Text('No Tasks Yet'),
-                const Text(
-                  "Completed",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-                ),
                 const SizedBox(height: 15),
                 state.completedTask.isEmpty
                     ? Column(
@@ -336,19 +333,19 @@ class _CreatePostScreenState extends State<CreatePostScreen>
       bottom: const TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
         Tab(
           child: Text(
-            "Remaining",
+            "Remaining 🧗",
             style: TextStyle(
                 color: kPrimaryBlackColor,
-                fontSize: 18,
+                fontSize: 22,
                 fontWeight: FontWeight.bold),
           ),
         ),
         Tab(
           child: Text(
-            "Completed",
+            "Completed 🚀",
             style: TextStyle(
                 color: kPrimaryBlackColor,
-                fontSize: 18,
+                fontSize: 22,
                 fontWeight: FontWeight.bold),
           ),
         ),
@@ -417,7 +414,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 autofocus: true,
                 controller: _taskTextEditingController,
                 decoration: const InputDecoration(
-                  hintText: 'Read Chapter of "Zero to One"',
+                  hintText: 'e.g. Read Chapter of "Zero to One"',
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 20),
                   border: InputBorder.none,
                   focusColor: Colors.grey,
@@ -461,19 +458,23 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               alignment: Alignment.centerRight,
               child: IconButton(
                 onPressed: () {
-                  onSubmit(
-                    Task(
-                      title: _taskTextEditingController.text,
-                      priority: 0,
-                      dateTime: DateTime.now(),
-                      description: _descriptionTextEditingController.text,
-                    ),
-                  );
-                  _taskTextEditingController.clear();
-                  _descriptionTextEditingController.clear();
+                  if (_taskTextEditingController.text.isEmpty) {
+                    Fluttertoast.showToast(msg: "Title cannont be empty.");
+                  } else {
+                    onSubmit(
+                      Task(
+                        title: _taskTextEditingController.text,
+                        priority: 0,
+                        dateTime: DateTime.now(),
+                        description: _descriptionTextEditingController.text,
+                      ),
+                    );
+                    _taskTextEditingController.clear();
+                    _descriptionTextEditingController.clear();
+                  }
                 },
                 icon: CircleAvatar(
-                  backgroundColor: kPrimaryTealColor,
+                  backgroundColor: kPrimaryBlackColor,
                   child: Center(
                     child: Icon(
                       FontAwesomeIcons.arrowUp,
