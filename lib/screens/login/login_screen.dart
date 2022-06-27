@@ -33,6 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
+    _textEditingController.text =
+        SessionHelper.phone?.replaceAll("+91", "") ?? "";
     _textEditingController.addListener(() {
       final isButtonNotActive = _textEditingController.text.length != 10;
       setState(() {
@@ -40,6 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
 
   @override

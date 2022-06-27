@@ -57,11 +57,14 @@ class _PhoneFormState extends State<PhoneForm> {
             fontSize: 12.sp, color: widget.textColor ?? kPrimaryBlackColor),
         initialCountryCode: 'IN',
         disableLengthCheck: true,
+        invalidNumberMessage: "Please Check Your Number",
         validator: (val) {
           if (val == null || val.number.isEmpty) {
             return "Enter phone number";
           } else if (val.number.length == 10) {
             context.read<LoginCubit>().phone = val.completeNumber;
+          } else if (val.number.length > 10) {
+            return "Please Check Your Number";
           }
           return null;
         },

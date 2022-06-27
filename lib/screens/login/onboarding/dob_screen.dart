@@ -35,6 +35,7 @@ class _DobScreenState extends State<DobScreen> {
   @override
   void initState() {
     _focusNode.requestFocus();
+    _ageController.text = SessionHelper.age ?? "";
     _ageController.addListener(() {
       final isButtonNotActive = _ageController.text.isEmpty;
       setState(() {

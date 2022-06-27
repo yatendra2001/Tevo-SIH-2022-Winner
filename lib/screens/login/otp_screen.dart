@@ -68,13 +68,6 @@ class _OtpScreenState extends State<OtpScreen> {
         }
       },
       builder: (context, state) {
-        if (state.status == LoginStatus.otpVerifying) {
-          return Center(
-              child: (Platform.isIOS)
-                  ? CupertinoActivityIndicator(color: kPrimaryBlackColor)
-                  : CircularProgressIndicator(color: kPrimaryBlackColor));
-        }
-
         return SafeArea(
           child: SingleChildScrollView(
             child: Center(
@@ -123,15 +116,23 @@ class _OtpScreenState extends State<OtpScreen> {
                         SizedBox(height: 2.h),
                       ],
                     ),
-                    StandardElevatedButton(
-                      labelText: "Continue →",
-                      onTap: () {
-                        BlocProvider.of<LoginCubit>(context)
-                            .verifyOtp(otp: _otpController.text);
-                        FocusScope.of(context).requestFocus(FocusNode());
-                      },
-                      isButtonNull: isButtonNotActive,
-                    ),
+                    state.status == LoginStatus.otpVerifying ||
+                            state.status == LoginStatus.success
+                        ? Center(
+                            child: (Platform.isIOS)
+                                ? const CupertinoActivityIndicator(
+                                    color: kPrimaryBlackColor)
+                                : const CircularProgressIndicator(),
+                          )
+                        : StandardElevatedButton(
+                            labelText: "Continue →",
+                            onTap: () {
+                              BlocProvider.of<LoginCubit>(context)
+                                  .verifyOtp(otp: _otpController.text);
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            },
+                            isButtonNull: isButtonNotActive,
+                          ),
                     Padding(
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom)),

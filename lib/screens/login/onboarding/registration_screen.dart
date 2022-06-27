@@ -23,22 +23,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _secondNameController = TextEditingController();
   final FocusNode _firstfocusNode = FocusNode();
   final FocusNode _lastfocusNode = FocusNode();
-  bool isButtonNotActive1 = true;
-  bool isButtonNotActive2 = true;
+  bool? isButtonActive1;
+  bool? isButtonActive2;
 
   @override
   void initState() {
+    _firstNameController.text = SessionHelper.firstName ?? "";
+    _secondNameController.text = SessionHelper.lastName ?? "";
+    isButtonActive1 = _firstNameController.text != "" ? true : false;
+    isButtonActive2 = _secondNameController.text != "" ? true : false;
     _firstfocusNode.requestFocus();
     _firstNameController.addListener(() {
-      final isButtonNotActive1 = _firstNameController.text.isEmpty;
       setState(() {
-        this.isButtonNotActive1 = isButtonNotActive1;
+        isButtonActive1 = _firstNameController.text.isNotEmpty;
       });
     });
     _secondNameController.addListener(() {
-      final isButtonNotActive2 = _firstNameController.text.isEmpty;
       setState(() {
-        this.isButtonNotActive2 = isButtonNotActive2;
+        isButtonActive2 = _secondNameController.text.isNotEmpty;
       });
     });
     super.initState();
@@ -180,7 +182,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     " " +
                     _secondNameController.text;
               },
-              isButtonNull: isButtonNotActive1 || isButtonNotActive2,
+              isButtonNull:
+                  isButtonActive1 == false || isButtonActive2 == false,
             ),
             Padding(
                 padding: EdgeInsets.only(

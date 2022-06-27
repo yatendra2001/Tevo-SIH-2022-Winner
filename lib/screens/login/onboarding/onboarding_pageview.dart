@@ -38,7 +38,7 @@ class _OnboardingpageviewState extends State<Onboardingpageview> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          appBar: _page != 0
+          appBar: _page != 0 && _page != 4
               ? AppBar(
                   elevation: 0,
                   backgroundColor: Colors.transparent,

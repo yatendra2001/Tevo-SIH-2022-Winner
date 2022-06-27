@@ -32,6 +32,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
   @override
   void initState() {
+    _usernameController.text = SessionHelper.username ?? "";
     _focusNode.requestFocus();
     super.initState();
   }
@@ -81,11 +82,16 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                       color: kPrimaryBlackColor,
                                     ),
                                     suffixIcon: (state.usernameStatus ==
-                                            UsernameStatus.usernameAvailable)
+                                                UsernameStatus
+                                                    .usernameAvailable &&
+                                            _usernameController.text.isNotEmpty)
                                         ? const Icon(Icons.check_circle,
                                             color: Colors.green)
                                         : (state.usernameStatus ==
-                                                UsernameStatus.usernameExists)
+                                                    UsernameStatus
+                                                        .usernameExists ||
+                                                _usernameController
+                                                    .text.isEmpty)
                                             ? const Icon(Icons.close_rounded,
                                                 color: Colors.red)
                                             : null,
@@ -127,15 +133,17 @@ class _UsernameScreenState extends State<UsernameScreen> {
                   ],
                 ),
                 StandardElevatedButton(
-                    labelText: "Continue →",
-                    onTap: () {
-                      SessionHelper.username = _usernameController.text;
-                      widget.pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeIn);
-                    },
-                    isButtonNull:
-                        state.usernameStatus == UsernameStatus.usernameExists),
+                  labelText: "Continue →",
+                  onTap: () {
+                    SessionHelper.username = _usernameController.text;
+                    widget.pageController.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn);
+                  },
+                  isButtonNull:
+                      state.usernameStatus == UsernameStatus.usernameExists ||
+                          _usernameController.text.isEmpty,
+                ),
                 Padding(
                     padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom)),
