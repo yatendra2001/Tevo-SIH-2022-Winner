@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
-import 'package:tevo/screens/login/login_screen.dart';
 import 'package:tevo/screens/login/onboarding/add_profile_photo_screen.dart';
 import 'package:tevo/screens/login/onboarding/dob_screen.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
 import 'package:tevo/screens/login/onboarding/registration_screen.dart';
 import 'package:tevo/screens/login/onboarding/username_screen.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
-import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/theme_constants.dart';
 
 class Onboardingpageview extends StatefulWidget {
   static const routeName = '/Onboardingpageview';
-  Onboardingpageview({Key? key}) : super(key: key);
+  const Onboardingpageview({Key? key}) : super(key: key);
 
   static Route route() {
     return PageRouteBuilder(
         settings: const RouteSettings(name: routeName),
         transitionDuration: const Duration(seconds: 0),
-        pageBuilder: (context, _, __) => Onboardingpageview());
+        pageBuilder: (context, _, __) => const Onboardingpageview());
   }
 
   @override
@@ -45,11 +43,11 @@ class _OnboardingpageviewState extends State<Onboardingpageview> {
                   leading: IconButton(
                       onPressed: () {
                         _pageController.previousPage(
-                          duration: Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 300),
                           curve: Curves.linear,
                         );
                       },
-                      icon: Icon(Icons.arrow_back_ios_new_outlined)),
+                      icon: const Icon(Icons.arrow_back_ios_new_outlined)),
                   actions: _page == 3
                       ? [
                           TextButton(
@@ -72,7 +70,7 @@ class _OnboardingpageviewState extends State<Onboardingpageview> {
           resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: PageView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               children: _buildPages(),
               controller: _pageController,
               onPageChanged: _onPageViewChange,

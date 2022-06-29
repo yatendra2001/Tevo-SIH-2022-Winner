@@ -122,7 +122,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       enddate: state.dateTime ??
           Timestamp.fromDate(
             DateTime.now().add(
-              const Duration(hours: 24),
+              const Duration(hours: Date),
             ),
           ),
     );
