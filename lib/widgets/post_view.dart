@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttericon/linecons_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tevo/models/models.dart';
+import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
+
+import '../screens/stream_chat/models/chat_type.dart';
 
 class PostView extends StatefulWidget {
   final Post post;
@@ -63,36 +67,37 @@ class _PostViewState extends State<PostView> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: UserProfileImage(
-                              radius: 20,
-                              profileImageUrl:
-                                  widget.post.author.profileImageUrl,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.post.author.username,
-                                style: Theme.of(context).textTheme.titleMedium,
+                  if (widget.post.author.id != SessionHelper.uid)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: UserProfileImage(
+                                radius: 20,
+                                profileImageUrl:
+                                    widget.post.author.profileImageUrl,
                               ),
-                              const Text(
-                                "",
-                                style: TextStyle(fontWeight: FontWeight.w300),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      if (widget.post.author.id != SessionHelper.uid)
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.post.author.username,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                                const Text(
+                                  "",
+                                  style: TextStyle(fontWeight: FontWeight.w300),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                         ElevatedButton(
                           onPressed: () {
                             showDialog(
@@ -129,9 +134,9 @@ class _PostViewState extends State<PostView> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0)),
                           ),
-                        )
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -196,8 +201,20 @@ class _PostViewState extends State<PostView> {
                 icon: FaIcon(FontAwesomeIcons.comment),
               ),
               //TODO plane
-              IconButton(
-                  onPressed: () {}, icon: Icon(FontAwesomeIcons.paperPlane))
+              if (widget.post.author.id != SessionHelper.uid)
+                IconButton(
+                    onPressed: () async {
+                      final user = widget.post.author;
+                      Navigator.of(context).pushNamed(
+                        ChannelScreen.routeName,
+                        arguments: ChannelScreenArgs(
+                          user: user,
+                          profileImage: user.profileImageUrl,
+                          chatType: ChatType.oneOnOne,
+                        ),
+                      );
+                    },
+                    icon: Icon(Linecons.paper_plane))
             ],
           ),
           (widget.post.likes != 0 || widget.recentlyLiked)

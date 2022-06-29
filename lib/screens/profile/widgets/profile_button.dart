@@ -45,10 +45,7 @@ class ProfileButton extends StatelessWidget {
                   style: TextButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  onPressed: () => Navigator.of(context).pushNamed(
-                    EditProfileScreen.routeName,
-                    arguments: EditProfileScreenArgs(context: context),
-                  ),
+                  onPressed: () {},
                   icon: const Icon(
                     Icons.share,
                     color: kPrimaryWhiteColor,

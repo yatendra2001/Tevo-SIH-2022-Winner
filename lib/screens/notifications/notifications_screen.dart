@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tevo/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:tevo/screens/notifications/widgets/widgets.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 import '../../models/models.dart';
@@ -72,9 +73,14 @@ _buildRequestTile(
                 .read<NotificationsBloc>()
                 .add(NotificationIgnoreFollowRequest(request: request));
           },
-          child: Text('Ignore'),
+          child: const Text(
+            'Ignore',
+            style: TextStyle(color: kPrimaryBlackColor),
+          ),
         ),
+        SizedBox(width: 4),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(primary: kPrimaryBlackColor),
           onPressed: () {
             context
                 .read<NotificationsBloc>()
