@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tevo/helpers/helpers.dart';
@@ -5,6 +6,7 @@ import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 
@@ -47,6 +49,7 @@ class EditProfileScreen extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0,
           title: Text('Edit Profile'),
         ),
         body: BlocConsumer<EditProfileCubit, EditProfileState>(
@@ -85,7 +88,21 @@ class EditProfileScreen extends StatelessWidget {
                         children: [
                           TextFormField(
                             initialValue: user.username,
-                            decoration: InputDecoration(hintText: 'Username'),
+                            decoration: InputDecoration(
+                              labelText: 'Username',
+                              labelStyle:
+                                  const TextStyle(color: kPrimaryBlackColor),
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
                             onChanged: (value) => context
                                 .read<EditProfileCubit>()
                                 .usernameChanged(value),
@@ -96,7 +113,21 @@ class EditProfileScreen extends StatelessWidget {
                           const SizedBox(height: 16.0),
                           TextFormField(
                             initialValue: user.bio,
-                            decoration: InputDecoration(hintText: 'Bio'),
+                            decoration: InputDecoration(
+                              labelText: 'Bio',
+                              labelStyle:
+                                  const TextStyle(color: kPrimaryBlackColor),
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
                             onChanged: (value) => context
                                 .read<EditProfileCubit>()
                                 .bioChanged(value),

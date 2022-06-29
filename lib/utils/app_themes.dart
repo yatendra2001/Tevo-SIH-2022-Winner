@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/utils/font_family.dart';
 import 'theme_constants.dart';
 
@@ -15,7 +16,7 @@ class AppThemes {
       displayLarge: ThemeData.light()
           .textTheme
           .displayLarge!
-          .copyWith(fontSize: 32, fontWeight: FontWeight.bold),
+          .copyWith(fontSize: 25.sp, fontWeight: FontWeight.bold),
       titleMedium: ThemeData.light().textTheme.titleLarge!.copyWith(
           fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
       bodyMedium: ThemeData.light()

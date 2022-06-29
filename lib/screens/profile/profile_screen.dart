@@ -1,13 +1,19 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/cubits/cubits.dart';
+import 'package:tevo/enums/bottom_nav_item.dart';
 import 'package:tevo/main.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/pageview.dart';
+import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/screens/screens.dart';
@@ -73,17 +79,29 @@ class _ProfileScreenState extends State<ProfileScreen>
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: true,
             elevation: 0,
             backgroundColor: Colors.grey[50],
+            title: const Text("Profile"),
             actions: [
               if (state.isCurrentUser)
-                Switch(
-                    value: state.user.isPrivate,
-                    onChanged: (val) {
-                      context
-                          .read<ProfileBloc>()
-                          .add(ProfileToUpdateUser(isPrivate: val));
-                    }),
+                Transform.scale(
+                  scale: 0.8,
+                  child: CupertinoSwitch(
+                      activeColor: kPrimaryBlackColor,
+                      value: state.user.isPrivate,
+                      onChanged: (val) {
+                        context
+                            .read<ProfileBloc>()
+                            .add(ProfileToUpdateUser(isPrivate: val));
+                        String message = '';
+                        setState(() {
+                          message = state.user.isPrivate ? "Public" : "Private";
+                        });
+                        Fluttertoast.showToast(
+                            msg: "Profile Updated: $message");
+                      }),
+                ),
               if (state.isCurrentUser)
                 IconButton(
                   icon: const Icon(
@@ -91,11 +109,57 @@ class _ProfileScreenState extends State<ProfileScreen>
                     color: kPrimaryBlackColor,
                   ),
                   onPressed: () {
-                    context.read<AuthBloc>().add(AuthLogoutRequested());
-                    context.read<LoginCubit>().logoutRequested();
-                    context.read<LikedPostsCubit>().clearAllLikedPosts();
-                    MyApp.navigatorKey.currentState!
-                        .pushReplacementNamed(LoginPageView.routeName);
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) => AlertDialog(
+                        backgroundColor: Colors.grey[50],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          side: const BorderSide(
+                              color: kPrimaryBlackColor, width: 2.0),
+                        ),
+                        title: Center(
+                          child: Text(
+                            "Are you sure you want to logout?",
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w400,
+                              color: kPrimaryBlackColor,
+                            ),
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text(
+                                "No",
+                                style: TextStyle(
+                                  color: kPrimaryBlackColor,
+                                ),
+                              )),
+                          TextButton(
+                              onPressed: () {
+                                context
+                                    .read<AuthBloc>()
+                                    .add(AuthLogoutRequested());
+                                context.read<LoginCubit>().logoutRequested();
+                                context
+                                    .read<LikedPostsCubit>()
+                                    .clearAllLikedPosts();
+                                MyApp.navigatorKey.currentState!
+                                    .pushReplacementNamed(
+                                        LoginPageView.routeName);
+                              },
+                              child: const Text(
+                                "Yes",
+                                style: TextStyle(
+                                  color: kPrimaryBlackColor,
+                                ),
+                              )),
+                        ],
+                      ),
+                    );
                   },
                 ),
             ],
@@ -123,6 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    const SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -163,12 +228,47 @@ class _ProfileScreenState extends State<ProfileScreen>
                     const SizedBox(
                       height: 32,
                     ),
-                    Divider(
+                    const Divider(
                       color: kPrimaryBlackColor,
+                      thickness: 1.2,
                     ),
                     const SizedBox(
                       height: 32,
                     ),
+                    if (state.posts.isEmpty &&
+                        state.status == ProfileStatus.loaded)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 64.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                "Make your first post 🚀",
+                                style: TextStyle(
+                                    color: kPrimaryBlackColor.withOpacity(0.7),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 24.sp),
+                              ),
+                              const SizedBox(height: 8.0),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: kPrimaryWhiteColor,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                            color: kPrimaryBlackColor),
+                                        borderRadius:
+                                            BorderRadius.circular(5))),
+                                onPressed: () {},
+                                child: const Text(
+                                  'Create Task',
+                                  style: TextStyle(color: kPrimaryBlackColor),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -181,6 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         context.watch<LikedPostsCubit>().state;
                     final isLiked =
                         likedPostsState.likedPostIds.contains(post!.id);
+                    log(post.toString());
                     return Column(
                       children: [
                         Text(
@@ -190,7 +291,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               fontWeight: FontWeight.w500,
                               fontSize: 18.sp),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         PostView(
                           post: post,
                           isLiked: isLiked,

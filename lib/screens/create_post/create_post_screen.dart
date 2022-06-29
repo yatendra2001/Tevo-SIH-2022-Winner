@@ -322,21 +322,21 @@ class _CreatePostScreenState extends State<CreatePostScreen>
       pinned: true,
       elevation: 1,
       toolbarHeight: 80,
-      title: const Text(
+      title: Text(
         "Today",
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 38,
+          fontSize: 25.sp,
         ),
       ),
-      bottom: const TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
+      bottom: TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
         Tab(
           child: Text(
             "Remaining 🧗",
             style: TextStyle(
                 color: kPrimaryBlackColor,
-                fontSize: 22,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold),
           ),
         ),
@@ -345,7 +345,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             "Completed 🚀",
             style: TextStyle(
                 color: kPrimaryBlackColor,
-                fontSize: 22,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold),
           ),
         ),

@@ -110,7 +110,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     centerTitle: false,
                     pinned: true,
                     elevation: 1,
-                    toolbarHeight: 70,
+                    toolbarHeight: 80,
                     title: Text("TEVO",
                         style: Theme.of(context).textTheme.displayLarge),
                     bottom: PreferredSize(
@@ -177,20 +177,20 @@ class _FeedScreenState extends State<FeedScreen> {
                                   if (SessionHelper.totalUnreadMessagesCount >
                                       0)
                                     Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
+                                      padding: const EdgeInsets.all(5),
+                                      decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: kPrimaryTealColor),
                                       child: Text(
                                         '${SessionHelper.totalUnreadMessagesCount}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600),
                                       ),
                                     ),
                                   IconButton(
-                                    icon: Icon(Linecons.paper_plane),
+                                    icon: const Icon(Linecons.paper_plane),
                                     onPressed: () {
                                       Navigator.pushNamed(
                                           context, StreamChatInbox.routeName);
@@ -204,7 +204,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),
                             child: IconButton(
-                              icon: Icon(Linecons.paper_plane),
+                              icon: const Icon(Linecons.paper_plane),
                               onPressed: () {
                                 Navigator.pushNamed(
                                     context, StreamChatInbox.routeName);
