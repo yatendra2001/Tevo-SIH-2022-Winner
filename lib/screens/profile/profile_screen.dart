@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
+
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/enums/bottom_nav_item.dart';
@@ -27,8 +28,11 @@ class ProfileScreenArgs {
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
-
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String userId;
+  const ProfileScreen({
+    Key? key,
+    required this.userId,
+  }) : super(key: key);
 
   static Route route({required ProfileScreenArgs args}) {
     return MaterialPageRoute(
@@ -40,7 +44,9 @@ class ProfileScreen extends StatefulWidget {
           authBloc: context.read<AuthBloc>(),
           likedPostsCubit: context.read<LikedPostsCubit>(),
         )..add(ProfileLoadUser(userId: args.userId)),
-        child: const ProfileScreen(),
+        child: ProfileScreen(
+          userId: args.userId,
+        ),
       ),
     );
   }
@@ -82,7 +88,16 @@ class _ProfileScreenState extends State<ProfileScreen>
             automaticallyImplyLeading: true,
             elevation: 0,
             backgroundColor: Colors.grey[50],
-            title: const Text("Profile"),
+            title: Row(
+              children: [
+                Text("Profile"),
+                Spacer(),
+                Text(
+                  "Private",
+                  style: TextStyle(fontSize: 16),
+                )
+              ],
+            ),
             actions: [
               if (state.isCurrentUser)
                 Transform.scale(
@@ -224,6 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       posts: state.posts.length,
                       followers: state.user.followers,
                       following: state.user.following,
+                      userId: widget.userId,
                     ),
                     const SizedBox(
                       height: 32,

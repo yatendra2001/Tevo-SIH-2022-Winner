@@ -6,6 +6,8 @@ import 'package:tevo/screens/login/onboarding/onboarding_pageview.dart';
 import 'package:tevo/screens/login/onboarding/registration_screen.dart';
 import 'package:tevo/screens/login/onboarding/username_screen.dart';
 import 'package:tevo/screens/login/pageview.dart';
+import 'package:tevo/screens/profile/followers_screen.dart';
+import 'package:tevo/screens/profile/following_screen.dart';
 
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
@@ -21,22 +23,13 @@ class CustomRouter {
         );
       case SplashScreen.routeName:
         return SplashScreen.route();
-      // case WelcomeScreen.routeName:
-      //   return WelcomeScreen.route();
-      // case LoginScreen.routeName:
-      //   return LoginScreen.route();
-      // case OtpScreen.routeName:
-      //   return OtpScreen.route();
-      // case RegistrationScreen.routeName:
-      //   return RegistrationScreen.route();
-      // case UsernameScreen.routeName:
-      //   return UsernameScreen.route();
-      // case DobScreen.routeName:
-      //   return DobScreen.route();
-      // case AddProfilePhotoScreen.routeName:
-      //   return AddProfilePhotoScreen.route();
-      // case FollowUsersScreen.routeName:
-      //   return FollowUsersScreen.route();
+      case FollowerScreen.routeName:
+        return FollowerScreen.route(
+            args: settings.arguments as FollowerScreenArgs);
+      case FollowingScreen.routeName:
+        return FollowingScreen.route(
+          args: settings.arguments as FollowingScreenArgs,
+        );
       case NavScreen.routeName:
         return NavScreen.route();
       case ProfileScreen.routeName:
