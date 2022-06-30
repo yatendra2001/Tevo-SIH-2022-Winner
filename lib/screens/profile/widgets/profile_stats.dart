@@ -47,7 +47,7 @@ class ProfileStats extends StatelessWidget {
               child: _Stats(count: following, label: 'Following'),
               onTap: () {
                 Navigator.of(context).pushNamed(FollowingScreen.routeName,
-                    arguments: FollowerScreenArgs(userId: userId));
+                    arguments: FollowingScreenArgs(userId: userId));
               },
             ),
             _Stats(count: posts, label: 'Completion Rate'),
