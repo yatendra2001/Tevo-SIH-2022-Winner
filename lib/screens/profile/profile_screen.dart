@@ -235,8 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     const SizedBox(
                       height: 32,
                     ),
-                    if (state.posts.isEmpty &&
-                        state.status == ProfileStatus.loaded)
+                    if (state.posts.isEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 64.0),
                         child: Center(
