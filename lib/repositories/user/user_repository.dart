@@ -283,4 +283,32 @@ class UserRepository extends BaseUserRepository {
     }
     return true;
   }
+
+  Future<List<User>> getFollowers(String userId) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.followers)
+        .doc(userId)
+        .collection(Paths.userFollowers)
+        .get();
+    List<User> followers = [];
+    for (var element in userSnap.docs) {
+      final user = await getUserWithId(userId: element.id);
+      followers.add(user);
+    }
+    return followers;
+  }
+
+  Future<List<User>> getFollowing(String userId) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.following)
+        .doc(userId)
+        .collection(Paths.userFollowing)
+        .get();
+    List<User> following = [];
+    for (var element in userSnap.docs) {
+      final user = await getUserWithId(userId: element.id);
+      following.add(user);
+    }
+    return following;
+  }
 }

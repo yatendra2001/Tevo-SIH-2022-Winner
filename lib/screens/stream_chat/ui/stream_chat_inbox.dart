@@ -1,8 +1,12 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sizer/sizer.dart';
+import 'package:tevo/extensions/string_extension.dart';
+import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/ui/widgets/dm_inbox.dart';
 import 'package:tevo/screens/stream_chat/ui/widgets/groups_inbox.dart';
@@ -39,63 +43,24 @@ class StreamChatInbox extends StatefulWidget {
 class _StreamChatInboxState extends State<StreamChatInbox> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 0,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Text('Chat'),
-          centerTitle: true,
-          bottom: TabBar(
-            tabs: <Widget>[
-              Tab(
-                child: Column(
-                  children: const [
-                    Icon(
-                      FontAwesomeIcons.message,
-                      color: kPrimaryBlackColor,
-                      size: 20,
-                    ),
-                    Text(
-                      'Messages',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-              Tab(
-                child: Column(
-                  children: const [
-                    Icon(
-                      Icons.people_outline_rounded,
-                      color: kPrimaryBlackColor,
-                      size: 20,
-                    ),
-                    Text('Groups', style: TextStyle(color: Colors.black)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: <Widget>[
-            DmInbox(),
-            GroupsInbox(),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: kPrimaryBlackColor,
-            onPressed: () {
-              Navigator.of(context).pushNamed(SearchScreen.routeName,
-                  arguments: SearchScreenArgs(type: SearchScreenType.message));
-            },
-            child: Icon(
-              Icons.add,
-              size: 30,
-            )),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        title: Text('Chat'),
+        elevation: 0,
+        centerTitle: false,
       ),
+      body: DmInbox(),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: kPrimaryBlackColor,
+          onPressed: () {
+            Navigator.of(context).pushNamed(SearchScreen.routeName,
+                arguments: SearchScreenArgs(type: SearchScreenType.message));
+          },
+          child: Icon(
+            Icons.add,
+            size: 30,
+          )),
     );
   }
 }
@@ -117,21 +82,19 @@ class _InboxListItemState extends State<InboxListItem> {
     var membersResponse = await widget.channel.queryMembers();
     members = membersResponse.members;
     log('INBOX PROFILE IMAGE:: $image');
-    members.forEach((member) {
-      log('MEMBER IMAGE:: ${member.user?.image}');
+    members.forEach((member) async {
+      log('MEMBER IMAGE:: ${member.user!.image}');
+      final user =
+          await UserRepository().getUserWithId(userId: member.user!.id);
+      setState(() {
+        image = widget.channel.image!;
+        targetDisplayName =
+            widget.channel.extraData['chat_type'] == 'one_on_one'
+                ? member.user!.name
+                : widget.channel.name ?? '';
+      });
     });
-    setState(() {
-      image = widget.channel.extraData['chat_type'] == 'one_on_one'
-          ? SessionHelper.uid == members[0].user!.id
-              ? members[1].user!.image!
-              : members[0].user!.image!
-          : widget.channel.image ?? '';
-      targetDisplayName = widget.channel.extraData['chat_type'] == 'one_on_one'
-          ? SessionHelper.uid == members[0].user!.id
-              ? members[1].user!.name
-              : members[0].user!.name
-          : widget.channel.name ?? '';
-    });
+
     log("Members: $members");
   }
 
@@ -154,57 +117,63 @@ class _InboxListItemState extends State<InboxListItem> {
                 chatType: widget.channel.extraData['chat_type'].toString()));
       },
       child: Container(
-        height: 60,
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        padding: EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-          color: Colors.grey.shade700,
-          width: 0.25,
-        ))),
+        height: 68,
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Container(
-              width: 40,
+              width: 50,
               alignment: Alignment.center,
-              margin: EdgeInsets.only(right: 8),
+              margin: const EdgeInsets.only(right: 8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.cyan,
                 image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(image.isEmpty
-                        ? 'https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png'
+                    image: CachedNetworkImageProvider(image.isEmpty
+                        ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'
                         : image)),
               ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 2),
-                Text(targetDisplayName),
+                const SizedBox(height: 4),
+                Text(
+                  targetDisplayName.capitalized(),
+                  style: TextStyle(
+                      color: kPrimaryBlackColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15.sp),
+                ),
                 const Spacer(),
                 Text(
                   widget.channel.state!.lastMessage?.text ?? '',
                   style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      color: Colors.grey.shade200,
-                      fontSize: 13,
-                      fontStyle: FontStyle.italic),
-                )
+                      fontWeight: FontWeight.w500,
+                      color: widget.channel.state!.unreadCount > 0
+                          ? kPrimaryBlackColor
+                          : Colors.grey,
+                      fontSize: 12.sp),
+                ),
+                const SizedBox(height: 4)
               ],
             ),
             const Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                SizedBox(height: 4),
                 if (widget.channel.state != null &&
                     widget.channel.state!.unreadCount > 0)
-                  Text(
-                    '${widget.channel.state?.unreadCount ?? ''}',
+                  CircleAvatar(
+                    radius: 11,
+                    backgroundColor: kPrimaryBlackColor,
+                    child: Text('${widget.channel.state?.unreadCount ?? ''}',
+                        style:
+                            TextStyle(color: kPrimaryWhiteColor, fontSize: 12)),
                   ),
                 Text(
                   '${widget.channel.lastMessageAt != null ? timeago.format(widget.channel.lastMessageAt!) : ''}',

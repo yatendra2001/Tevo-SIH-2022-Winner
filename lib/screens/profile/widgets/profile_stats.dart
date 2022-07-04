@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+
+import 'package:tevo/screens/profile/followers_screen.dart';
+import 'package:tevo/screens/profile/following_screen.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/utils/theme_constants.dart';
 
@@ -10,6 +13,7 @@ class ProfileStats extends StatelessWidget {
   final int posts;
   final int followers;
   final int following;
+  final String userId;
 
   const ProfileStats({
     Key? key,
@@ -19,6 +23,7 @@ class ProfileStats extends StatelessWidget {
     required this.posts,
     required this.followers,
     required this.following,
+    required this.userId,
   }) : super(key: key);
 
   @override
@@ -31,8 +36,20 @@ class ProfileStats extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _Stats(count: posts, label: 'Streak'),
-            _Stats(count: followers, label: 'Followers'),
-            _Stats(count: following, label: 'Following'),
+            InkWell(
+              child: _Stats(count: followers, label: 'Followers'),
+              onTap: () {
+                Navigator.of(context).pushNamed(FollowerScreen.routeName,
+                    arguments: FollowerScreenArgs(userId: userId));
+              },
+            ),
+            InkWell(
+              child: _Stats(count: following, label: 'Following'),
+              onTap: () {
+                Navigator.of(context).pushNamed(FollowingScreen.routeName,
+                    arguments: FollowingScreenArgs(userId: userId));
+              },
+            ),
             _Stats(count: posts, label: 'Completion Rate'),
           ],
         ),
@@ -75,7 +92,7 @@ class _Stats extends StatelessWidget {
             Text(
               count.toString(),
               style: TextStyle(
-                  fontSize: 20.sp,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w600,
                   color: kPrimaryBlackColor),
             ),
@@ -84,7 +101,7 @@ class _Stats extends StatelessWidget {
               label,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontSize: 18.0,
+                  fontSize: 15.0,
                   fontWeight: FontWeight.w400,
                   color: kPrimaryBlackColor),
             ),

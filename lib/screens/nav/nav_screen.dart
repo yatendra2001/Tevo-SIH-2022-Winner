@@ -106,16 +106,12 @@ class NavScreen extends StatelessWidget {
       onWillPop: () async => false,
       child: BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: const Color(0xffE5E5E5),
-              resizeToAvoidBottomInset: false,
-              extendBody: true,
-              body:
-                  screens[context.read<BottomNavBarCubit>().state.selectedItem],
-              bottomNavigationBar:
-                  _customisedGoogleBottomNavBar(context, state),
-            ),
+          return Scaffold(
+            backgroundColor: const Color(0xffE5E5E5),
+            resizeToAvoidBottomInset: false,
+            extendBody: true,
+            body: screens[context.read<BottomNavBarCubit>().state.selectedItem],
+            bottomNavigationBar: _customisedGoogleBottomNavBar(context, state),
           );
         },
       ),

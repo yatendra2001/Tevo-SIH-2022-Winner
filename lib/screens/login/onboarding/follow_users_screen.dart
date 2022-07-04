@@ -21,11 +21,11 @@ import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/user_profile_image.dart';
 
 class FollowUsersScreen extends StatefulWidget {
-  final PageController pageController;
+  final PageController? pageController;
 
   const FollowUsersScreen({
     Key? key,
-    required this.pageController,
+    this.pageController,
   }) : super(key: key);
   @override
   State<FollowUsersScreen> createState() => _FollowUsersScreenState();

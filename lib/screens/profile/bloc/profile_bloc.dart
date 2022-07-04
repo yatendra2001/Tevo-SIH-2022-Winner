@@ -168,4 +168,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     _userRepository.updateUser(user: user);
     yield state.copyWith(user: user);
   }
+
+  Future<List<User>> getFollowers(String userId) {
+    return _userRepository.getFollowers(userId);
+  }
+
+  Future<List<User>> getFollowing(String userId) {
+    return _userRepository.getFollowing(userId);
+  }
 }
