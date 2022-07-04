@@ -4,9 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sizer/sizer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
+import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
+import 'package:tevo/screens/profile/followers_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
@@ -180,7 +183,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                       padding: const EdgeInsets.all(5),
                                       decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: kPrimaryTealColor),
+                                          color: kPrimaryBlackColor),
                                       child: Text(
                                         '${SessionHelper.totalUnreadMessagesCount}',
                                         style: const TextStyle(
@@ -235,42 +238,89 @@ class _FeedScreenState extends State<FeedScreen> {
           onRefresh: () async {
             context.read<FeedBloc>().add(FeedFetchPosts());
             context.read<LikedPostsCubit>().clearAllLikedPosts();
+            print("Laaaaaaaaa    " + state.posts.length.toString());
           },
-          child: ListView.builder(
-            itemCount: state.posts.length,
-            itemBuilder: (BuildContext context, int index) {
-              final post = state.posts[index];
-              final likedPostsState = context.watch<LikedPostsCubit>().state;
-              final isLiked = likedPostsState.likedPostIds.contains(post!.id);
-              final recentlyLiked =
-                  likedPostsState.recentlyLikedPostIds.contains(post.id);
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: PostView(
-                  isLiked: isLiked,
-                  onLike: () {
-                    if (isLiked) {
-                      context.read<LikedPostsCubit>().unlikePost(post: post);
-                    } else {
-                      context.read<LikedPostsCubit>().likePost(post: post);
-                    }
-                  },
-                  recentlyLiked: recentlyLiked,
-                  post: post,
-                  onPressed: () {
-                    context.read<FeedBloc>().add(
-                        FeedToUnfollowUser(unfollowUserId: post.author.id));
-                    Fluttertoast.showToast(
-                      msg: "${post.author.username} Unfollowed",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: Colors.black54,
+          child: state.posts.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 128.0),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          "Your feed looks empty 📭",
+                          style: TextStyle(
+                              color: kPrimaryBlackColor.withOpacity(0.7),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 24.sp),
+                        ),
+                        const SizedBox(height: 8.0),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: kPrimaryWhiteColor,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      color: kPrimaryBlackColor),
+                                  borderRadius: BorderRadius.circular(5))),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const FollowUsersScreen()),
+                            );
+                          },
+                          child: const Text(
+                            'Follow users',
+                            style: TextStyle(color: kPrimaryBlackColor),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: state.posts.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final post = state.posts[index];
+                    final likedPostsState =
+                        context.watch<LikedPostsCubit>().state;
+                    final isLiked =
+                        likedPostsState.likedPostIds.contains(post!.id);
+                    final recentlyLiked =
+                        likedPostsState.recentlyLikedPostIds.contains(post.id);
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: PostView(
+                        isLiked: isLiked,
+                        onLike: () {
+                          if (isLiked) {
+                            context
+                                .read<LikedPostsCubit>()
+                                .unlikePost(post: post);
+                          } else {
+                            context
+                                .read<LikedPostsCubit>()
+                                .likePost(post: post);
+                          }
+                        },
+                        recentlyLiked: recentlyLiked,
+                        post: post,
+                        onPressed: () {
+                          context.read<FeedBloc>().add(FeedToUnfollowUser(
+                              unfollowUserId: post.author.id));
+                          Fluttertoast.showToast(
+                            msg: "${post.author.username} Unfollowed",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.black54,
+                          );
+                        },
+                      ),
                     );
                   },
                 ),
-              );
-            },
-          ),
         );
     }
   }

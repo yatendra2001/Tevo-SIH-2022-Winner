@@ -90,12 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             backgroundColor: Colors.grey[50],
             title: Row(
               children: [
-                Text("Profile"),
-                Spacer(),
-                Text(
-                  "Private",
-                  style: TextStyle(fontSize: 16),
-                )
+                Text("${!state.user.isPrivate ? "Public" : "Private"} Profile"),
               ],
             ),
             actions: [
@@ -251,8 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     const SizedBox(
                       height: 32,
                     ),
-                    if (state.posts.isEmpty &&
-                        state.status == ProfileStatus.loaded)
+                    if (state.posts.isEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 64.0),
                         child: Center(
