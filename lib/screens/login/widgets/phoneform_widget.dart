@@ -54,7 +54,7 @@ class _PhoneFormState extends State<PhoneForm> {
         ),
         showCountryFlag: widget.textColor == null,
         dropdownTextStyle: TextStyle(
-            fontSize: 12.sp, color: widget.textColor ?? kPrimaryBlackColor),
+            fontSize: 9.5.sp, color: widget.textColor ?? kPrimaryBlackColor),
         initialCountryCode: 'IN',
         disableLengthCheck: true,
         invalidNumberMessage: "Please Check Your Number",
@@ -96,7 +96,7 @@ class _PhoneFormState extends State<PhoneForm> {
           filled: true,
           hintText: "Phone Number",
           hintStyle: TextStyle(
-              fontSize: 12.sp,
+              fontSize: 9.5.sp,
               color: widget.textColor ?? kPrimaryBlackColor,
               fontWeight: FontWeight.w500),
         ),

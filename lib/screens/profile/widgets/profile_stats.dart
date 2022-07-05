@@ -100,8 +100,8 @@ class _Stats extends StatelessWidget {
             Text(
               label,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 15.0,
+              style: TextStyle(
+                  fontSize: 8.5.sp,
                   fontWeight: FontWeight.w400,
                   color: kPrimaryBlackColor),
             ),

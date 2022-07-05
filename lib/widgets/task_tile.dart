@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sizer/sizer.dart';
 
 import 'package:tevo/models/task_model.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -50,7 +51,7 @@ class _TaskTileState extends State<TaskTile> {
               children: [
                 Text(
                   widget.task.title,
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 9.5.sp),
                 ),
                 (widget.view == TaskTileView.createScreenView &&
                         !widget.isComplete)

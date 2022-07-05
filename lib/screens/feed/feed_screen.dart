@@ -113,46 +113,50 @@ class _FeedScreenState extends State<FeedScreen> {
                     centerTitle: false,
                     pinned: true,
                     elevation: 1,
-                    toolbarHeight: 80,
+                    toolbarHeight: 9.h,
                     title: Text("TEVO",
                         style: Theme.of(context).textTheme.displayLarge),
                     bottom: PreferredSize(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          child: TextField(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  SearchScreen.routeName,
-                                  arguments: SearchScreenArgs(
-                                      type: SearchScreenType.profile));
-                            },
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              fillColor: const Color(0xffF5F5F5),
-                              filled: true,
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.white, width: 1.0),
-                                borderRadius: BorderRadius.circular(50.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.white, width: 1.0),
-                                borderRadius: BorderRadius.circular(50.0),
-                              ),
-                              hintText: 'Search for accounts',
-                              hintStyle: const TextStyle(
-                                  fontWeight: FontWeight.normal),
-                              suffixIcon: const Icon(
-                                Icons.search,
-                                color: Colors.black38,
-                                size: 30,
+                          padding: const EdgeInsets.only(
+                              top: 10, bottom: 16, right: 16, left: 16),
+                          child: SizedBox(
+                            height: 7.5.h,
+                            child: TextField(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                    SearchScreen.routeName,
+                                    arguments: SearchScreenArgs(
+                                        type: SearchScreenType.profile));
+                              },
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                fillColor: const Color(0xffF5F5F5),
+                                filled: true,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.white, width: 1.0),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.white, width: 1.0),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                hintText: 'Search for accounts',
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 8.5.sp),
+                                suffixIcon: const Icon(
+                                  Icons.search,
+                                  color: Colors.black38,
+                                  size: 30,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        preferredSize: Size(double.infinity, 77)),
+                        preferredSize: Size(double.infinity, 11.h)),
                     actions: [
                       Padding(
                           padding: EdgeInsets.only(right: 16),
@@ -251,7 +255,7 @@ class _FeedScreenState extends State<FeedScreen> {
                           style: TextStyle(
                               color: kPrimaryBlackColor.withOpacity(0.7),
                               fontWeight: FontWeight.w500,
-                              fontSize: 24.sp),
+                              fontSize: 15.sp),
                         ),
                         const SizedBox(height: 8.0),
                         ElevatedButton(
@@ -270,9 +274,10 @@ class _FeedScreenState extends State<FeedScreen> {
                                       const FollowUsersScreen()),
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             'Follow users',
-                            style: TextStyle(color: kPrimaryBlackColor),
+                            style: TextStyle(
+                                color: kPrimaryBlackColor, fontSize: 8.5.sp),
                           ),
                         )
                       ],

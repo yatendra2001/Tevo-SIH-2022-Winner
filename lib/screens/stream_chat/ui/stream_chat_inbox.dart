@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/extensions/string_extension.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
@@ -27,9 +28,10 @@ class StreamChatInbox extends StatefulWidget {
   const StreamChatInbox({Key? key}) : super(key: key);
 
   static Route route() {
-    return MaterialPageRoute(
+    return PageTransition(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => BlocProvider(
+      type: PageTransitionType.rightToLeft,
+      child: BlocProvider(
         create: (context) => InitializeStreamChatCubit(),
         child: const StreamChatInbox(),
       ),
@@ -45,8 +47,12 @@ class _StreamChatInboxState extends State<StreamChatInbox> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[50],
-        title: Text('Chat'),
+        backgroundColor: kPrimaryWhiteColor,
+        toolbarHeight: 8.h,
+        title: Text(
+          'Chat',
+          style: TextStyle(fontSize: 20.sp),
+        ),
         elevation: 0,
         centerTitle: false,
       ),
@@ -118,15 +124,21 @@ class _InboxListItemState extends State<InboxListItem> {
       },
       child: Container(
         height: 68,
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         padding: const EdgeInsets.symmetric(vertical: 8),
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+                color: kPrimaryBlackColor.withOpacity(0.5), width: 0.25),
+          ),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Container(
-              width: 50,
+              width: 60,
               alignment: Alignment.center,
-              margin: const EdgeInsets.only(right: 8),
+              margin: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
@@ -144,42 +156,50 @@ class _InboxListItemState extends State<InboxListItem> {
                   targetDisplayName.capitalized(),
                   style: TextStyle(
                       color: kPrimaryBlackColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15.sp),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 11.5.sp),
                 ),
                 const Spacer(),
                 Text(
                   widget.channel.state!.lastMessage?.text ?? '',
                   style: TextStyle(
-                      fontWeight: FontWeight.w500,
+                      fontWeight: widget.channel.state!.unreadCount > 0
+                          ? FontWeight.w500
+                          : FontWeight.w400,
                       color: widget.channel.state!.unreadCount > 0
                           ? kPrimaryBlackColor
                           : Colors.grey,
-                      fontSize: 12.sp),
+                      fontSize: 8.5.sp),
                 ),
                 const SizedBox(height: 4)
               ],
             ),
             const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(height: 4),
-                if (widget.channel.state != null &&
-                    widget.channel.state!.unreadCount > 0)
-                  CircleAvatar(
-                    radius: 11,
-                    backgroundColor: kPrimaryBlackColor,
-                    child: Text('${widget.channel.state?.unreadCount ?? ''}',
-                        style:
-                            TextStyle(color: kPrimaryWhiteColor, fontSize: 12)),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(height: 4),
+                  if (widget.channel.state != null &&
+                      widget.channel.state!.unreadCount > 0)
+                    CircleAvatar(
+                      radius: 11,
+                      backgroundColor: kPrimaryBlackColor,
+                      child: Text('${widget.channel.state?.unreadCount ?? ''}',
+                          style: TextStyle(
+                              color: kPrimaryWhiteColor, fontSize: 8.5.sp)),
+                    ),
+                  Text(
+                    '${widget.channel.lastMessageAt != null ? timeago.format(widget.channel.lastMessageAt!) : ''}',
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 8.5.sp,
+                        fontWeight: FontWeight.w400),
                   ),
-                Text(
-                  '${widget.channel.lastMessageAt != null ? timeago.format(widget.channel.lastMessageAt!) : ''}',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/cubits/cubits.dart';
@@ -22,10 +23,10 @@ class NavScreen extends StatelessWidget {
   NavScreen({Key? key}) : super(key: key);
 
   static Route route() {
-    return PageRouteBuilder(
+    return PageTransition(
       settings: const RouteSettings(name: routeName),
-      transitionDuration: const Duration(seconds: 0),
-      pageBuilder: (_, __, ___) => BlocProvider<BottomNavBarCubit>(
+      type: PageTransitionType.fade,
+      child: BlocProvider<BottomNavBarCubit>(
         create: (_) => BottomNavBarCubit(),
         child: NavScreen(),
       ),

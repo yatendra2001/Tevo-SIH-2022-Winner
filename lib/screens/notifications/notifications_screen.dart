@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:tevo/screens/notifications/widgets/widgets.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -18,10 +19,12 @@ class NotificationsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        toolbarHeight: 9.h,
         leading: SizedBox.shrink(),
         leadingWidth: 0,
-        title: const Text(
+        title: Text(
           "Notifications",
+          style: Theme.of(context).textTheme.displayLarge!,
         ),
       ),
       body: BlocBuilder<NotificationsBloc, NotificationsState>(
