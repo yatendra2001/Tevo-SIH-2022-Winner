@@ -22,7 +22,7 @@ class ProfileInfo extends StatelessWidget {
         Text(
           displayName.toUpperCase(),
           style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: 18.sp,
               fontWeight: FontWeight.w500,
               letterSpacing: 2,
               wordSpacing: 4),
@@ -33,7 +33,7 @@ class ProfileInfo extends StatelessWidget {
         Text(
           "@" + username,
           style: TextStyle(
-              fontSize: 15.0,
+              fontSize: 9.5.sp,
               fontWeight: FontWeight.w400,
               color: kPrimaryBlackColor.withOpacity(0.7)),
         ),
@@ -41,7 +41,7 @@ class ProfileInfo extends StatelessWidget {
         Text(
           bio,
           textAlign: TextAlign.justify,
-          style: const TextStyle(fontSize: 18.0, color: kPrimaryBlackColor),
+          style: TextStyle(fontSize: 11.5.sp, color: kPrimaryBlackColor),
         ),
       ],
     );

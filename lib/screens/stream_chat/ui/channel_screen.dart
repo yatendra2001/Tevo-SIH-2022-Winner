@@ -193,6 +193,30 @@ class _ChannelScreenState extends State<ChannelScreen> {
               MessageInput(
                 quotedMessage: _quotedMessage,
                 focusNode: _messageFocusNode,
+                idleSendButton: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    radius: 16,
+                    child: Icon(
+                      Icons.arrow_forward,
+                      color: kPrimaryWhiteColor,
+                      size: 16,
+                    ),
+                  ),
+                ),
+                activeSendButton: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.black,
+                    child: Icon(
+                      Icons.arrow_upward,
+                      size: 16,
+                      color: kPrimaryWhiteColor,
+                    ),
+                  ),
+                ),
                 onQuotedMessageCleared: () {
                   setState(() => _quotedMessage = null);
                 },

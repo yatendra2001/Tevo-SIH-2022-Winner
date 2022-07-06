@@ -33,9 +33,9 @@ class ProfileButton extends StatelessWidget {
                     EditProfileScreen.routeName,
                     arguments: EditProfileScreenArgs(context: context),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Edit Profile',
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    style: TextStyle(fontSize: 9.5.sp, color: Colors.white),
                   ),
                 ),
               ),
@@ -49,10 +49,12 @@ class ProfileButton extends StatelessWidget {
                   icon: const Icon(
                     Icons.share,
                     color: kPrimaryWhiteColor,
+                    size: 19,
                   ),
-                  label: const Text(
+                  label: Text(
                     'Share ',
-                    style: TextStyle(fontSize: 16.0, color: kPrimaryWhiteColor),
+                    style:
+                        TextStyle(fontSize: 9.5.sp, color: kPrimaryWhiteColor),
                   ),
                 ),
               ),
@@ -90,7 +92,7 @@ class ProfileButton extends StatelessWidget {
                             ? 'Unfollow'
                             : 'Follow',
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 9.5.sp,
                       color: isFollowing ? Colors.black : Colors.white,
                     ),
                   ),
@@ -116,8 +118,9 @@ class ProfileButton extends StatelessWidget {
                   child: Text(
                     "Message",
                     style: TextStyle(
-                      fontSize: 16.0,
-                      color: isFollowing ? Colors.black : Colors.white,
+                      fontSize: 9.5.sp,
+                      color:
+                          isFollowing ? kPrimaryWhiteColor : kPrimaryBlackColor,
                     ),
                   ),
                 ),

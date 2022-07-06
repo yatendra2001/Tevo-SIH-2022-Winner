@@ -90,7 +90,10 @@ class _ProfileScreenState extends State<ProfileScreen>
             backgroundColor: Colors.grey[50],
             title: Row(
               children: [
-                Text("${!state.user.isPrivate ? "Public" : "Private"} Profile"),
+                Text(
+                  "${!state.user.isPrivate ? "Public" : "Private"} Profile",
+                  style: TextStyle(fontSize: 15.sp),
+                ),
               ],
             ),
             actions: [
@@ -133,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           child: Text(
                             "Are you sure you want to logout?",
                             style: TextStyle(
-                              fontSize: 15.sp,
+                              fontSize: 11.5.sp,
                               fontWeight: FontWeight.w400,
                               color: kPrimaryBlackColor,
                             ),
@@ -142,11 +145,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                         actions: [
                           TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: const Text(
+                              child: Text(
                                 "No",
                                 style: TextStyle(
-                                  color: kPrimaryBlackColor,
-                                ),
+                                    color: kPrimaryBlackColor,
+                                    fontSize: 8.5.sp),
                               )),
                           TextButton(
                               onPressed: () {
@@ -161,11 +164,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     .pushReplacementNamed(
                                         LoginPageView.routeName);
                               },
-                              child: const Text(
+                              child: Text(
                                 "Yes",
                                 style: TextStyle(
-                                  color: kPrimaryBlackColor,
-                                ),
+                                    color: kPrimaryBlackColor,
+                                    fontSize: 8.5.sp),
                               )),
                         ],
                       ),
@@ -246,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     const SizedBox(
                       height: 32,
                     ),
-                    if (state.posts.isEmpty)
+                    if (state.posts.isEmpty && state.isCurrentUser)
                       Padding(
                         padding: const EdgeInsets.only(top: 64.0),
                         child: Center(
@@ -257,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 style: TextStyle(
                                     color: kPrimaryBlackColor.withOpacity(0.7),
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 24.sp),
+                                    fontSize: 15.sp),
                               ),
                               const SizedBox(height: 8.0),
                               ElevatedButton(
@@ -270,9 +273,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         borderRadius:
                                             BorderRadius.circular(5))),
                                 onPressed: () {},
-                                child: const Text(
+                                child: Text(
                                   'Create Task',
-                                  style: TextStyle(color: kPrimaryBlackColor),
+                                  style: TextStyle(
+                                      color: kPrimaryBlackColor,
+                                      fontSize: 9.5.sp),
                                 ),
                               )
                             ],
@@ -299,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           style: TextStyle(
                               color: kPrimaryBlackColor,
                               fontWeight: FontWeight.w500,
-                              fontSize: 18.sp),
+                              fontSize: 11.5.sp),
                         ),
                         const SizedBox(height: 8),
                         PostView(

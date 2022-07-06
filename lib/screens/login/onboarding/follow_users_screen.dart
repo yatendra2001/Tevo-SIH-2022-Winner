@@ -67,10 +67,14 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
               top: 7.h,
               right: 4.w,
               left: 4.w,
-              child: Text(
-                "Follow new friends to inspire from their daily progress",
-                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  "Follow new friends to inspire from their daily progress",
+                  style:
+                      TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             ListView.builder(

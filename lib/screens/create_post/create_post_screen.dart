@@ -132,7 +132,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 const SizedBox(height: 16),
                 state.dateTime != null
                     ? _buildRemainingTime(state)
-                    : const Text('No Posts Yet'),
+                    : Text(
+                        'No Posts Yet',
+                        style: TextStyle(fontSize: 8.5.sp),
+                      ),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,10 +144,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     //   "Tasks",
                     //   textStyle: NeumorphicTextStyle(fontSize: 18.sp),
                     // ),
-                    const Text(
+                    Text(
                       "Tasks",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          fontSize: 15.sp, fontWeight: FontWeight.w500),
                     ),
                     // NeumorphicButton(
                     //   onPressed: () {
@@ -189,9 +192,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         });
                         _scrollDown();
                       },
-                      child: const Text(
+                      child: Text(
                         'Add Task',
-                        style: TextStyle(color: kPrimaryWhiteColor),
+                        style: TextStyle(
+                            color: kPrimaryWhiteColor, fontSize: 8.5.sp),
                       ),
                     )
                   ],
@@ -214,7 +218,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                             state.dateTime == null
                                 ? 'Drop your 1st task 🎯'
                                 : 'Winning 🎉',
-                            style: TextStyle(fontSize: 15.sp),
+                            style: TextStyle(fontSize: 11.5.sp),
                           ),
                         ],
                       )
@@ -287,7 +291,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                           SizedBox(height: 2.h),
                           Text(
                             'Complete your 1st task 🚀',
-                            style: TextStyle(fontSize: 15.sp),
+                            style: TextStyle(fontSize: 11.5.sp),
                           ),
                         ],
                       )
@@ -321,13 +325,13 @@ class _CreatePostScreenState extends State<CreatePostScreen>
       centerTitle: false,
       pinned: true,
       elevation: 1,
-      toolbarHeight: 80,
+      toolbarHeight: 9.h,
       title: Text(
         "Today",
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 25.sp,
+          fontSize: 20.sp,
         ),
       ),
       bottom: TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
@@ -336,7 +340,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             "Remaining 🧗",
             style: TextStyle(
                 color: kPrimaryBlackColor,
-                fontSize: 16.sp,
+                fontSize: 11.5.sp,
                 fontWeight: FontWeight.bold),
           ),
         ),
@@ -345,7 +349,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             "Completed 🚀",
             style: TextStyle(
                 color: kPrimaryBlackColor,
-                fontSize: 16.sp,
+                fontSize: 11.5.sp,
                 fontWeight: FontWeight.bold),
           ),
         ),
@@ -402,20 +406,21 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           children: [
             Padding(
               padding: EdgeInsets.all(2.w),
-              child: const Center(
+              child: Center(
                   child: Text(
                 "Add Task",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w600),
               )),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: TextField(
+                style: const TextStyle(fontWeight: FontWeight.w600),
                 autofocus: true,
                 controller: _taskTextEditingController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'e.g. Read Chapter of "Zero to One"',
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 20),
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 9.5.sp),
                   border: InputBorder.none,
                   focusColor: Colors.grey,
                 ),
@@ -428,15 +433,16 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: TextField(
+                style: const TextStyle(fontWeight: FontWeight.w400),
                 controller: _descriptionTextEditingController,
                 keyboardType: TextInputType.multiline,
                 focusNode: _focusNode,
                 maxLines: null,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Description\n\n\n',
                   hintStyle: TextStyle(
                     color: Colors.grey,
-                    fontSize: 20,
+                    fontSize: 9.5.sp,
                   ),
                   border: InputBorder.none,
                 ),

@@ -57,7 +57,7 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
           children: [
             Text(
               "Add a profile picture!",
-              style: TextStyle(fontSize: 20.sp),
+              style: TextStyle(fontSize: 15.sp),
             ),
             BlocListener<LoginCubit, LoginState>(
               listener: (context, state) {
@@ -102,7 +102,7 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
                 SizedBox(height: 1.h),
                 Text(
                   "This is visible to everyone",
-                  style: TextStyle(fontSize: 10.sp),
+                  style: TextStyle(fontSize: 8.sp),
                 ),
               ],
             ),

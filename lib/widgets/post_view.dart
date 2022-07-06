@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/linecons_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/screens/screens.dart';
@@ -104,7 +105,14 @@ class _PostViewState extends State<PostView> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    content: Text('Are you sure to unfollow ?'),
+                                    shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                            color: kPrimaryBlackColor),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    content: Text(
+                                      'Are you sure to unfollow ?',
+                                      style: TextStyle(fontSize: 9.5.sp),
+                                    ),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
@@ -112,22 +120,33 @@ class _PostViewState extends State<PostView> {
                                           // Navigator.of(context).popAndPushNamed(
                                           //     ReportScreen.routeName);
                                         },
-                                        child: const Text('Report'),
+                                        child: Text(
+                                          'Report',
+                                          style: TextStyle(
+                                              fontSize: 9.5.sp,
+                                              color: kPrimaryBlackColor),
+                                        ),
                                       ),
                                       TextButton(
                                         onPressed: () {
                                           widget.onPressed!();
                                           Navigator.of(context).pop();
                                         },
-                                        child: const Text('Unfollow'),
+                                        child: Text(
+                                          'Unfollow',
+                                          style: TextStyle(
+                                              fontSize: 9.5.sp,
+                                              color: kPrimaryBlackColor),
+                                        ),
                                       ),
                                     ],
                                   );
                                 });
                           },
-                          child: const Text(
+                          child: Text(
                             'Following',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 9.5.sp),
                           ),
                           style: ElevatedButton.styleFrom(
                             primary: kPrimaryBlackColor,
