@@ -47,7 +47,10 @@ class _PhoneFormState extends State<PhoneForm> {
         controller: widget.textEditingController,
         focusNode: _focusNode,
         textAlignVertical: TextAlignVertical.center,
-        style: TextStyle(color: widget.textColor ?? kPrimaryBlackColor),
+        style: TextStyle(
+          color: widget.textColor ?? kPrimaryBlackColor,
+          fontSize: 9.5.sp,
+        ),
         dropdownIcon: Icon(
           Icons.arrow_drop_down,
           color: widget.textColor ?? kPrimaryBlackColor,

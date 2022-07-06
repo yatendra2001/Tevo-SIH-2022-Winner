@@ -249,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     const SizedBox(
                       height: 32,
                     ),
-                    if (state.posts.isEmpty)
+                    if (state.posts.isEmpty && state.isCurrentUser)
                       Padding(
                         padding: const EdgeInsets.only(top: 64.0),
                         child: Center(
@@ -260,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 style: TextStyle(
                                     color: kPrimaryBlackColor.withOpacity(0.7),
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 20.sp),
+                                    fontSize: 15.sp),
                               ),
                               const SizedBox(height: 8.0),
                               ElevatedButton(
@@ -273,9 +273,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         borderRadius:
                                             BorderRadius.circular(5))),
                                 onPressed: () {},
-                                child: const Text(
+                                child: Text(
                                   'Create Task',
-                                  style: TextStyle(color: kPrimaryBlackColor),
+                                  style: TextStyle(
+                                      color: kPrimaryBlackColor,
+                                      fontSize: 9.5.sp),
                                 ),
                               )
                             ],

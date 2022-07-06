@@ -92,7 +92,7 @@ class ProfileButton extends StatelessWidget {
                             ? 'Unfollow'
                             : 'Follow',
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 9.5.sp,
                       color: isFollowing ? Colors.black : Colors.white,
                     ),
                   ),
@@ -118,8 +118,9 @@ class ProfileButton extends StatelessWidget {
                   child: Text(
                     "Message",
                     style: TextStyle(
-                      fontSize: 16.0,
-                      color: isFollowing ? Colors.black : Colors.white,
+                      fontSize: 9.5.sp,
+                      color:
+                          isFollowing ? kPrimaryWhiteColor : kPrimaryBlackColor,
                     ),
                   ),
                 ),

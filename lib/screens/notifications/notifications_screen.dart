@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
 import 'package:tevo/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:tevo/screens/notifications/widgets/widgets.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -37,20 +38,61 @@ class NotificationsScreen extends StatelessWidget {
             case NotificationsStatus.loading:
               return const Center(child: CircularProgressIndicator());
             case NotificationsStatus.loaded:
-              return ListView.builder(
-                itemCount: requestlist.length + notificationList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index < requestlist.length) {
-                    final request = requestlist[index];
-                    return _buildRequestTile(context, state, request!);
-                  } else {
-                    final notification = notificationList[index];
-                    return NotificationTile(
-                      notification: notification!,
+              return requestlist.isEmpty && notificationList.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 128.0),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              "No new notifications 📭",
+                              style: TextStyle(
+                                  color: kPrimaryBlackColor.withOpacity(0.7),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15.sp),
+                            ),
+                            const SizedBox(height: 8.0),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: kPrimaryWhiteColor,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      side: const BorderSide(
+                                          color: kPrimaryBlackColor),
+                                      borderRadius: BorderRadius.circular(5))),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FollowUsersScreen()),
+                                );
+                              },
+                              child: Text(
+                                'Follow users',
+                                style: TextStyle(
+                                    color: kPrimaryBlackColor,
+                                    fontSize: 8.5.sp),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: requestlist.length + notificationList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index < requestlist.length) {
+                          final request = requestlist[index];
+                          return _buildRequestTile(context, state, request!);
+                        } else {
+                          final notification = notificationList[index];
+                          return NotificationTile(
+                            notification: notification!,
+                          );
+                        }
+                      },
                     );
-                  }
-                },
-              );
             default:
               return const Center(child: CircularProgressIndicator());
           }

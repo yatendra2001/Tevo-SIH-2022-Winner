@@ -174,21 +174,20 @@ class _LoginScreenState extends State<LoginScreen> {
       repeatForever: true,
       animatedTexts: [
         RotateAnimatedText(
-          'Life Before Death. Strength Before Weakness. Journey Before Destination.  - Brandon Sanderson📚',
-          duration: const Duration(seconds: 3),
-        ),
+            'Life Before Death. Strength Before Weakness. Journey Before Destination.  - Brandon Sanderson📚',
+            duration: const Duration(seconds: 3),
+            textStyle: TextStyle(fontSize: 8.5.sp)),
+        RotateAnimatedText('The journey is the reward. - Steve Jobs🍎',
+            duration: const Duration(seconds: 3),
+            textStyle: TextStyle(fontSize: 8.5.sp)),
         RotateAnimatedText(
-          'The journey is the reward. - Steve Jobs🍎',
-          duration: const Duration(seconds: 3),
-        ),
+            'Process is more important than tesult. - MS Dhoni🏏',
+            duration: const Duration(seconds: 3),
+            textStyle: TextStyle(fontSize: 8.5.sp)),
         RotateAnimatedText(
-          'Process is more important than tesult. - MS Dhoni🏏',
-          duration: const Duration(seconds: 3),
-        ),
-        RotateAnimatedText(
-          'How you climb a mountain is more important than reaching the top. - Yvon Chouinard🧗',
-          duration: const Duration(seconds: 3),
-        ),
+            'How you climb a mountain is more important than reaching the top. - Yvon Chouinard🧗',
+            duration: const Duration(seconds: 3),
+            textStyle: TextStyle(fontSize: 8.5.sp)),
       ],
     );
   }
