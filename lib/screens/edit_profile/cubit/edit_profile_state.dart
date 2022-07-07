@@ -6,6 +6,7 @@ class EditProfileState extends Equatable {
   final File? profileImage;
   final String username;
   final String bio;
+  final String name;
   final EditProfileStatus status;
   final Failure failure;
 
@@ -14,6 +15,7 @@ class EditProfileState extends Equatable {
     required this.username,
     required this.bio,
     required this.status,
+    required this.name,
     required this.failure,
   });
 
@@ -21,6 +23,7 @@ class EditProfileState extends Equatable {
     return const EditProfileState(
       profileImage: null,
       username: '',
+      name: '',
       bio: '',
       status: EditProfileStatus.initial,
       failure: Failure(),
@@ -33,6 +36,7 @@ class EditProfileState extends Equatable {
         username,
         bio,
         status,
+        name,
         failure,
       ];
 
@@ -42,12 +46,14 @@ class EditProfileState extends Equatable {
     String? bio,
     EditProfileStatus? status,
     Failure? failure,
+    String? name,
   }) {
     return EditProfileState(
       profileImage: profileImage ?? this.profileImage,
       username: username ?? this.username,
       bio: bio ?? this.bio,
       status: status ?? this.status,
+      name: name ?? this.name,
       failure: failure ?? this.failure,
     );
   }

@@ -28,41 +28,44 @@ class ProfileStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _Stats(count: posts, label: 'Streak'),
-            InkWell(
-              child: _Stats(count: followers, label: 'Followers'),
-              onTap: () {
-                Navigator.of(context).pushNamed(FollowerScreen.routeName,
-                    arguments: FollowerScreenArgs(userId: userId));
-              },
-            ),
-            InkWell(
-              child: _Stats(count: following, label: 'Following'),
-              onTap: () {
-                Navigator.of(context).pushNamed(FollowingScreen.routeName,
-                    arguments: FollowingScreenArgs(userId: userId));
-              },
-            ),
-            _Stats(count: posts, label: 'Completion Rate'),
-          ],
-        ),
-        const SizedBox(height: 16.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: ProfileButton(
-            isRequesting: isRequesting,
-            isCurrentUser: isCurrentUser,
-            isFollowing: isFollowing,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _Stats(count: posts, label: 'Streak'),
+              InkWell(
+                child: _Stats(count: followers, label: 'Followers'),
+                onTap: () {
+                  Navigator.of(context).pushNamed(FollowerScreen.routeName,
+                      arguments: FollowerScreenArgs(userId: userId));
+                },
+              ),
+              InkWell(
+                child: _Stats(count: following, label: 'Following'),
+                onTap: () {
+                  Navigator.of(context).pushNamed(FollowingScreen.routeName,
+                      arguments: FollowingScreenArgs(userId: userId));
+                },
+              ),
+              _Stats(count: posts, label: 'Completion Rate'),
+            ],
           ),
-        ),
-      ],
+          const SizedBox(height: 16.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: ProfileButton(
+              isRequesting: isRequesting,
+              isCurrentUser: isCurrentUser,
+              isFollowing: isFollowing,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

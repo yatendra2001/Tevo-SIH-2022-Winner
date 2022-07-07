@@ -14,6 +14,7 @@ import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
 import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
+import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/app_themes.dart';
@@ -96,6 +97,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => InitializeStreamChatCubit(),
+          ),
+          BlocProvider<BottomNavBarCubit>(
+            create: (context) => BottomNavBarCubit(),
           ),
         ],
         child: Sizer(

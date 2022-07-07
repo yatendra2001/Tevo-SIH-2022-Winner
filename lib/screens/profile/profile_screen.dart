@@ -272,7 +272,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             color: kPrimaryBlackColor),
                                         borderRadius:
                                             BorderRadius.circular(5))),
-                                onPressed: () {},
+                                onPressed: () {
+                                  context
+                                      .read<BottomNavBarCubit>()
+                                      .updateSelectedItem(BottomNavItem.create);
+                                  Navigator.of(context).pop();
+                                },
                                 child: Text(
                                   'Create Task',
                                   style: TextStyle(

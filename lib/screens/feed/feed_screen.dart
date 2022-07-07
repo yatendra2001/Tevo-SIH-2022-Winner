@@ -267,12 +267,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                       color: kPrimaryBlackColor),
                                   borderRadius: BorderRadius.circular(5))),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const FollowUsersScreen()),
-                            );
+                            Navigator.of(context)
+                                .pushNamed(FollowUsersScreen.routeName);
                           },
                           child: Text(
                             'Follow users',

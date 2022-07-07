@@ -37,6 +37,10 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     );
   }
 
+  void nameChanged(String name) {
+    emit(state.copyWith(name: name));
+  }
+
   void bioChanged(String bio) {
     emit(
       state.copyWith(bio: bio, status: EditProfileStatus.initial),
@@ -77,5 +81,10 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         ),
       );
     }
+  }
+
+  Future<bool> checkUsernameExists() async {
+    if (state.username == _profileBloc.state.user.username) return true;
+    return await _userRepository.searchUserbyUsername(query: state.username);
   }
 }

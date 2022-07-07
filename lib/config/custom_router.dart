@@ -30,6 +30,7 @@ class CustomRouter {
         return FollowingScreen.route(
           args: settings.arguments as FollowingScreenArgs,
         );
+
       case NavScreen.routeName:
         return NavScreen.route();
       case ProfileScreen.routeName:
@@ -58,6 +59,9 @@ class CustomRouter {
         );
       case StreamChatInbox.routeName:
         return StreamChatInbox.route();
+
+      case FollowUsersScreen.routeName:
+        return FollowUsersScreen.route();
       default:
         return _errorRoute();
     }

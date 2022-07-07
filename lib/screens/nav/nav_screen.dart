@@ -26,10 +26,7 @@ class NavScreen extends StatelessWidget {
     return PageTransition(
       settings: const RouteSettings(name: routeName),
       type: PageTransitionType.fade,
-      child: BlocProvider<BottomNavBarCubit>(
-        create: (_) => BottomNavBarCubit(),
-        child: NavScreen(),
-      ),
+      child: NavScreen(),
     );
   }
 
@@ -126,7 +123,7 @@ class NavScreen extends StatelessWidget {
     context.read<BottomNavBarCubit>().updateSelectedItem(selectedItem);
   }
 
-  _customisedGoogleBottomNavBar(context, state) {
+  _customisedGoogleBottomNavBar(context, BottomNavBarState state) {
     return Container(
       height: 9.4.h,
       decoration: const BoxDecoration(
@@ -164,6 +161,11 @@ class NavScreen extends StatelessWidget {
           tabBackgroundColor:
               kPrimaryBlackColor, // selected tab background color
           padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+          selectedIndex: state.selectedItem == BottomNavItem.feed
+              ? 0
+              : state.selectedItem == BottomNavItem.create
+                  ? 1
+                  : 2,
           tabs: const [
             GButton(
               icon: Icons.home_outlined,
