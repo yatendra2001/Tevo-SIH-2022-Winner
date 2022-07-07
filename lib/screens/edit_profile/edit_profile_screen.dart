@@ -74,6 +74,7 @@ class EditProfileScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () => _selectProfileImage(context),
                     child: UserProfileImage(
+                      iconRadius: 80,
                       radius: 80.0,
                       profileImageUrl: user.profileImageUrl,
                       profileImage: state.profileImage,

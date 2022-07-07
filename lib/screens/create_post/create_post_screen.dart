@@ -132,9 +132,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 const SizedBox(height: 16),
                 state.dateTime != null
                     ? _buildRemainingTime(state)
-                    : Text(
-                        'No Posts Yet',
-                        style: TextStyle(fontSize: 8.5.sp),
+                    : Center(
+                        child: Text(
+                          'No Posts Yet',
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
                       ),
                 const SizedBox(height: 16),
                 Row(
@@ -147,7 +149,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     Text(
                       "Tasks",
                       style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.w500),
+                          fontSize: 18.sp, fontWeight: FontWeight.w500),
                     ),
                     // NeumorphicButton(
                     //   onPressed: () {
@@ -195,7 +197,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                       child: Text(
                         'Add Task',
                         style: TextStyle(
-                            color: kPrimaryWhiteColor, fontSize: 8.5.sp),
+                            color: kPrimaryWhiteColor, fontSize: 10.sp),
                       ),
                     )
                   ],
@@ -218,7 +220,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                             state.dateTime == null
                                 ? 'Drop your 1st task 🎯'
                                 : 'Winning 🎉',
-                            style: TextStyle(fontSize: 11.5.sp),
+                            style: TextStyle(fontSize: 12.sp),
                           ),
                         ],
                       )
@@ -272,16 +274,23 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 16,
+                ),
                 state.post != null
                     ? _buildRemainingTime(state)
-                    : const Text('No Tasks Yet'),
+                    : Center(
+                        child: Text(
+                        'No Task Completed',
+                        style: TextStyle(fontSize: 14.sp),
+                      )),
                 const SizedBox(height: 15),
                 state.completedTask.isEmpty
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: 10.h),
+                          SizedBox(height: 16.h),
                           Center(
                             child: Image.asset(
                               kEmptyCompleteImagePath,
@@ -291,7 +300,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                           SizedBox(height: 2.h),
                           Text(
                             'Complete your 1st task 🚀',
-                            style: TextStyle(fontSize: 11.5.sp),
+                            style: TextStyle(fontSize: 12.sp),
                           ),
                         ],
                       )
@@ -325,13 +334,13 @@ class _CreatePostScreenState extends State<CreatePostScreen>
       centerTitle: false,
       pinned: true,
       elevation: 1,
-      toolbarHeight: 9.h,
+      toolbarHeight: 7.5.h,
       title: Text(
         "Today",
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 20.sp,
+          fontSize: 24.sp,
         ),
       ),
       bottom: TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
@@ -339,18 +348,20 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           child: Text(
             "Remaining 🧗",
             style: TextStyle(
-                color: kPrimaryBlackColor,
-                fontSize: 11.5.sp,
-                fontWeight: FontWeight.bold),
+              color: kPrimaryBlackColor,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         Tab(
           child: Text(
             "Completed 🚀",
             style: TextStyle(
-                color: kPrimaryBlackColor,
-                fontSize: 11.5.sp,
-                fontWeight: FontWeight.bold),
+              color: kPrimaryBlackColor,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ]),
@@ -363,6 +374,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: UserProfileImage(
+                iconRadius: 45,
                 radius: 30,
                 profileImageUrl: SessionHelper.profileImageUrl!,
               )),

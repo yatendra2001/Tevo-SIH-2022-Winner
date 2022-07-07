@@ -14,6 +14,7 @@ import 'package:tevo/screens/stream_chat/ui/widgets/groups_inbox.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/cutom_appbar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../search/search_screen.dart';
@@ -46,16 +47,7 @@ class _StreamChatInboxState extends State<StreamChatInbox> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryWhiteColor,
-        toolbarHeight: 8.h,
-        title: Text(
-          'Chat',
-          style: TextStyle(fontSize: 20.sp),
-        ),
-        elevation: 0,
-        centerTitle: false,
-      ),
+      appBar: customAppbar('Chat'),
       body: DmInbox(),
       floatingActionButton: FloatingActionButton(
           backgroundColor: kPrimaryBlackColor,

@@ -163,6 +163,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
                                 },
                                 tileColor: Colors.grey[100],
                                 leading: UserProfileImage(
+                                    iconRadius: 12,
                                     radius: 12,
                                     profileImageUrl:
                                         searchResult[index].profileImageUrl),
@@ -188,6 +189,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
                                 },
                                 tileColor: Colors.grey[100],
                                 leading: UserProfileImage(
+                                    iconRadius: 12,
                                     radius: 12,
                                     profileImageUrl:
                                         following[index].profileImageUrl),
