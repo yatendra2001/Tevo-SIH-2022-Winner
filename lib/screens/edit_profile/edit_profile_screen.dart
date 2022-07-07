@@ -117,9 +117,45 @@ class EditProfileScreen extends StatelessWidget {
                             onChanged: (value) => context
                                 .read<EditProfileCubit>()
                                 .usernameChanged(value),
-                            validator: (value) => value!.trim().isEmpty
-                                ? 'Username cannot be empty.'
-                                : null,
+                            validator: (value) {
+                              if (value!.trim().isEmpty) {
+                                return "Username cannot be empty";
+                              } else if (value.trim().length < 4) {
+                                return "Username cannot be less than four letter";
+                              }
+
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 32,
+                          ),
+                          TextFormField(
+                            initialValue: user.username,
+                            decoration: InputDecoration(
+                              labelText: 'Name',
+                              labelStyle:
+                                  const TextStyle(color: kPrimaryBlackColor),
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onChanged: (value) => context
+                                .read<EditProfileCubit>()
+                                .nameChanged(value),
+                            validator: (value) {
+                              if (value!.trim().isEmpty) {
+                                return "name cannot be empty";
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 16.0),
                           TextFormField(
@@ -128,6 +164,8 @@ class EditProfileScreen extends StatelessWidget {
                               fontSize: 9.5.sp,
                             ),
                             initialValue: user.bio,
+                            maxLines: 3,
+                            minLines: 3,
                             decoration: InputDecoration(
                               labelText: 'Bio',
                               labelStyle: TextStyle(
@@ -167,6 +205,7 @@ class EditProfileScreen extends StatelessWidget {
                                 fontSize: 9.5.sp,
                               ),
                             ),
+
                           ),
                         ],
                       ),
@@ -192,8 +231,12 @@ class EditProfileScreen extends StatelessWidget {
     }
   }
 
-  void _submitForm(BuildContext context, bool isSubmitting) {
-    if (_formKey.currentState!.validate() && !isSubmitting) {
+  void _submitForm(BuildContext context, bool isSubmitting) async {
+    final userNameAvaialable =
+        await context.read<EditProfileCubit>().checkUsernameExists();
+    if (userNameAvaialable == false) {
+      flutterToast(msg: "Username exists");
+    } else if (_formKey.currentState!.validate() && !isSubmitting) {
       context.read<EditProfileCubit>().submit();
     }
   }

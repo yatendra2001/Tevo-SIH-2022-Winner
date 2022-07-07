@@ -53,21 +53,22 @@ class _TaskTileState extends State<TaskTile> {
                   widget.task.title,
                   style: TextStyle(fontSize: 9.5.sp),
                 ),
-                (widget.view == TaskTileView.createScreenView &&
-                        !widget.isComplete)
+                (widget.view == TaskTileView.createScreenView)
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          IconButton(
-                            padding: EdgeInsets.all(0),
-                            icon: Icon(Icons.repeat),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            padding: EdgeInsets.all(0),
-                            icon: Icon(Icons.edit),
-                            onPressed: widget.isEditing,
-                          ),
+                          if (widget.isComplete == false)
+                            IconButton(
+                              padding: EdgeInsets.all(0),
+                              icon: Icon(Icons.repeat),
+                              onPressed: () {},
+                            ),
+                          if (widget.isComplete == false)
+                            IconButton(
+                              padding: EdgeInsets.all(0),
+                              icon: Icon(Icons.edit),
+                              onPressed: widget.isEditing,
+                            ),
                           IconButton(
                             padding: EdgeInsets.all(0),
                             icon: Icon(Icons.delete),

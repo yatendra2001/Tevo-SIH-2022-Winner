@@ -100,9 +100,7 @@ class _OnboardingpageviewState extends State<Onboardingpageview> {
           pageController: _pageController,
         ),
       ),
-      FollowUsersScreen(
-        pageController: _pageController,
-      )
+      FollowUsersScreen()
     ];
   }
 
