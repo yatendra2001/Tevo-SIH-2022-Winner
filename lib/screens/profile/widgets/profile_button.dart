@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/screens.dart';
@@ -45,7 +46,11 @@ class ProfileButton extends StatelessWidget {
                   style: TextButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Share.share(
+                        '👋Hey-You should join us on Tevo. I share mine and view other\'s everyday progress on health, career and personal interests to stay inspired!.\n\nHere is the link:  \nhttps://play.google.com/store/apps/details?id=com.superawesomeapps.tevo',
+                        subject: 'Noobs Assemble!');
+                  },
                   icon: const Icon(
                     Icons.share,
                     color: kPrimaryWhiteColor,

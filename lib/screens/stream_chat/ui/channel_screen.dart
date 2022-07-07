@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:tevo/extensions/string_extension.dart';
 import 'package:tevo/models/user_model.dart' as userModel;
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/models/chat_type.dart';
@@ -96,11 +98,16 @@ class _ChannelScreenState extends State<ChannelScreen> {
         channel: channel,
         child: Scaffold(
           appBar: ChannelHeader(
-            title: Text(channel.extraData['chat_type'] == 'group'
-                ? channel.name!
-                : channel.extraData['u1id'] != SessionHelper.uid
-                    ? channel.extraData['u1'].toString()
-                    : channel.extraData['u2'].toString()),
+            title: Text(
+              channel.extraData['u1id'] != SessionHelper.uid
+                  ? channel.extraData['u1'].toString().capitalized()
+                  : channel.extraData['u2'].toString().capitalized(),
+              style: TextStyle(
+                color: kPrimaryBlackColor,
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             // title: Text(
             //     channel.name!.replaceFirst(SessionHelper.displayName!, '')),
             leading: IconButton(

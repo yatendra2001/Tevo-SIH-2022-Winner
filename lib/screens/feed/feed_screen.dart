@@ -114,8 +114,12 @@ class _FeedScreenState extends State<FeedScreen> {
                     pinned: true,
                     elevation: 1,
                     toolbarHeight: 9.h,
+                    backgroundColor: kPrimaryWhiteColor,
                     title: Text("TEVO",
-                        style: Theme.of(context).textTheme.displayLarge),
+                        style: TextStyle(
+                            fontSize: 20.sp,
+                            color: kPrimaryBlackColor,
+                            fontWeight: FontWeight.w500)),
                     bottom: PreferredSize(
                         child: Padding(
                           padding: const EdgeInsets.only(
@@ -197,7 +201,10 @@ class _FeedScreenState extends State<FeedScreen> {
                                       ),
                                     ),
                                   IconButton(
-                                    icon: const Icon(Linecons.paper_plane),
+                                    icon: const Icon(
+                                      Linecons.paper_plane,
+                                      color: kPrimaryBlackColor,
+                                    ),
                                     onPressed: () {
                                       Navigator.pushNamed(
                                           context, StreamChatInbox.routeName);
@@ -211,7 +218,10 @@ class _FeedScreenState extends State<FeedScreen> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),
                             child: IconButton(
-                              icon: const Icon(Linecons.paper_plane),
+                              icon: const Icon(
+                                Linecons.paper_plane,
+                                color: kPrimaryBlackColor,
+                              ),
                               onPressed: () {
                                 Navigator.pushNamed(
                                     context, StreamChatInbox.routeName);

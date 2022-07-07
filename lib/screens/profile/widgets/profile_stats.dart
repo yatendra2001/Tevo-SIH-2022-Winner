@@ -1,12 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tevo/repositories/post/post_repository.dart';
+import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 
 import 'package:tevo/screens/profile/followers_screen.dart';
 import 'package:tevo/screens/profile/following_screen.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/utils/theme_constants.dart';
 
-class ProfileStats extends StatelessWidget {
+class ProfileStats extends StatefulWidget {
   final bool isCurrentUser;
   final bool isFollowing;
   final bool isRequesting;
@@ -27,6 +32,30 @@ class ProfileStats extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ProfileStats> createState() => _ProfileStatsState();
+}
+
+class _ProfileStatsState extends State<ProfileStats> {
+  double? completionRate;
+
+  _getCompletionRate() {
+    PostRepository()
+        .getCompletionRate(userId: context.read<ProfileBloc>().state.user.id)
+        .then((value) {
+      setState(() {
+        completionRate = value;
+      });
+      log("Total Completed Tasks" + completionRate.toString());
+    });
+  }
+
+  @override
+  void initState() {
+    _getCompletionRate();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -35,31 +64,32 @@ class ProfileStats extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _Stats(count: posts, label: 'Streak'),
+            _Stats(count: widget.posts, label: 'Posts'),
             InkWell(
-              child: _Stats(count: followers, label: 'Followers'),
+              child: _Stats(count: widget.followers, label: 'Followers'),
               onTap: () {
                 Navigator.of(context).pushNamed(FollowerScreen.routeName,
-                    arguments: FollowerScreenArgs(userId: userId));
+                    arguments: FollowerScreenArgs(userId: widget.userId));
               },
             ),
             InkWell(
-              child: _Stats(count: following, label: 'Following'),
+              child: _Stats(count: widget.following, label: 'Following'),
               onTap: () {
                 Navigator.of(context).pushNamed(FollowingScreen.routeName,
-                    arguments: FollowingScreenArgs(userId: userId));
+                    arguments: FollowingScreenArgs(userId: widget.userId));
               },
             ),
-            _Stats(count: posts, label: 'Completion Rate'),
+            _Stats(
+                count: completionRate?.toInt() ?? 0, label: 'Completion Rate'),
           ],
         ),
         const SizedBox(height: 16.0),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: ProfileButton(
-            isRequesting: isRequesting,
-            isCurrentUser: isCurrentUser,
-            isFollowing: isFollowing,
+            isRequesting: widget.isRequesting,
+            isCurrentUser: widget.isCurrentUser,
+            isFollowing: widget.isFollowing,
           ),
         ),
       ],
