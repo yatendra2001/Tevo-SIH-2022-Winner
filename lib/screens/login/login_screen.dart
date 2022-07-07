@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(
                 children: [
@@ -67,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     "Sign in with your phone number",
                     style: TextStyle(fontSize: 15.sp),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 3.h),
                   Container(
@@ -76,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: DefaultTextStyle(
                         style: TextStyle(
                           color: kPrimaryBlackColor,
-                          fontSize: 10.sp,
+                          fontSize: 8.5.sp,
                         ),
                         textAlign: TextAlign.center,
                         child: _animatedQuotedTextsMethod(),
@@ -174,20 +176,21 @@ class _LoginScreenState extends State<LoginScreen> {
       repeatForever: true,
       animatedTexts: [
         RotateAnimatedText(
-            'Life Before Death. Strength Before Weakness. Journey Before Destination.  - Brandon Sanderson📚',
-            duration: const Duration(seconds: 3),
-            textStyle: TextStyle(fontSize: 8.5.sp)),
-        RotateAnimatedText('The journey is the reward. - Steve Jobs🍎',
-            duration: const Duration(seconds: 3),
-            textStyle: TextStyle(fontSize: 8.5.sp)),
+          'Life Before Death. Strength Before Weakness. Journey Before Destination.  - Brandon Sanderson📚',
+          duration: const Duration(seconds: 3),
+        ),
         RotateAnimatedText(
-            'Process is more important than tesult. - MS Dhoni🏏',
-            duration: const Duration(seconds: 3),
-            textStyle: TextStyle(fontSize: 8.5.sp)),
+          'The journey is the reward. - Steve Jobs🍎',
+          duration: const Duration(seconds: 3),
+        ),
         RotateAnimatedText(
-            'How you climb a mountain is more important than reaching the top. - Yvon Chouinard🧗',
-            duration: const Duration(seconds: 3),
-            textStyle: TextStyle(fontSize: 8.5.sp)),
+          'Process is more important than tesult. - MS Dhoni🏏',
+          duration: const Duration(seconds: 3),
+        ),
+        RotateAnimatedText(
+          'How you climb a mountain is more important than reaching the top. - Yvon Chouinard🧗',
+          duration: const Duration(seconds: 3),
+        ),
       ],
     );
   }

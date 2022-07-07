@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/linecons_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
+import 'package:tevo/screens/comments/bloc/comments_bloc.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -33,6 +36,7 @@ class PostView extends StatefulWidget {
 
 class _PostViewState extends State<PostView> {
   List<Task>? tasks;
+  final _commentTextController = TextEditingController();
 
   @override
   void initState() {
@@ -156,6 +160,7 @@ class _PostViewState extends State<PostView> {
                         ),
                       ],
                     ),
+                  SizedBox(height: 8),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -181,6 +186,7 @@ class _PostViewState extends State<PostView> {
                     itemCount: tasks!.length,
                   ),
                   _buildFavoriteCommentTitle(widget),
+                  _buildCommentTile(context, widget.post)
                 ],
               ),
             ),
@@ -195,7 +201,7 @@ class _PostViewState extends State<PostView> {
         widget.recentlyLiked ? widget.post.likes + 1 : widget.post.likes;
     String likeText = (likes == 1) ? '$likes Person' : '$likes People';
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -237,15 +243,18 @@ class _PostViewState extends State<PostView> {
             ],
           ),
           (widget.post.likes != 0 || widget.recentlyLiked)
-              ? RichText(
-                  text: TextSpan(
-                      text: "Liked by ",
-                      style: TextStyle(color: Colors.black),
-                      children: [
-                      TextSpan(
-                          text: likeText,
-                          style: TextStyle(fontWeight: FontWeight.bold))
-                    ]))
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: RichText(
+                      text: TextSpan(
+                          text: "Liked by ",
+                          style: TextStyle(color: kPrimaryBlackColor),
+                          children: [
+                        TextSpan(
+                            text: likeText,
+                            style: TextStyle(fontWeight: FontWeight.bold))
+                      ])),
+                )
               : SizedBox.shrink(),
           SizedBox(
             height: 2,
@@ -257,41 +266,50 @@ class _PostViewState extends State<PostView> {
 
   _buildCommentTile(BuildContext context, Post post) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 12.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Container(
+            width: 20.sp,
+            height: 20.sp,
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(
+                      SessionHelper.profileImageUrl!),
+                  fit: BoxFit.fitHeight),
+            ),
+          ),
           SizedBox(
-            width: 300,
+            width: 60.w,
             child: TextField(
-              onTap: () => Navigator.of(context).pushNamed(
-                CommentsScreen.routeName,
-                arguments: CommentsScreenArgs(post: post),
-              ),
-              readOnly: true,
+              controller: _commentTextController,
+              style: TextStyle(fontSize: 8.5.sp),
               decoration: InputDecoration(
-                disabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
+                enabledBorder: InputBorder.none,
                 filled: true,
-                hintText: "Add Comment",
-                hintStyle: TextStyle(fontSize: 12),
+                hintText: "Add a comment...",
+                hintStyle: TextStyle(fontSize: 8.5.sp),
                 fillColor: Colors.white,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
+                focusedBorder: InputBorder.none,
                 isDense: true, // Added this
-                contentPadding: EdgeInsets.all(12),
               ),
             ),
           ),
-          Icon(Icons.send)
+          Spacer(),
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: () {
+              if (_commentTextController.text.trim().isNotEmpty) {
+                context.read<CommentsBloc>().add(CommentsPostComment(
+                    content: _commentTextController.text.trim()));
+                _commentTextController.clear();
+                FocusScope.of(context).requestFocus();
+              }
+            },
+          )
         ],
       ),
     );

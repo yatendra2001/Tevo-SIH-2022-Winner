@@ -10,6 +10,7 @@ import 'package:tevo/config/custom_router.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/keys/key.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/screens/comments/bloc/comments_bloc.dart';
 import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
 import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
@@ -95,6 +96,12 @@ class MyApp extends StatelessWidget {
               likedPostsCubit: context.read<LikedPostsCubit>(),
             )..add(ProfileLoadUser(userId: SessionHelper.uid!)),
           ),
+          BlocProvider<CommentsBloc>(
+            create: (context) => CommentsBloc(
+              authBloc: context.read<AuthBloc>(),
+              postRepository: context.read<PostRepository>(),
+            ),
+          ),
           BlocProvider(
             create: (context) => InitializeStreamChatCubit(),
           ),
@@ -109,7 +116,7 @@ class MyApp extends StatelessWidget {
               child: child,
             ),
             navigatorKey: navigatorKey,
-            title: 'Flutter Tevo',
+            title: 'Tevo',
             debugShowCheckedModeBanner: false,
             theme: AppThemes.lightTheme,
             onGenerateRoute: CustomRouter.onGenerateRoute,

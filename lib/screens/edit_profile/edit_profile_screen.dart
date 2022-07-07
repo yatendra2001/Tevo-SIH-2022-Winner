@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/helpers/helpers.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
@@ -50,7 +51,13 @@ class EditProfileScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: Text('Edit Profile'),
+          title: Text(
+            'Edit Profile',
+            style: TextStyle(
+              color: kPrimaryBlackColor,
+              fontSize: 15.sp,
+            ),
+          ),
         ),
         body: BlocConsumer<EditProfileCubit, EditProfileState>(
           listener: (context, state) {
@@ -87,11 +94,15 @@ class EditProfileScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TextFormField(
+                            style: TextStyle(
+                              color: kPrimaryBlackColor,
+                              fontSize: 9.5.sp,
+                            ),
                             initialValue: user.username,
                             decoration: InputDecoration(
                               labelText: 'Username',
-                              labelStyle:
-                                  const TextStyle(color: kPrimaryBlackColor),
+                              labelStyle: TextStyle(
+                                  color: kPrimaryBlackColor, fontSize: 9.5.sp),
                               border: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: kPrimaryBlackColor),
@@ -148,13 +159,17 @@ class EditProfileScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 16.0),
                           TextFormField(
+                            style: TextStyle(
+                              color: kPrimaryBlackColor,
+                              fontSize: 9.5.sp,
+                            ),
                             initialValue: user.bio,
                             maxLines: 3,
                             minLines: 3,
                             decoration: InputDecoration(
                               labelText: 'Bio',
-                              labelStyle:
-                                  const TextStyle(color: kPrimaryBlackColor),
+                              labelStyle: TextStyle(
+                                  color: kPrimaryBlackColor, fontSize: 9.5.sp),
                               border: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: kPrimaryBlackColor),
@@ -179,13 +194,18 @@ class EditProfileScreen extends StatelessWidget {
                               primary: Theme.of(context).primaryColor,
                               textStyle: const TextStyle(color: Colors.white),
                             ),
-                            onPressed: () {
-                              _submitForm(
-                                context,
-                                state.status == EditProfileStatus.submitting,
-                              );
-                            },
-                            child: const Text('Update'),
+                            onPressed: () => _submitForm(
+                              context,
+                              state.status == EditProfileStatus.submitting,
+                            ),
+                            child: Text(
+                              'Update',
+                              style: TextStyle(
+                                color: kPrimaryWhiteColor,
+                                fontSize: 9.5.sp,
+                              ),
+                            ),
+
                           ),
                         ],
                       ),

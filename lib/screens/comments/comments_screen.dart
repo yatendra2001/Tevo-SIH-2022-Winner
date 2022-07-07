@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/comments/bloc/comments_bloc.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -67,9 +69,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   Navigator.of(context).pop();
                 },
               ),
-              title: const Text(
+              title: Text(
                 'Comments',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: kPrimaryBlackColor, fontSize: 15.sp),
               ),
               bottom: PreferredSize(
                 child: Padding(
@@ -83,9 +85,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           Expanded(
                             child: TextField(
                               controller: _commentController,
+                              style: TextStyle(fontSize: 9.5.sp),
                               textCapitalization: TextCapitalization.sentences,
-                              decoration: const InputDecoration.collapsed(
-                                  hintText: 'Write a comment...'),
+                              decoration: InputDecoration.collapsed(
+                                hintText: 'Write a comment...',
+                                hintStyle: TextStyle(fontSize: 9.5.sp),
+                              ),
                             ),
                           ),
                           IconButton(

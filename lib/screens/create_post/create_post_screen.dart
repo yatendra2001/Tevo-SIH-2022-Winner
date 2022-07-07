@@ -319,6 +319,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
 
   _buildAppBar() {
     return SliverAppBar(
+      backgroundColor: kPrimaryWhiteColor,
       floating: true,
       snap: true,
       automaticallyImplyLeading: false,
