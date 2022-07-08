@@ -25,7 +25,7 @@ class NotificationsScreen extends StatelessWidget {
         leadingWidth: 0,
         title: Text(
           "Notifications",
-          style: Theme.of(context).textTheme.displayLarge!,
+          style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w700),
         ),
       ),
       body: BlocBuilder<NotificationsBloc, NotificationsState>(
@@ -39,44 +39,48 @@ class NotificationsScreen extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             case NotificationsStatus.loaded:
               return requestlist.isEmpty && notificationList.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 128.0),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Text(
-                              "No new notifications 📭",
+                  ? Center(
+                      child: Column(
+                        children: [
+                          Spacer(
+                            flex: 3,
+                          ),
+                          Text(
+                            "No new notifications\nTap To Follow",
+                            style: TextStyle(
+                                color: kPrimaryBlackColor.withOpacity(0.7),
+                                fontWeight: FontWeight.w500,
+                                height: 1.5,
+                                fontSize: 15.sp),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16.0),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: kPrimaryWhiteColor,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        color: kPrimaryBlackColor),
+                                    borderRadius: BorderRadius.circular(5))),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const FollowUsersScreen()),
+                              );
+                            },
+                            child: Text(
+                              'Follow users',
                               style: TextStyle(
-                                  color: kPrimaryBlackColor.withOpacity(0.7),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15.sp),
+                                  color: kPrimaryBlackColor, fontSize: 12.sp),
                             ),
-                            const SizedBox(height: 8.0),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: kPrimaryWhiteColor,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                      side: const BorderSide(
-                                          color: kPrimaryBlackColor),
-                                      borderRadius: BorderRadius.circular(5))),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const FollowUsersScreen()),
-                                );
-                              },
-                              child: Text(
-                                'Follow users',
-                                style: TextStyle(
-                                    color: kPrimaryBlackColor,
-                                    fontSize: 8.5.sp),
-                              ),
-                            )
-                          ],
-                        ),
+                          ),
+                          Spacer(
+                            flex: 4,
+                          )
+                        ],
                       ),
                     )
                   : ListView.builder(
@@ -107,6 +111,7 @@ _buildRequestTile(
   return ListTile(
     leading: UserProfileImage(
       radius: 18.0,
+      iconRadius: 12,
       profileImageUrl: request.fromUser.profileImageUrl,
     ),
     title: Text('${request.fromUser.username} requested to follow you'),

@@ -164,6 +164,7 @@ class _FollowerScreenState extends State<FollowerScreen> {
                                 },
                                 tileColor: Colors.grey[100],
                                 leading: UserProfileImage(
+                                    iconRadius: 12,
                                     radius: 12,
                                     profileImageUrl:
                                         searchResult[index].profileImageUrl),
@@ -189,6 +190,7 @@ class _FollowerScreenState extends State<FollowerScreen> {
                                 },
                                 tileColor: Colors.grey[100],
                                 leading: UserProfileImage(
+                                    iconRadius: 12,
                                     radius: 12,
                                     profileImageUrl:
                                         followers[index].profileImageUrl),

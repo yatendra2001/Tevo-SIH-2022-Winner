@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:sizer/sizer.dart';
 
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/screens.dart';
@@ -28,21 +30,10 @@ class SearchScreen extends StatefulWidget {
   }) : super(key: key);
 
   static Route route({required SearchScreenArgs args}) {
-    return PageRouteBuilder(
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.linear;
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
+    return PageTransition(
+      type: PageTransitionType.rightToLeft,
       settings: const RouteSettings(name: routeName),
-      pageBuilder: (_, __, ___) => BlocProvider<SearchCubit>(
+      child: BlocProvider<SearchCubit>(
         create: (context) =>
             SearchCubit(userRepository: context.read<UserRepository>()),
         child: SearchScreen(
@@ -139,6 +130,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             final user = state.users[index];
                             return ListTile(
                               leading: UserProfileImage(
+                                iconRadius: 12,
                                 radius: 22.0,
                                 profileImageUrl: user.profileImageUrl,
                               ),
@@ -166,9 +158,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       : const CenteredText(text: 'No users found');
                 default:
                   return Center(
-                      child: Text(widget.type == SearchScreenType.profile
-                          ? 'So Whom To Stalk....'
-                          : 'So Whom you wanna chat with'));
+                      child: Text(
+                    widget.type == SearchScreenType.profile
+                        ? 'So Whom To Stalk....'
+                        : 'So Whom you wanna chat with...',
+                    style: TextStyle(fontSize: 14.sp),
+                  ));
               }
             },
           ),

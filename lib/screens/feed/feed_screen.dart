@@ -100,8 +100,8 @@ class _FeedScreenState extends State<FeedScreen> {
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
-              body: SafeArea(
-            child: NestedScrollView(
+            backgroundColor: Colors.white70,
+            body: NestedScrollView(
               clipBehavior: Clip.none,
               controller: _scrollController,
               headerSliverBuilder: (_, __) {
@@ -112,20 +112,17 @@ class _FeedScreenState extends State<FeedScreen> {
                     automaticallyImplyLeading: false,
                     centerTitle: false,
                     pinned: true,
-                    elevation: 1,
-                    toolbarHeight: 9.h,
-                    backgroundColor: kPrimaryWhiteColor,
+                    elevation: 0,
+                    toolbarHeight: 7.h,
                     title: Text("TEVO",
                         style: TextStyle(
-                            fontSize: 20.sp,
-                            color: kPrimaryBlackColor,
-                            fontWeight: FontWeight.w500)),
+                            fontSize: 24.sp, fontWeight: FontWeight.w700)),
                     bottom: PreferredSize(
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              top: 10, bottom: 16, right: 16, left: 16),
+                              right: 16, left: 16, bottom: 8),
                           child: SizedBox(
-                            height: 7.5.h,
+                            height: 6.5.h,
                             child: TextField(
                               onTap: () {
                                 Navigator.of(context).pushNamed(
@@ -140,17 +137,17 @@ class _FeedScreenState extends State<FeedScreen> {
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
                                       color: Colors.white, width: 1.0),
-                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderRadius: BorderRadius.circular(15.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
                                       color: Colors.white, width: 1.0),
-                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderRadius: BorderRadius.circular(15.0),
                                 ),
                                 hintText: 'Search for accounts',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.normal,
-                                    fontSize: 8.5.sp),
+                                    fontSize: 11.sp),
                                 suffixIcon: const Icon(
                                   Icons.search,
                                   color: Colors.black38,
@@ -160,7 +157,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             ),
                           ),
                         ),
-                        preferredSize: Size(double.infinity, 11.h)),
+                        preferredSize: Size(double.infinity, 8.h)),
                     actions: [
                       Padding(
                           padding: EdgeInsets.only(right: 16),
@@ -172,7 +169,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                       userId: SessionHelper.uid!));
                             },
                             child: UserProfileImage(
-                              radius: 16,
+                              radius: 24,
+                              iconRadius: 45,
                               profileImageUrl: SessionHelper.profileImageUrl!,
                             ),
                           )),
@@ -181,8 +179,8 @@ class _FeedScreenState extends State<FeedScreen> {
                         builder: (context, state) {
                           if (state is StreamChatInitializedState) {
                             return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 8),
+                              padding: const EdgeInsets.only(
+                                  right: 8, top: 8, bottom: 8),
                               child: Stack(
                                 children: [
                                   if (SessionHelper.totalUnreadMessagesCount >
@@ -203,7 +201,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                   IconButton(
                                     icon: const Icon(
                                       Linecons.paper_plane,
-                                      color: kPrimaryBlackColor,
+                                      color: Colors.black54,
                                     ),
                                     onPressed: () {
                                       Navigator.pushNamed(
@@ -237,7 +235,7 @@ class _FeedScreenState extends State<FeedScreen> {
               body: _buildBody(state),
               floatHeaderSlivers: true,
             ),
-          )),
+          ),
         );
       },
     );
@@ -252,43 +250,46 @@ class _FeedScreenState extends State<FeedScreen> {
           onRefresh: () async {
             context.read<FeedBloc>().add(FeedFetchPosts());
             context.read<LikedPostsCubit>().clearAllLikedPosts();
-            print("Laaaaaaaaa    " + state.posts.length.toString());
           },
           child: state.posts.isEmpty
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 128.0),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          "Your feed looks empty 📭",
-                          style: TextStyle(
-                              color: kPrimaryBlackColor.withOpacity(0.7),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15.sp),
-                        ),
-                        const SizedBox(height: 8.0),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: kPrimaryWhiteColor,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  side: const BorderSide(
-                                      color: kPrimaryBlackColor),
-                                  borderRadius: BorderRadius.circular(5))),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(FollowUsersScreen.routeName);
-                          },
-                          child: Text(
-                            'Follow users',
-                            style: TextStyle(
-                                color: kPrimaryBlackColor, fontSize: 8.5.sp),
-                          ),
-                        )
-                      ],
+              ? Column(
+                  children: [
+                    Spacer(flex: 2),
+                    Center(
+                      child: Text(
+                        "Umm...Your feed looks empty\nTap To Follow",
+                        style: TextStyle(
+                            color: kPrimaryBlackColor.withOpacity(0.7),
+                            fontWeight: FontWeight.w500,
+                            height: 1.5,
+                            fontSize: 15.sp),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 24,
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: kPrimaryWhiteColor,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: kPrimaryBlackColor),
+                              borderRadius: BorderRadius.circular(5))),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(FollowUsersScreen.routeName);
+                      },
+                      child: Text(
+                        'Follow users',
+                        style: TextStyle(
+                            color: kPrimaryBlackColor, fontSize: 11.sp),
+                      ),
+                    ),
+                    Spacer(
+                      flex: 3,
+                    )
+                  ],
                 )
               : ListView.builder(
                   itemCount: state.posts.length,

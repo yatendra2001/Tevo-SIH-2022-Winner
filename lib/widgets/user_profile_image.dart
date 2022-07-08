@@ -8,12 +8,14 @@ class UserProfileImage extends StatelessWidget {
   final double radius;
   final String profileImageUrl;
   final File? profileImage;
+  final double iconRadius;
 
   const UserProfileImage({
     Key? key,
     required this.radius,
     required this.profileImageUrl,
     this.profileImage,
+    required this.iconRadius,
   }) : super(key: key);
 
   @override
@@ -45,8 +47,8 @@ class UserProfileImage extends StatelessWidget {
     if (profileImage == null && profileImageUrl.isEmpty) {
       return Icon(
         Icons.account_circle,
-        color: kPrimaryBlackColor.withOpacity(0.3),
-        size: radius * 2,
+        color: Colors.black54,
+        size: iconRadius,
       );
     }
     return null;

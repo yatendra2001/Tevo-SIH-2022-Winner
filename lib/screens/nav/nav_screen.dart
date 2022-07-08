@@ -136,8 +136,8 @@ class NavScreen extends StatelessWidget {
         ],
         color: Color(0xffFFFFFF),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
           bottomLeft: Radius.zero,
           bottomRight: Radius.zero,
         ),
@@ -153,11 +153,11 @@ class NavScreen extends StatelessWidget {
               Border.all(color: Colors.grey, width: 1), // tab button border
           curve: Curves.easeOutExpo, // tab animation curves
           duration: Duration(milliseconds: 300), // tab animation duration
-          gap: 8, // the tab button gap between icon and text
+          gap: 16, // the tab button gap between icon and text
           color: Colors.grey[800], // unselected icon color
           activeColor: kPrimaryWhiteColor, // selected icon and text color
-          iconSize: 20.sp, // tab button icon size
-          textSize: 30.sp,
+          iconSize: 28, // tab button icon size
+          textSize: 32.sp,
           tabBackgroundColor:
               kPrimaryBlackColor, // selected tab background color
           padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
@@ -193,50 +193,6 @@ class NavScreen extends StatelessWidget {
             }
           },
         ),
-      ),
-    );
-  }
-
-  _customisedBottomNavBar(context, state) {
-    return Container(
-      height: 9.4.h,
-      decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black38,
-            spreadRadius: 0,
-            blurRadius: 8,
-          ),
-        ],
-        color: Color(0xffFFFFFF),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-          bottomLeft: Radius.zero,
-          bottomRight: Radius.zero,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: items
-            .map((item, icon) => MapEntry(
-                item,
-                Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    highlightColor: kPrimaryBlackColor,
-                    onTap: () {
-                      _selectBottomNavItem(
-                        context,
-                        item,
-                      );
-                    },
-                    child: icon,
-                  ),
-                )))
-            .values
-            .toList(),
       ),
     );
   }

@@ -20,6 +20,8 @@ class StandardElevatedButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         primary: kPrimaryBlackColor,
+        minimumSize: Size(100, 30),
+        maximumSize: Size(100, 30),
       ),
       onPressed: isButtonNull ? null : onTap,
       child: Padding(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:tevo/blocs/blocs.dart';
@@ -35,10 +36,11 @@ class ProfileScreen extends StatefulWidget {
   }) : super(key: key);
 
   static Route route({required ProfileScreenArgs args}) {
-    return MaterialPageRoute(
+    return PageTransition(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => BlocProvider<ProfileBloc>(
-        create: (_) => ProfileBloc(
+      type: PageTransitionType.rightToLeft,
+      child: BlocProvider<ProfileBloc>(
+        create: (context) => ProfileBloc(
           userRepository: context.read<UserRepository>(),
           postRepository: context.read<PostRepository>(),
           authBloc: context.read<AuthBloc>(),
@@ -88,6 +90,11 @@ class _ProfileScreenState extends State<ProfileScreen>
             automaticallyImplyLeading: true,
             elevation: 0,
             backgroundColor: Colors.grey[50],
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.arrow_back_ios_new_outlined)),
             title: Row(
               children: [
                 Text(
@@ -208,6 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           UserProfileImage(
+                            iconRadius: 40,
                             radius: 40.0,
                             profileImageUrl: state.user.profileImageUrl,
                           ),

@@ -82,6 +82,7 @@ class _PostViewState extends State<PostView> {
                             Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: UserProfileImage(
+                                iconRadius: 20,
                                 radius: 20,
                                 profileImageUrl:
                                     widget.post.author.profileImageUrl,
