@@ -152,16 +152,20 @@ class _InboxListItemState extends State<InboxListItem> {
                       fontSize: 11.5.sp),
                 ),
                 const Spacer(),
-                Text(
-                  widget.channel.state!.lastMessage?.text ?? '',
-                  style: TextStyle(
-                      fontWeight: widget.channel.state!.unreadCount > 0
-                          ? FontWeight.w500
-                          : FontWeight.w400,
-                      color: widget.channel.state!.unreadCount > 0
-                          ? kPrimaryBlackColor
-                          : Colors.grey,
-                      fontSize: 8.5.sp),
+                SizedBox(
+                  width: 55.w,
+                  child: Text(
+                    widget.channel.state!.lastMessage?.text ?? '',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: widget.channel.state!.unreadCount > 0
+                            ? FontWeight.w500
+                            : FontWeight.w400,
+                        color: widget.channel.state!.unreadCount > 0
+                            ? kPrimaryBlackColor
+                            : Colors.grey,
+                        fontSize: 8.5.sp),
+                  ),
                 ),
                 const SizedBox(height: 4)
               ],

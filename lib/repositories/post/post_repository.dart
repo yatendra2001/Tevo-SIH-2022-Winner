@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
@@ -88,6 +90,34 @@ class PostRepository extends BasePostRepository {
         .orderBy('enddate', descending: true)
         .snapshots()
         .map((snap) => snap.docs.map((doc) => Post.fromDocument(doc)).toList());
+  }
+
+  @override
+  Future<double> getCompletionRate({required String userId}) async {
+    final authorRef = _firebaseFirestore.collection(Paths.users).doc(userId);
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.posts)
+        .where('author', isEqualTo: authorRef)
+        .get();
+
+    double totalCompletedTasks = 0;
+    double totalTasks = 0;
+    final postsList =
+        userSnap.docs.map((doc) => Post.fromDocument(doc)).toList();
+
+    postsList.forEach((element) {
+      element.then((value) {
+        totalCompletedTasks += value?.completedTask.length ?? 0;
+        log("Posts" + value.toString());
+        log("Total Completed Tasks" + totalCompletedTasks.toString());
+        totalTasks =
+            totalTasks + (value?.toDoTask.length ?? 0) + totalCompletedTasks;
+        log("Total  Tasks" + totalTasks.toString());
+      });
+    });
+    log("Total Completed Tasks" + totalCompletedTasks.toString());
+    log("Total  Tasks" + totalTasks.toString());
+    return totalTasks != 0 ? ((totalCompletedTasks * 100) / totalTasks) : 1;
   }
 
   Future<Post?> getUserLastPost({required String userId}) async {

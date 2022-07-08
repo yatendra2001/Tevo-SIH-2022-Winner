@@ -216,7 +216,10 @@ class _FeedScreenState extends State<FeedScreen> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),
                             child: IconButton(
-                              icon: const Icon(Linecons.paper_plane),
+                              icon: const Icon(
+                                Linecons.paper_plane,
+                                color: kPrimaryBlackColor,
+                              ),
                               onPressed: () {
                                 Navigator.pushNamed(
                                     context, StreamChatInbox.routeName);

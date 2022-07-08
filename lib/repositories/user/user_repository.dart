@@ -273,10 +273,8 @@ class UserRepository extends BaseUserRepository {
 
   Future<bool> checkUsernameAvailability(String username) async {
     try {
-      var result = await _firebaseFirestore
-          .collection(Paths.username)
-          .doc(username)
-          .get();
+      var result =
+          await _firebaseFirestore.collection(Paths.users).doc(username).get();
       return result.exists;
     } catch (e) {
       log(e.toString());
