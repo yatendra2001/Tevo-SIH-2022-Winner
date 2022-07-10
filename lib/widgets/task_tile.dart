@@ -49,9 +49,11 @@ class _TaskTileState extends State<TaskTile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.task.title,
-                  style: TextStyle(fontSize: 9.5.sp),
+                Expanded(
+                  child: Text(
+                    widget.task.title,
+                    style: TextStyle(fontSize: 10.sp),
+                  ),
                 ),
                 (widget.view == TaskTileView.createScreenView)
                     ? Row(

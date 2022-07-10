@@ -202,7 +202,6 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     )
                   ],
                 ),
-                const SizedBox(height: 16),
                 state.todoTask.isEmpty
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -290,7 +289,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: 16.h),
+                          SizedBox(height: 17.3.h),
                           Center(
                             child: Image.asset(
                               kEmptyCompleteImagePath,
@@ -452,7 +451,8 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: TextField(
-                style: const TextStyle(fontWeight: FontWeight.w300),
+                style:
+                    TextStyle(fontWeight: FontWeight.w400, fontSize: 10.5.sp),
                 controller: _descriptionTextEditingController,
                 keyboardType: TextInputType.multiline,
                 focusNode: _focusNode,
@@ -461,7 +461,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                   hintText: 'Description\n\n\n',
                   hintStyle: TextStyle(
                     color: Colors.grey,
-                    fontSize: 10.sp,
+                    fontSize: 10.5.sp,
                     fontWeight: FontWeight.w500,
                   ),
                   border: InputBorder.none,
