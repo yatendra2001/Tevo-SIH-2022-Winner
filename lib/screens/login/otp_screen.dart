@@ -82,7 +82,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         SizedBox(height: 4.h),
                         Text(
                           "okay, check your texts💬 - we sent you a security code",
-                          style: TextStyle(fontSize: 15.sp),
+                          style: TextStyle(fontSize: 20.sp),
                         ),
                         SizedBox(height: 2.h),
                         SizedBox(height: 8.h),
@@ -152,7 +152,7 @@ class _OtpScreenState extends State<OtpScreen> {
       children: [
         Text(
           "Didn't get the code? ",
-          style: TextStyle(fontSize: 8.5.sp),
+          style: TextStyle(fontSize: 10.sp),
         ),
         TimerButton(
           label: 'Resend',
@@ -164,9 +164,9 @@ class _OtpScreenState extends State<OtpScreen> {
           disabledColor: Colors.grey[50]!,
           buttonType: ButtonType.FlatButton,
           disabledTextStyle: TextStyle(
-              color: kPrimaryBlackColor.withOpacity(0.4), fontSize: 8.5.sp),
+              color: kPrimaryBlackColor.withOpacity(0.4), fontSize: 10.sp),
           activeTextStyle:
-              TextStyle(color: kPrimaryBlackColor, fontSize: 8.5.sp),
+              TextStyle(color: kPrimaryBlackColor, fontSize: 10.sp),
         ),
       ],
     );

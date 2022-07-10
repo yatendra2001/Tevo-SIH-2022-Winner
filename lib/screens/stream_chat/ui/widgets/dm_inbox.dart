@@ -27,7 +27,7 @@ class _DmInboxState extends State<DmInbox> {
             if (channels.isNotEmpty) {
               return SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ListView.builder(
                         itemCount: channels.length,
@@ -47,6 +47,8 @@ class _DmInboxState extends State<DmInbox> {
             );
           },
           limit: 20,
+          pullToRefresh: true,
+
           filter: Filter.and([
             Filter.in_(
               'members',

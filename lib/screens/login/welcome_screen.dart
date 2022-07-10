@@ -34,7 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               animatedTexts: [
                 WavyAnimatedText('TEVO',
                     textStyle: TextStyle(
-                        fontSize: 40.sp,
+                        fontSize: 50.sp,
                         color: kPrimaryBlackColor,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 10.sp)),

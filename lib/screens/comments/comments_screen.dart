@@ -85,11 +85,14 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           Expanded(
                             child: TextField(
                               controller: _commentController,
-                              style: TextStyle(fontSize: 9.5.sp),
+                              style: TextStyle(
+                                  fontSize: 12.sp, fontWeight: FontWeight.w400),
                               textCapitalization: TextCapitalization.sentences,
                               decoration: InputDecoration.collapsed(
                                 hintText: 'Write a comment...',
-                                hintStyle: TextStyle(fontSize: 9.5.sp),
+                                hintStyle: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -124,20 +127,24 @@ class _CommentsScreenState extends State<CommentsScreen> {
                       final comment = state.comments[index];
                       return ListTile(
                         leading: UserProfileImage(
-                          iconRadius: 22,
-                          radius: 22.0,
+                          iconRadius: 49,
+                          radius: 14.0,
                           profileImageUrl: comment!.author.profileImageUrl,
                         ),
                         title: Text.rich(
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: comment.author.username,
-                                style: const TextStyle(
+                                text: comment.author.displayName.split(" ")[0],
+                                style: TextStyle(
+                                    fontSize: 9.sp,
                                     fontWeight: FontWeight.w600),
                               ),
-                              const TextSpan(text: ' '),
-                              TextSpan(text: comment.content),
+                              TextSpan(
+                                  text: " : " + comment.content,
+                                  style: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w400)),
                             ],
                           ),
                         ),

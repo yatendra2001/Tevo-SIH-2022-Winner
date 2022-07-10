@@ -119,11 +119,22 @@ class _PostViewState extends State<PostView> {
                                             color: kPrimaryBlackColor),
                                         borderRadius: BorderRadius.circular(8)),
                                     content: Text(
-                                      'Are you sure to unfollow ?',
-                                      style: TextStyle(fontSize: 9.5.sp),
+                                      'Reporting will unfollow the user and the post will be sent to help@tevo.com.',
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    title: Text(
+                                      'Report or Unfollow',
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     actions: [
-                                      TextButton(
+                                      OutlinedButton(
                                         onPressed: () {
                                           widget.onPressed!();
                                           Navigator.of(context).popAndPushNamed(
@@ -136,7 +147,7 @@ class _PostViewState extends State<PostView> {
                                               color: kPrimaryBlackColor),
                                         ),
                                       ),
-                                      TextButton(
+                                      OutlinedButton(
                                         onPressed: () {
                                           widget.onPressed!();
                                           Navigator.of(context).pop();

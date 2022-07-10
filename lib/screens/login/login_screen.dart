@@ -8,7 +8,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/otp_screen.dart';
@@ -16,7 +15,6 @@ import 'package:tevo/screens/login/widgets/phoneform_widget.dart';
 import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   final PageController controller;
@@ -60,17 +58,15 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(
                 children: [
                   SizedBox(height: 4.h),
                   Text(
                     "Sign in with your phone number",
-                    style: TextStyle(fontSize: 15.sp),
-                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20.sp),
                   ),
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 2.h),
                   Container(
                     height: 6.h,
                     child: Padding(
@@ -78,20 +74,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: DefaultTextStyle(
                         style: TextStyle(
                           color: kPrimaryBlackColor,
-                          fontSize: 8.5.sp,
+                          fontSize: 10.sp,
                         ),
                         textAlign: TextAlign.center,
                         child: _animatedQuotedTextsMethod(),
                       ),
                     ),
                   ),
-                  SizedBox(height: 6.5.h),
+                  SizedBox(height: 8.h),
                   PhoneForm(textEditingController: _textEditingController),
-                  SizedBox(height: 1.h),
+                  SizedBox(height: 1.3.h),
                   _termsAndPrivacyPolicy(),
                 ],
               ),
-              SizedBox(height: 2.5.h),
+              SizedBox(height: 2.h),
               StandardElevatedButton(
                   labelText: "Continue →",
                   onTap: () {
@@ -122,48 +118,44 @@ class _LoginScreenState extends State<LoginScreen> {
             text: "By continuing you agree to our ",
             style: TextStyle(
                 color: kPrimaryBlackColor.withOpacity(0.6),
-                fontSize: 7.sp,
+                fontSize: 8.sp,
                 fontWeight: FontWeight.w600),
           ),
-          // TextSpan(
-          //     text: "Terms",
-          //     style: TextStyle(
-          //         color: Colors.blue,
-          //         fontSize: 7.sp,
-          //         fontWeight: FontWeight.w600),
-          //     recognizer: TapGestureRecognizer()
-          //       ..onTap = () {
-          //         const url = '';
-          //         print("Terms tapped");
-          //         // if (await canLaunch(url)) {
-          //         //   await launch(url);
-          //         // } else {
-          //         //   throw 'Could not launch $url';
-          //         // }
-          //       }),
-          // TextSpan(
-          //   text: " and ",
-          //   style: TextStyle(
-          //       color: kPrimaryBlackColor.withOpacity(0.6),
-          //       fontSize: 7.sp,
-          //       fontWeight: FontWeight.w600),
-          // ),
+          TextSpan(
+              text: "Terms",
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 8.sp,
+                  fontWeight: FontWeight.w600),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  const url = '';
+                  print("Terms tapped");
+                  // if (await canLaunch(url)) {
+                  //   await launch(url);
+                  // } else {
+                  //   throw 'Could not launch $url';
+                  // }
+                }),
+          TextSpan(
+            text: " and ",
+            style: TextStyle(color: kPrimaryBlackColor.withOpacity(0.6)),
+          ),
           TextSpan(
               text: "Privacy Policy",
               style: TextStyle(
                   color: Colors.blue,
-                  fontSize: 7.sp,
+                  fontSize: 8.sp,
                   fontWeight: FontWeight.w600),
               recognizer: TapGestureRecognizer()
-                ..onTap = () async {
-                  const url =
-                      'https://docs.google.com/document/d/1I-HN3dkIZPssPKQEi_5tLnNFJq8bQVqFvv6gINBEgbk/edit';
+                ..onTap = () {
+                  const url = '';
                   print("Terms tapped");
-                  if (await canLaunchUrl(Uri.parse(url))) {
-                    await launchURL(context, url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
+                  // if (await canLaunch(url)) {
+                  //   await launch(url);
+                  // } else {
+                  //   throw 'Could not launch $url';
+                  // }
                 }),
         ],
       ),
@@ -176,19 +168,19 @@ class _LoginScreenState extends State<LoginScreen> {
       repeatForever: true,
       animatedTexts: [
         RotateAnimatedText(
-          'Life Before Death. Strength Before Weakness. Journey Before Destination.  - Brandon Sanderson📚',
+          'Life Before Death. Strength Before Weakness. Journey Before Destination.  - Brandon Sanderson 📚',
           duration: const Duration(seconds: 3),
         ),
         RotateAnimatedText(
-          'The journey is the reward. - Steve Jobs🍎',
+          'The journey is the reward. - Steve Jobs 🍎',
           duration: const Duration(seconds: 3),
         ),
         RotateAnimatedText(
-          'Process is more important than tesult. - MS Dhoni🏏',
+          'Process is more important than result. - MS Dhoni 🏏',
           duration: const Duration(seconds: 3),
         ),
         RotateAnimatedText(
-          'How you climb a mountain is more important than reaching the top. - Yvon Chouinard🧗',
+          'How you climb a mountain is more important than reaching the top. - Yvon Chouinard 🧗',
           duration: const Duration(seconds: 3),
         ),
       ],

@@ -1,16 +1,19 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/extensions/string_extension.dart';
 import 'package:tevo/models/user_model.dart' as userModel;
+import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/models/chat_type.dart';
 import 'package:tevo/screens/stream_chat/models/inbox_utils.dart';
 import 'package:tevo/screens/stream_chat/ui/widgets/members_list_sheet.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/user_profile_image.dart';
 
 class ChannelScreenArgs {
   final userModel.User? user;
@@ -69,7 +72,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   widget.user!.username + "," + SessionHelper.username!,
               'members': [SessionHelper.uid!, widget.user!.id],
               'chat_type': widget.chatType,
-              'u1': SessionHelper.username,
+              'u1': SessionHelper.displayName,
               'u2': widget.user!.username,
               'u1id': SessionHelper.uid,
               'u2id': widget.user!.id,
@@ -98,43 +101,39 @@ class _ChannelScreenState extends State<ChannelScreen> {
         channel: channel,
         child: Scaffold(
           appBar: ChannelHeader(
+            showTypingIndicator: true,
+            backgroundColor: Colors.white,
             title: Text(
               channel.extraData['u1id'] != SessionHelper.uid
                   ? channel.extraData['u1'].toString().capitalized()
                   : channel.extraData['u2'].toString().capitalized(),
               style: TextStyle(
                 color: kPrimaryBlackColor,
-                fontSize: 11.5.sp,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
               ),
+              textAlign: TextAlign.start,
             ),
             // title: Text(
             //     channel.name!.replaceFirst(SessionHelper.displayName!, '')),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back_ios_new_outlined),
               onPressed: () => Navigator.of(context).pop(true),
             ),
+            onTitleTap: () {
+              Navigator.of(context).pushNamed(ProfileScreen.routeName,
+                  arguments: ProfileScreenArgs(
+                      userId: channel.extraData["u2id"].toString()));
+            },
             onBackPressed: () => Navigator.popUntil(context, (route) => false),
             actions: [
               if (channel.extraData['chat_type'] == ChatType.oneOnOne)
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pushNamed(
-                      ProfileScreen.routeName,
-                      arguments:
-                          ProfileScreenArgs(userId: widget.user!.id ?? '')),
-                  child: Container(
-                    width: 44,
-                    height: 44,
-                    margin: EdgeInsets.only(right: 8),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: kPrimaryBlackColor,
-                        image: DecorationImage(
-                            image: NetworkImage((isOneOnOne
-                                    ? (widget.profileImage ??
-                                        'https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png')
-                                    : channel.image) ??
-                                'https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png'))),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: UserProfileImage(
+                    radius: 14,
+                    profileImageUrl: widget.profileImage!,
+                    iconRadius: 49,
                   ),
                 ),
               if (channel.extraData['chat_type'] != ChatType.oneOnOne)

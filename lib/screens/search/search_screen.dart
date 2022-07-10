@@ -131,13 +131,21 @@ class _SearchScreenState extends State<SearchScreen> {
                             final user = state.users[index];
                             return ListTile(
                               leading: UserProfileImage(
-                                iconRadius: 12,
-                                radius: 22.0,
+                                iconRadius: 48,
+                                radius: 15.0,
                                 profileImageUrl: user.profileImageUrl,
                               ),
                               title: Text(
-                                user.username,
-                                style: const TextStyle(fontSize: 16.0),
+                                user.displayName,
+                                style: TextStyle(
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              subtitle: Text(
+                                "@" + user.username,
+                                style: TextStyle(
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.w400),
                               ),
                               onTap: () => widget.type ==
                                       SearchScreenType.message
