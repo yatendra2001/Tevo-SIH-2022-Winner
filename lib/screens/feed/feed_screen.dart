@@ -252,44 +252,46 @@ class _FeedScreenState extends State<FeedScreen> {
             context.read<LikedPostsCubit>().clearAllLikedPosts();
           },
           child: state.posts.isEmpty
-              ? Column(
-                  children: [
-                    Spacer(flex: 2),
-                    Center(
-                      child: Text(
-                        "Umm...Your feed looks empty\nTap To Follow",
-                        style: TextStyle(
-                            color: kPrimaryBlackColor.withOpacity(0.7),
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            fontSize: 15.sp),
-                        textAlign: TextAlign.center,
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 25.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: kPrimaryWhiteColor,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: kPrimaryBlackColor),
-                              borderRadius: BorderRadius.circular(5))),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(FollowUsersScreen.routeName);
-                      },
-                      child: Text(
-                        'Follow users',
-                        style: TextStyle(
-                            color: kPrimaryBlackColor, fontSize: 11.sp),
+                      Center(
+                        child: Text(
+                          "Umm...Your feed looks empty\nTap To Follow",
+                          style: TextStyle(
+                              color: kPrimaryBlackColor.withOpacity(0.7),
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                              fontSize: 15.sp),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                    Spacer(
-                      flex: 3,
-                    )
-                  ],
+                      SizedBox(
+                        height: 24,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: kPrimaryWhiteColor,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                side:
+                                    const BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(5))),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(FollowUsersScreen.routeName);
+                        },
+                        child: Text(
+                          'Follow users',
+                          style: TextStyle(
+                              color: kPrimaryBlackColor, fontSize: 11.sp),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               : ListView.builder(
                   itemCount: state.posts.length,

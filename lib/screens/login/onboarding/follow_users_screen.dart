@@ -167,6 +167,7 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                               requestId: null);
                         }
                       }
+
                       Navigator.of(context).pushNamed(NavScreen.routeName);
                     },
                     child: Container(
