@@ -1323,6 +1323,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
+  webcrypto:
+    dependency: "direct main"
+    description:
+      name: webcrypto
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.2"
   win32:
     dependency: transitive
     description:

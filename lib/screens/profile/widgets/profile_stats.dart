@@ -38,8 +38,8 @@ class ProfileStats extends StatefulWidget {
 class _ProfileStatsState extends State<ProfileStats> {
   double? completionRate;
 
-  _getCompletionRate() {
-    PostRepository()
+  _getCompletionRate() async {
+    await PostRepository()
         .getCompletionRate(userId: context.read<ProfileBloc>().state.user.id)
         .then((value) {
       setState(() {
@@ -79,21 +79,22 @@ class _ProfileStatsState extends State<ProfileStats> {
                     arguments: FollowingScreenArgs(userId: widget.userId));
               },
             ),
-            _Stats(
-                count: completionRate?.toInt() ?? 0, label: 'Completion Rate'),
+            Builder(builder: (context) {
+              return _Stats(
+                  count: completionRate?.toInt() ?? 0,
+                  label: 'Completion Rate');
+            }),
           ],
         ),
         const SizedBox(height: 16.0),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: ProfileButton(
-            isRequesting: widget.isRequesting,
-            isCurrentUser: widget.isCurrentUser,
-            isFollowing: widget.isFollowing,
-
-          ),
-        ],
-      ),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: ProfileButton(
+              isRequesting: widget.isRequesting,
+              isCurrentUser: widget.isCurrentUser,
+              isFollowing: widget.isFollowing,
+            )),
+      ],
     );
   }
 }

@@ -204,116 +204,113 @@ class _ProfileScreenState extends State<ProfileScreen>
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          UserProfileImage(
-                            iconRadius: 40,
-                            radius: 40.0,
-                            profileImageUrl: state.user.profileImageUrl,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 30.0,
-                                vertical: 10.0,
-                              ),
-                              child: ProfileInfo(
-                                username: state.user.username,
-                                bio: state.user.bio,
-                                displayName: state.user.displayName,
-                              ),
+                child: Container(
+                  margin: EdgeInsets.only(top: 64),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: kPrimaryBlackColor),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 16),
+
+                      UserProfileImage(
+                        iconRadius: 40,
+                        radius: 40.0,
+                        profileImageUrl: state.user.profileImageUrl,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      ProfileInfo(
+                        username: state.user.username,
+                        bio: state.user.bio,
+                        displayName: state.user.displayName,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      ProfileStats(
+                        isRequesting: state.isRequesting,
+                        isCurrentUser: state.isCurrentUser,
+                        isFollowing: state.isFollowing,
+                        posts: state.posts.length,
+                        followers: state.user.followers,
+                        following: state.user.following,
+                        userId: widget.userId,
+                      ),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      // const Divider(
+                      //   color: kPrimaryBlackColor,
+                      //   thickness: 1.2,
+                      // ),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      if (state.posts.isEmpty && state.isCurrentUser)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 64.0),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Make your first post 🚀",
+                                  style: TextStyle(
+                                      color:
+                                          kPrimaryBlackColor.withOpacity(0.7),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15.sp),
+                                ),
+                                const SizedBox(height: 8.0),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryWhiteColor,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                          side: const BorderSide(
+                                              color: kPrimaryBlackColor),
+                                          borderRadius:
+                                              BorderRadius.circular(5))),
+                                  onPressed: () {
+                                    context
+                                        .read<BottomNavBarCubit>()
+                                        .updateSelectedItem(
+                                            BottomNavItem.create);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(
+                                    'Create Task',
+                                    style: TextStyle(
+                                        color: kPrimaryBlackColor,
+                                        fontSize: 9.5.sp),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    ProfileStats(
-                      isRequesting: state.isRequesting,
-                      isCurrentUser: state.isCurrentUser,
-                      isFollowing: state.isFollowing,
-                      posts: state.posts.length,
-                      followers: state.user.followers,
-                      following: state.user.following,
-                      userId: widget.userId,
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    const Divider(
-                      color: kPrimaryBlackColor,
-                      thickness: 1.2,
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    if (state.posts.isEmpty && state.isCurrentUser)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 64.0),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                "Make your first post 🚀",
-                                style: TextStyle(
-                                    color: kPrimaryBlackColor.withOpacity(0.7),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15.sp),
-                              ),
-                              const SizedBox(height: 8.0),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryWhiteColor,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                        side: const BorderSide(
-                                            color: kPrimaryBlackColor),
-                                        borderRadius:
-                                            BorderRadius.circular(5))),
-                                onPressed: () {
-                                  context
-                                      .read<BottomNavBarCubit>()
-                                      .updateSelectedItem(BottomNavItem.create);
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  'Create Task',
-                                  style: TextStyle(
-                                      color: kPrimaryBlackColor,
-                                      fontSize: 9.5.sp),
-                                ),
-                              )
-                            ],
-                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final post = state.posts[index];
-                    final date = state.posts[index]!.toDoTask[0].dateTime;
+                    final date = post!.enddate.toDate();
                     final likedPostsState =
                         context.watch<LikedPostsCubit>().state;
                     final isLiked =
                         likedPostsState.likedPostIds.contains(post!.id);
                     log(post.toString());
+                    log("This is length of posts: " +
+                        state.posts.length.toString());
                     return Column(
                       children: [
                         Text(
-                          DateFormat("EEEE, MMMM d, y").format(date),
+                          DateFormat("EEEE, MMMM d, y").format(date!),
                           style: TextStyle(
                               color: kPrimaryBlackColor,
                               fontWeight: FontWeight.w500,

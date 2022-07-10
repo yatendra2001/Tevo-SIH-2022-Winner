@@ -117,7 +117,7 @@ class PostRepository extends BasePostRepository {
     });
     log("Total Completed Tasks" + totalCompletedTasks.toString());
     log("Total  Tasks" + totalTasks.toString());
-    return totalTasks != 0 ? ((totalCompletedTasks * 100) / totalTasks) : 1;
+    return totalTasks != 0 ? ((totalCompletedTasks * 100) / totalTasks) : 0;
   }
 
   Future<Post?> getUserLastPost({required String userId}) async {

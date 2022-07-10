@@ -48,7 +48,7 @@ class ProfileButton extends StatelessWidget {
                   ),
                   onPressed: () {
                     Share.share(
-                        '👋Hey-You should join us on Tevo. I share mine and view other\'s everyday progress on health, career and personal interests to stay inspired!.\n\nHere is the link:  \nhttps://play.google.com/store/apps/details?id=com.superawesomeapps.tevo',
+                        '👋Hey-You should join us on Tevo. I share my everyday progress there on health, career and personal interests to stay inspired!.\n\nHere is the link:  \nhttps://app.tevo.social/download',
                         subject: 'Noobs Assemble!');
                   },
                   icon: const Icon(
