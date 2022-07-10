@@ -19,7 +19,7 @@ class Post extends Equatable {
     required this.author,
     required this.toDoTask,
     required this.completedTask,
-    this.likes = 0,
+    required this.likes,
     required this.enddate,
   });
 
@@ -48,6 +48,7 @@ class Post extends Equatable {
       'toDoTask': toDoTask.map((task) => task.toMap()).toList(),
       'completedTask': completedTask.map((task) => task.toMap()).toList(),
       'enddate': enddate.microsecondsSinceEpoch,
+      'likes': likes,
     };
   }
 
@@ -70,6 +71,7 @@ class Post extends Equatable {
           author: User.fromDocument(authorDoc),
           toDoTask: ls,
           completedTask: ps,
+          likes: (data['likes'] ?? 0).toInt(),
           enddate: Timestamp.fromMicrosecondsSinceEpoch(data['enddate']),
         );
       }

@@ -350,7 +350,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             "Remaining 🧗",
             style: TextStyle(
               color: kPrimaryBlackColor,
-              fontSize: 14.sp,
+              fontSize: 13.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -360,7 +360,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             "Completed 🚀",
             style: TextStyle(
               color: kPrimaryBlackColor,
-              fontSize: 14.sp,
+              fontSize: 13.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -373,12 +373,13 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 arguments: ProfileScreenArgs(userId: SessionHelper.uid!));
           }),
           child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: UserProfileImage(
-                iconRadius: 45,
-                radius: 30,
-                profileImageUrl: SessionHelper.profileImageUrl!,
-              )),
+            padding: const EdgeInsets.only(right: 16),
+            child: UserProfileImage(
+              iconRadius: 45,
+              radius: 15,
+              profileImageUrl: SessionHelper.profileImageUrl!,
+            ),
+          ),
         )
       ],
     );

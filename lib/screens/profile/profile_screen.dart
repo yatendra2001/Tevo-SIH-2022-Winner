@@ -304,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final post = state.posts[index];
-                    final date = state.posts[index]!.toDoTask[0].dateTime;
+                    final date = DateTime.now();
                     final likedPostsState =
                         context.watch<LikedPostsCubit>().state;
                     final isLiked =

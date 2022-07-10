@@ -90,10 +90,9 @@ class _ProfileStatsState extends State<ProfileStats> {
             isRequesting: widget.isRequesting,
             isCurrentUser: widget.isCurrentUser,
             isFollowing: widget.isFollowing,
-
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 }

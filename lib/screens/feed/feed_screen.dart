@@ -157,7 +157,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             ),
                           ),
                         ),
-                        preferredSize: Size(double.infinity, 8.h)),
+                        preferredSize: Size(double.infinity, 7.45.h)),
                     actions: [
                       Padding(
                           padding: EdgeInsets.only(right: 16),
@@ -169,7 +169,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                       userId: SessionHelper.uid!));
                             },
                             child: UserProfileImage(
-                              radius: 24,
+                              radius: 15,
                               iconRadius: 45,
                               profileImageUrl: SessionHelper.profileImageUrl!,
                             ),
@@ -293,6 +293,8 @@ class _FeedScreenState extends State<FeedScreen> {
                 )
               : ListView.builder(
                   itemCount: state.posts.length,
+                  padding:
+                      EdgeInsets.only(right: 4, left: 4, top: 4, bottom: 100),
                   itemBuilder: (BuildContext context, int index) {
                     final post = state.posts[index];
                     final likedPostsState =
@@ -302,34 +304,29 @@ class _FeedScreenState extends State<FeedScreen> {
                     final recentlyLiked =
                         likedPostsState.recentlyLikedPostIds.contains(post.id);
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: PostView(
-                        isLiked: isLiked,
-                        onLike: () {
-                          if (isLiked) {
-                            context
-                                .read<LikedPostsCubit>()
-                                .unlikePost(post: post);
-                          } else {
-                            context
-                                .read<LikedPostsCubit>()
-                                .likePost(post: post);
-                          }
-                        },
-                        recentlyLiked: recentlyLiked,
-                        post: post,
-                        onPressed: () {
-                          context.read<FeedBloc>().add(FeedToUnfollowUser(
-                              unfollowUserId: post.author.id));
-                          Fluttertoast.showToast(
-                            msg: "${post.author.username} Unfollowed",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.black54,
-                          );
-                        },
-                      ),
+                    return PostView(
+                      isLiked: isLiked,
+                      recentlyLiked: recentlyLiked,
+                      onLike: () {
+                        if (isLiked) {
+                          context
+                              .read<LikedPostsCubit>()
+                              .unlikePost(post: post);
+                        } else {
+                          context.read<LikedPostsCubit>().likePost(post: post);
+                        }
+                      },
+                      post: post,
+                      onPressed: () {
+                        context.read<FeedBloc>().add(
+                            FeedToUnfollowUser(unfollowUserId: post.author.id));
+                        Fluttertoast.showToast(
+                          msg: "${post.author.username} Unfollowed",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.black54,
+                        );
+                      },
                     );
                   },
                 ),
