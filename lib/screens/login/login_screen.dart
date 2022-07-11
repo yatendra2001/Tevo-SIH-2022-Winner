@@ -64,10 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 4.h),
                   Text(
                     "Sign in with your phone number",
-                    style: TextStyle(fontSize: 20.sp),
+                    style: TextStyle(fontSize: 18.sp),
+                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 2.h),
-                  Container(
+                  SizedBox(height: 40),
+                  SizedBox(
                     height: 6.h,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 2.w),
@@ -81,9 +82,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 80),
                   PhoneForm(textEditingController: _textEditingController),
-                  SizedBox(height: 1.3.h),
+                  SizedBox(height: 12),
                   _termsAndPrivacyPolicy(),
                 ],
               ),
@@ -168,20 +169,28 @@ class _LoginScreenState extends State<LoginScreen> {
       repeatForever: true,
       animatedTexts: [
         RotateAnimatedText(
-          'Life Before Death. Strength Before Weakness. Journey Before Destination.  - Brandon Sanderson 📚',
+          'Life Before Death. Strength Before Weakness. Journey Before Destination.\n  - Brandon Sanderson',
           duration: const Duration(seconds: 3),
+          textAlign: TextAlign.center,
+          textStyle: TextStyle(height: 1.5),
         ),
         RotateAnimatedText(
-          'The journey is the reward. - Steve Jobs 🍎',
+          'The journey is the reward.\n - Steve Jobs',
           duration: const Duration(seconds: 3),
+          textAlign: TextAlign.center,
+          textStyle: TextStyle(height: 1.5),
         ),
         RotateAnimatedText(
-          'Process is more important than result. - MS Dhoni 🏏',
+          'Process is more important than result.\n - MS Dhoni',
           duration: const Duration(seconds: 3),
+          textAlign: TextAlign.center,
+          textStyle: TextStyle(height: 1.2),
         ),
         RotateAnimatedText(
-          'How you climb a mountain is more important than reaching the top. - Yvon Chouinard 🧗',
+          'How you climb a mountain is more important than reaching the top.\n - Yvon Chouinard',
           duration: const Duration(seconds: 3),
+          textAlign: TextAlign.center,
+          textStyle: TextStyle(height: 1.5),
         ),
       ],
     );

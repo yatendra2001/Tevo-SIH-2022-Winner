@@ -53,12 +53,13 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            SizedBox(height: 4.h),
             Text(
               "Add a profile picture!",
-              style: TextStyle(fontSize: 20.sp),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400),
             ),
+            Spacer(),
             BlocListener<LoginCubit, LoginState>(
               listener: (context, state) {
                 if (state.profilePhotoStatus == ProfilePhotoStatus.uploading) {
@@ -85,6 +86,7 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
                     )),
               ),
             ),
+            Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -99,13 +101,14 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
                   },
                   isButtonNull: isButtonNotActive,
                 ),
-                SizedBox(height: 1.h),
+                SizedBox(height: 1.5.h),
                 Text(
                   "This is visible to everyone",
                   style: TextStyle(fontSize: 10.sp),
                 ),
               ],
             ),
+            Spacer()
           ],
         ),
       ),

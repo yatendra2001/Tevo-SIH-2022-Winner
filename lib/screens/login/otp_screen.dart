@@ -81,8 +81,12 @@ class _OtpScreenState extends State<OtpScreen> {
                       children: [
                         SizedBox(height: 4.h),
                         Text(
-                          "okay, check your texts💬 - we sent you a security code",
-                          style: TextStyle(fontSize: 20.sp),
+                          "okay, check your texts 💬\nwe have sent you a security code",
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 2.h),
                         SizedBox(height: 8.h),
