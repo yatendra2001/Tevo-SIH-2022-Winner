@@ -162,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               onPressed: () {
                                 context
                                     .read<AuthBloc>()
-                                    .add(AuthLogoutRequested());
+                                    .add(AuthLogoutRequested(context: context));
                                 context.read<LoginCubit>().logoutRequested();
                                 context
                                     .read<LikedPostsCubit>()
@@ -207,33 +207,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          UserProfileImage(
-                            iconRadius: 40,
-                            radius: 40.0,
-                            profileImageUrl: state.user.profileImageUrl,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 30.0,
-                                vertical: 10.0,
-                              ),
-                              child: ProfileInfo(
-                                username: state.user.username,
-                                bio: state.user.bio,
-                                displayName: state.user.displayName,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    const SizedBox(height: 16),
+
+                    UserProfileImage(
+                      iconRadius: 45.sp,
+                      radius: 45.sp,
+                      profileImageUrl: state.user.profileImageUrl,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ProfileInfo(
+                      username: state.user.username,
+                      bio: state.user.bio,
+                      displayName: state.user.displayName,
                     ),
                     const SizedBox(
                       height: 16,
@@ -250,10 +237,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                     const SizedBox(
                       height: 32,
                     ),
-                    const Divider(
-                      color: kPrimaryBlackColor,
-                      thickness: 1.2,
-                    ),
+                    // const Divider(
+                    //   color: kPrimaryBlackColor,
+                    //   thickness: 1.2,
+                    // ),
                     const SizedBox(
                       height: 32,
                     ),
@@ -304,16 +291,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final post = state.posts[index];
-                    final date = DateTime.now();
+                    final date = post!.enddate.toDate();
                     final likedPostsState =
                         context.watch<LikedPostsCubit>().state;
                     final isLiked =
                         likedPostsState.likedPostIds.contains(post!.id);
                     log(post.toString());
+                    log("This is length of posts: " +
+                        state.posts.length.toString());
                     return Column(
                       children: [
                         Text(
-                          DateFormat("EEEE, MMMM d, y").format(date),
+                          DateFormat("EEEE, MMMM d, y").format(date!),
                           style: TextStyle(
                               color: kPrimaryBlackColor,
                               fontWeight: FontWeight.w500,

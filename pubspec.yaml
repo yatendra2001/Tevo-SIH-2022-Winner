@@ -76,6 +76,7 @@ dependencies:
   google_nav_bar: ^5.0.6
   fluttericon: ^2.0.0
   share_plus: ^4.0.10
+  webcrypto: ^0.5.2
 
 dev_dependencies:
   flutter_test:

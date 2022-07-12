@@ -73,6 +73,7 @@ class _DobScreenState extends State<DobScreen> {
                 SizedBox(height: 3.h),
                 Text(
                   "It helps us personalising your experience and will not be visible on your profile.",
+
                   style: TextStyle(fontSize: 10.sp, height: 1.3),
                   textAlign: TextAlign.center,
                 ),

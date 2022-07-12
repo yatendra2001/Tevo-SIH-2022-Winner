@@ -5,7 +5,7 @@
 <uses-permission android:name="android.permission.INTERNET"/>
 
    <application
-        android:label="tevo"
+        android:label="Tevo"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -23,6 +23,17 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+
+            <!-- Deep linking -->
+            <!-- <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="tevo.social" />
+                <data android:scheme="http" android:host="tevo.page.link" />
+                <data android:scheme="https" />
+            </intent-filter> -->
               
             <!-- Displays an Android View that continues showing the launch screen
                  Drawable until Flutter paints its first frame, then this splash

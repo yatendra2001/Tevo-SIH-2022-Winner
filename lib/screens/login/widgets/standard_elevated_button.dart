@@ -27,6 +27,7 @@ class StandardElevatedButton extends StatelessWidget {
             EdgeInsets.only(left: 2.w, right: 1.5.w, top: 1.h, bottom: 1.4.h),
         child: Text(
           labelText,
+
           style: TextStyle(fontSize: 12.sp, color: Colors.white),
           textAlign: TextAlign.center,
         ),

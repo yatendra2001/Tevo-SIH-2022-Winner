@@ -346,7 +346,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
       bottom: TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
         Tab(
           child: Text(
-            "Remaining 🧗",
+            "Remaining",
             style: TextStyle(
               color: kPrimaryBlackColor,
               fontSize: 13.sp,
@@ -356,7 +356,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
         ),
         Tab(
           child: Text(
-            "Completed 🚀",
+            "Completed",
             style: TextStyle(
               color: kPrimaryBlackColor,
               fontSize: 13.sp,

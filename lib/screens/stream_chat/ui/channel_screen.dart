@@ -8,9 +8,11 @@ import 'package:tevo/extensions/string_extension.dart';
 import 'package:tevo/models/user_model.dart' as userModel;
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/models/chat_type.dart';
 import 'package:tevo/screens/stream_chat/models/inbox_utils.dart';
 import 'package:tevo/screens/stream_chat/ui/widgets/members_list_sheet.dart';
+import 'package:tevo/screens/stream_chat/utils/chat_encryption.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/user_profile_image.dart';
@@ -54,6 +56,7 @@ class ChannelScreen extends StatefulWidget {
 class _ChannelScreenState extends State<ChannelScreen> {
   late Channel channel;
   bool isOneOnOne = false;
+  var derivedKey;
   FocusNode _messageFocusNode = FocusNode();
   @override
   void initState() {
@@ -73,7 +76,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
               'members': [SessionHelper.uid!, widget.user!.id],
               'chat_type': widget.chatType,
               'u1': SessionHelper.displayName,
-              'u2': widget.user!.username,
+              'u2': widget.user!.displayName,
               'u1id': SessionHelper.uid,
               'u2id': widget.user!.id,
               'image': widget.user?.profileImageUrl
@@ -83,6 +86,11 @@ class _ChannelScreenState extends State<ChannelScreen> {
     } else {
       channel = widget.channel!;
     }
+    // final receiverJwk = channel.extraData['publicKey'] as String;
+
+// // Generating derivedKey using user's privateKey and receiver's publicKey
+//     derivedKey = await deriveKey(
+//         context.read<InitializeStreamChatCubit>().privateKey!, receiverJwk);
     isOneOnOne = channel.extraData['chat_type'] == 'one_on_one';
     log('IS ONE ON ONE: $isOneOnOne');
     await channel.watch();
@@ -181,7 +189,22 @@ class _ChannelScreenState extends State<ChannelScreen> {
                     });
                   },
                   messageBuilder: (context, details, messages, defaultMessage) {
+                    // Retrieving the message from details
+                    final message = details.message;
+                    // final decryptedMessageFuture =
+                    //     decryptMessage(message.text ?? '', derivedKey);
+
+                    // return FutureBuilder<String>(
+                    //     future: decryptedMessageFuture,
+                    //     builder: (context, snapshot) {
+                    //       if (snapshot.hasError)
+                    //         return Text('Error: ${snapshot.error}');
+                    //       if (!snapshot.hasData) return Container();
+                    //       // Updating the original message with the decrypted text
+                    //       final decryptedMessage =
+                    //           message.copyWith(text: snapshot.data);
                     return defaultMessage.copyWith(
+                        message: message,
                         showFlagButton: true,
                         showEditMessage: details.isMyMessage,
                         showCopyMessage: true,
@@ -197,6 +220,16 @@ class _ChannelScreenState extends State<ChannelScreen> {
                 ),
               ),
               MessageInput(
+                // preMessageSending: (message) async {
+                //   // Encrypting the message text using derivedKey
+                //   final encryptedMessage =
+                //       await encryptMessage(message.text!, derivedKey);
+
+                //   // Creating a new message with the encrypted message text
+                //   final newMessage = message.copyWith(text: encryptedMessage);
+
+                //   return newMessage;
+                // },
                 quotedMessage: _quotedMessage,
                 focusNode: _messageFocusNode,
                 idleSendButton: const Padding(

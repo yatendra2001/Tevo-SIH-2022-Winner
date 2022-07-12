@@ -57,6 +57,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
                       "Your username",
                       style: TextStyle(fontSize: 20.sp),
                     ),
+
                     SizedBox(height: 3.h),
                     Text(
                       "You can always change it later as per availability.",

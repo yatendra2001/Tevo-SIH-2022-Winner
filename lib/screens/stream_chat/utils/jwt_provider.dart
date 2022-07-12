@@ -6,8 +6,8 @@ class JwtProvider {
     final jwt = JWT(
       {'user_id': id},
     );
-    var token =
-        jwt.sign(SecretKey(streamChatSecretKey), algorithm: JWTAlgorithm.HS256);
+    var token = jwt.sign(SecretKey(streamChatSecretKeyProd),
+        algorithm: JWTAlgorithm.HS256);
     return token;
   }
 }

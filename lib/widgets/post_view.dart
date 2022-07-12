@@ -56,7 +56,7 @@ class _PostViewState extends State<PostView> {
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       color: kPrimaryWhiteColor,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
           side: const BorderSide(color: kPrimaryBlackColor)),
       elevation: 0,
       child: Padding(
