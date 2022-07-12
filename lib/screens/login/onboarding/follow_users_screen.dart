@@ -100,10 +100,18 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                             ),
                             minLeadingWidth: 4,
                             title: Text(
-                              state.topFollowersAccount[index].username,
+                              state.topFollowersAccount[index].displayName,
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w500,
+                                color: kPrimaryBlackColor,
+                              ),
+                            ),
+                            subtitle: Text(
+                              "@" + state.topFollowersAccount[index].username,
+                              style: TextStyle(
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.w400,
                                 color: kPrimaryBlackColor,
                               ),
                             ),
@@ -159,6 +167,7 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                               requestId: null);
                         }
                       }
+
                       Navigator.of(context).pushNamed(NavScreen.routeName);
                     },
                     child: Container(

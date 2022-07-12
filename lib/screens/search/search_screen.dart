@@ -68,6 +68,7 @@ class _SearchScreenState extends State<SearchScreen> {
               child: TextField(
                 controller: _textController,
                 autofocus: true,
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400),
                 decoration: InputDecoration(
                   focusColor: Colors.black,
                   fillColor: const Color(0xffF5F5F5),
@@ -130,13 +131,21 @@ class _SearchScreenState extends State<SearchScreen> {
                             final user = state.users[index];
                             return ListTile(
                               leading: UserProfileImage(
-                                iconRadius: 12,
-                                radius: 22.0,
+                                iconRadius: 48,
+                                radius: 15.0,
                                 profileImageUrl: user.profileImageUrl,
                               ),
                               title: Text(
-                                user.username,
-                                style: const TextStyle(fontSize: 16.0),
+                                user.displayName,
+                                style: TextStyle(
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              subtitle: Text(
+                                "@" + user.username,
+                                style: TextStyle(
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.w400),
                               ),
                               onTap: () => widget.type ==
                                       SearchScreenType.message
@@ -160,9 +169,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   return Center(
                       child: Text(
                     widget.type == SearchScreenType.profile
-                        ? 'So Whom To Stalk....'
+                        ? 'Find People....'
                         : 'So Whom you wanna chat with...',
-                    style: TextStyle(fontSize: 14.sp),
+                    style: TextStyle(fontSize: 12.sp),
                   ));
               }
             },

@@ -13,26 +13,31 @@ part 'initialize_stream_chat_state.dart';
 
 class InitializeStreamChatCubit extends Cubit<InitializeStreamChatState> {
   InitializeStreamChatCubit() : super(InitializeStreamChatInitial());
-
+  String? publicKey;
+  String? privateKey;
   initializeStreamChat(BuildContext context) async {
     var token = await JwtProvider.tokenProvider(SessionHelper.uid!);
     log('PROFILE IMAGE: ${SessionHelper.profileImageUrl}');
     // Generating keyPair using the function defined in above steps
-    String? publicKey;
-    generateKeys().then((value) {
-      publicKey = value.publicKey;
-    });
+
+    // await generateKeys().then((value) async {
+    //   publicKey = value.publicKey;
+    //   privateKey = value.privateKey;
+
+    // });
     var user = User(
       id: SessionHelper.uid ?? '',
       name: SessionHelper.username,
       image: "",
       // extraData: {'publicKey': publicKey!},
     );
+    // log("Private Key" + privateKey!);
+    // log("public Key" + publicKey!);
+
     var chatUser = await StreamChat.of(context).client.connectUser(
           user,
           token,
         );
     SessionHelper.totalUnreadMessagesCount = chatUser.totalUnreadCount;
-    emit(StreamChatInitializedState());
   }
 }

@@ -117,6 +117,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     Post post = Post(
       id: state.post != null ? state.post!.id : null,
       author: user,
+      likes: state.post != null ? state.post!.likes : 0,
       toDoTask: state.todoTask,
       completedTask: state.completedTask,
       enddate: state.dateTime ??

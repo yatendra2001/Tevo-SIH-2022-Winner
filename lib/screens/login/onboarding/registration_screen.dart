@@ -67,12 +67,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 SizedBox(height: 10.h),
                 Text(
                   "What's your full name?",
-                  style: TextStyle(fontSize: 15.sp),
+                  style: TextStyle(fontSize: 20.sp),
                 ),
                 SizedBox(height: 2.h),
                 Text(
                   "People use their real name at Tevo",
-                  style: TextStyle(fontSize: 8.5.sp),
+                  style: TextStyle(fontSize: 10.sp),
                 ),
                 SizedBox(height: 8.h),
                 Padding(
@@ -84,10 +84,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           height: 8.h,
                           width: 30.w,
                           child: TextField(
-                            style: TextStyle(
-                                fontSize: 9.5.sp,
-                                color: kPrimaryBlackColor,
-                                fontWeight: FontWeight.w500),
                             controller: _firstNameController,
                             focusNode: _firstfocusNode,
                             onSubmitted: (_) {
@@ -123,7 +119,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               filled: true,
                               hintText: "First",
                               hintStyle: TextStyle(
-                                  fontSize: 9.5.sp,
+                                  fontSize: 12.sp,
                                   color: kPrimaryBlackColor,
                                   fontWeight: FontWeight.w500),
                             ),
@@ -136,10 +132,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           child: TextField(
                             focusNode: _lastfocusNode,
                             controller: _secondNameController,
-                            style: TextStyle(
-                                fontSize: 9.5.sp,
-                                color: kPrimaryBlackColor,
-                                fontWeight: FontWeight.w500),
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -168,7 +160,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               filled: true,
                               hintText: "Last",
                               hintStyle: TextStyle(
-                                  fontSize: 9.5.sp,
+                                  fontSize: 12.sp,
                                   color: kPrimaryBlackColor,
                                   fontWeight: FontWeight.w500),
                             ),

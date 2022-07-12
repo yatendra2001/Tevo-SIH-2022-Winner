@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
   final client = StreamChatClient(
-    streamChatApiKey,
+    streamChatApiKeyProd,
     logLevel: Level.INFO,
   );
 

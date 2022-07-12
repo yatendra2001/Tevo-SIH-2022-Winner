@@ -157,7 +157,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             ),
                           ),
                         ),
-                        preferredSize: Size(double.infinity, 8.h)),
+                        preferredSize: Size(double.infinity, 7.45.h)),
                     actions: [
                       Padding(
                           padding: EdgeInsets.only(right: 16),
@@ -169,7 +169,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                       userId: SessionHelper.uid!));
                             },
                             child: UserProfileImage(
-                              radius: 24,
+                              radius: 15,
                               iconRadius: 45,
                               profileImageUrl: SessionHelper.profileImageUrl!,
                             ),
@@ -252,47 +252,51 @@ class _FeedScreenState extends State<FeedScreen> {
             context.read<LikedPostsCubit>().clearAllLikedPosts();
           },
           child: state.posts.isEmpty
-              ? Column(
-                  children: [
-                    Spacer(flex: 2),
-                    Center(
-                      child: Text(
-                        "Umm...Your feed looks empty\nTap To Follow",
-                        style: TextStyle(
-                            color: kPrimaryBlackColor.withOpacity(0.7),
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            fontSize: 15.sp),
-                        textAlign: TextAlign.center,
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 25.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: kPrimaryWhiteColor,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: kPrimaryBlackColor),
-                              borderRadius: BorderRadius.circular(5))),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(FollowUsersScreen.routeName);
-                      },
-                      child: Text(
-                        'Follow users',
-                        style: TextStyle(
-                            color: kPrimaryBlackColor, fontSize: 11.sp),
+                      Center(
+                        child: Text(
+                          "Umm...Your feed looks empty\nTap To Follow",
+                          style: TextStyle(
+                              color: kPrimaryBlackColor.withOpacity(0.7),
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                              fontSize: 15.sp),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                    Spacer(
-                      flex: 3,
-                    )
-                  ],
+                      SizedBox(
+                        height: 24,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: kPrimaryWhiteColor,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                side:
+                                    const BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(5))),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(FollowUsersScreen.routeName);
+                        },
+                        child: Text(
+                          'Follow users',
+                          style: TextStyle(
+                              color: kPrimaryBlackColor, fontSize: 11.sp),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               : ListView.builder(
                   itemCount: state.posts.length,
+                  padding:
+                      EdgeInsets.only(right: 4, left: 4, top: 4, bottom: 100),
                   itemBuilder: (BuildContext context, int index) {
                     final post = state.posts[index];
                     final likedPostsState =
@@ -302,34 +306,29 @@ class _FeedScreenState extends State<FeedScreen> {
                     final recentlyLiked =
                         likedPostsState.recentlyLikedPostIds.contains(post.id);
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: PostView(
-                        isLiked: isLiked,
-                        onLike: () {
-                          if (isLiked) {
-                            context
-                                .read<LikedPostsCubit>()
-                                .unlikePost(post: post);
-                          } else {
-                            context
-                                .read<LikedPostsCubit>()
-                                .likePost(post: post);
-                          }
-                        },
-                        recentlyLiked: recentlyLiked,
-                        post: post,
-                        onPressed: () {
-                          context.read<FeedBloc>().add(FeedToUnfollowUser(
-                              unfollowUserId: post.author.id));
-                          Fluttertoast.showToast(
-                            msg: "${post.author.username} Unfollowed",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.black54,
-                          );
-                        },
-                      ),
+                    return PostView(
+                      isLiked: isLiked,
+                      recentlyLiked: recentlyLiked,
+                      onLike: () {
+                        if (isLiked) {
+                          context
+                              .read<LikedPostsCubit>()
+                              .unlikePost(post: post);
+                        } else {
+                          context.read<LikedPostsCubit>().likePost(post: post);
+                        }
+                      },
+                      post: post,
+                      onPressed: () {
+                        context.read<FeedBloc>().add(
+                            FeedToUnfollowUser(unfollowUserId: post.author.id));
+                        Fluttertoast.showToast(
+                          msg: "${post.author.username} Unfollowed",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.black54,
+                        );
+                      },
                     );
                   },
                 ),

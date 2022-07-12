@@ -88,12 +88,13 @@ class _ProfileStatsState extends State<ProfileStats> {
         ),
         const SizedBox(height: 16.0),
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: ProfileButton(
-              isRequesting: widget.isRequesting,
-              isCurrentUser: widget.isCurrentUser,
-              isFollowing: widget.isFollowing,
-            )),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: ProfileButton(
+            isRequesting: widget.isRequesting,
+            isCurrentUser: widget.isCurrentUser,
+            isFollowing: widget.isFollowing,
+          ),
+        )
       ],
     );
   }

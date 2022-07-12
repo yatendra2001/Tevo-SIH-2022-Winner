@@ -15,6 +15,7 @@ import 'package:tevo/utils/session_helper.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/cutom_appbar.dart';
+import 'package:tevo/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../search/search_screen.dart';
@@ -115,59 +116,66 @@ class _InboxListItemState extends State<InboxListItem> {
                 chatType: widget.channel.extraData['chat_type'].toString()));
       },
       child: Container(
-        height: 68,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-                color: kPrimaryBlackColor.withOpacity(0.5), width: 0.25),
-          ),
-        ),
+        height: 72,
+        // padding: EdgeInsets.all(4),
+        // margin: EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        // margin: const EdgeInsets.symmetric(vertical: 5),
+        alignment: Alignment.center,
+        // decoration: BoxDecoration(
+        //   border: Border(
+        //     bottom: BorderSide(
+        //         color: kPrimaryBlackColor.withOpacity(0.5), width: 0.25),
+        //   ),
+        // ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 60,
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: CachedNetworkImageProvider(image.isEmpty
-                        ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'
-                        : image)),
-              ),
+            SizedBox(
+              width: 8,
+            ),
+            UserProfileImage(
+              radius: 14,
+              profileImageUrl: image,
+              iconRadius: 46,
+            ),
+            SizedBox(
+              width: 8,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 4),
+                Spacer(),
                 Text(
                   targetDisplayName.capitalized(),
                   style: TextStyle(
                       color: kPrimaryBlackColor,
                       fontWeight: FontWeight.w500,
-                      fontSize: 11.5.sp),
+                      fontSize: 12.sp),
                 ),
-                const Spacer(),
                 SizedBox(
-                  width: 55.w,
-                  child: Text(
-                    widget.channel.state!.lastMessage?.text ?? '',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontWeight: widget.channel.state!.unreadCount > 0
-                            ? FontWeight.w500
-                            : FontWeight.w400,
-                        color: widget.channel.state!.unreadCount > 0
-                            ? kPrimaryBlackColor
-                            : Colors.grey,
-                        fontSize: 8.5.sp),
+                  height: 2,
+                ),
+                SizedBox(
+                  width: 60.w,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 3),
+                    child: Text(
+                      widget.channel.state!.lastMessage?.text ?? "Chat Created",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: widget.channel.state!.unreadCount > 0
+                              ? FontWeight.w500
+                              : FontWeight.w400,
+                          color: widget.channel.state!.unreadCount > 0
+                              ? kPrimaryBlackColor
+                              : Colors.grey,
+                          fontSize: 8.sp),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4)
+                Spacer(),
               ],
             ),
             const Spacer(),

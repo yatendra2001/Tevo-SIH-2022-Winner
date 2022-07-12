@@ -1084,21 +1084,21 @@ packages:
       name: stream_chat
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.6.1"
+    version: "3.6.2"
   stream_chat_flutter:
     dependency: "direct main"
     description:
       name: stream_chat_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.6.1"
+    version: "3.6.2"
   stream_chat_flutter_core:
     dependency: transitive
     description:
       name: stream_chat_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.6.1"
+    version: "3.6.2"
   string_scanner:
     dependency: transitive
     description:
@@ -1238,7 +1238,7 @@ packages:
       name: video_compress
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   video_player:
     dependency: transitive
     description:

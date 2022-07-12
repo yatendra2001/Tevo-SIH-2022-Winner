@@ -26,7 +26,7 @@ class StandardElevatedButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 1.2.h, horizontal: 4.w),
         child: Text(
           labelText,
-          style: TextStyle(fontSize: 9.5.sp, color: Colors.white),
+          style: TextStyle(fontSize: 11.5.sp, color: Colors.white),
         ),
       ),
     );

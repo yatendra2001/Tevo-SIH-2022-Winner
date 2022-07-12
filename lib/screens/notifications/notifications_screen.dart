@@ -25,7 +25,7 @@ class NotificationsScreen extends StatelessWidget {
         leadingWidth: 0,
         title: Text(
           "Notifications",
-          style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w700),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),
         ),
       ),
       body: BlocBuilder<NotificationsBloc, NotificationsState>(

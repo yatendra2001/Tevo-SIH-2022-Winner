@@ -7,7 +7,7 @@ class ChatModel extends ChangeNotifier {
 
   ChatModel() {
     _streamChatClient = StreamChatClient(
-      streamChatApiKey,
+      streamChatApiKeyProd,
       logLevel: Level.SEVERE,
     );
   }

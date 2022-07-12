@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/utils/session_helper.dart';
@@ -32,6 +34,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is AuthUserChanged) {
       yield* _mapAuthUserChangedToState(event);
     } else if (event is AuthLogoutRequested) {
+      await StreamChat.of(event.context)
+          .client
+          .removeDevice(SessionHelper.uid ?? '');
       await _authRepository.logOut();
     }
   }
