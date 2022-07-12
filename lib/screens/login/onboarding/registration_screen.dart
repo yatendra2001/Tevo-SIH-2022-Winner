@@ -67,7 +67,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 SizedBox(height: 10.h),
                 Text(
                   "What's your full name?",
-                  style: TextStyle(fontSize: 20.sp),
+                  style:
+                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(height: 2.h),
                 Text(
@@ -84,6 +85,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           height: 8.h,
                           width: 30.w,
                           child: TextField(
+                            style: TextStyle(fontWeight: FontWeight.w400),
                             controller: _firstNameController,
                             focusNode: _firstfocusNode,
                             onSubmitted: (_) {
@@ -121,7 +123,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               hintStyle: TextStyle(
                                   fontSize: 12.sp,
                                   color: kPrimaryBlackColor,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w400),
                             ),
                           ),
                         ),
@@ -130,6 +132,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           height: 8.h,
                           width: 30.w,
                           child: TextField(
+                            style: TextStyle(fontWeight: FontWeight.w400),
                             focusNode: _lastfocusNode,
                             controller: _secondNameController,
                             decoration: InputDecoration(
@@ -162,7 +165,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               hintStyle: TextStyle(
                                   fontSize: 12.sp,
                                   color: kPrimaryBlackColor,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w400),
                             ),
                           ),
                         )

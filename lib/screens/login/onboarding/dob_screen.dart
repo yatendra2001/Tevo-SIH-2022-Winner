@@ -61,16 +61,21 @@ class _DobScreenState extends State<DobScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 10.h),
+                SizedBox(height: 4.h),
                 Text(
                   "How old are you? 🍰",
-                  style: TextStyle(fontSize: 20.sp),
+                  style:
+                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400),
                 ),
-                SizedBox(height: 2.h),
+                SizedBox(height: 3.h),
                 Text(
                   "It helps us personalising your experience and will not be visible on your profile.",
-                  style: TextStyle(fontSize: 8.sp),
+
+                  style: TextStyle(fontSize: 10.sp, height: 1.3),
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8.h),
                 Padding(
@@ -79,13 +84,14 @@ class _DobScreenState extends State<DobScreen> {
                       height: 8.h,
                       width: 40.w,
                       child: TextField(
+                        style: TextStyle(fontWeight: FontWeight.w400),
                         controller: _ageController,
                         keyboardType: TextInputType.number,
                         focusNode: _focusNode,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(
+                          prefixIcon: Icon(
                             FontAwesomeIcons.hashtag,
-                            color: kPrimaryBlackColor,
+                            color: kPrimaryBlackColor.withOpacity(0.8),
                           ),
                           border: const OutlineInputBorder(
                             borderSide: BorderSide(
@@ -116,7 +122,7 @@ class _DobScreenState extends State<DobScreen> {
                           hintStyle: TextStyle(
                               fontSize: 12.sp,
                               color: kPrimaryBlackColor,
-                              fontWeight: FontWeight.w500),
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     )),
@@ -131,29 +137,30 @@ class _DobScreenState extends State<DobScreen> {
                   builder: (context) => AlertDialog(
                     backgroundColor: Colors.grey[50],
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: kPrimaryBlackColor, width: 2.0),
+                      borderRadius: BorderRadius.circular(10),
+                      // side: BorderSide(color: kPrimaryBlackColor, width: 2.0),
                     ),
                     title: Center(
                       child: Text(
                         "You're ${_ageController.text} years old. Is it correct?",
                         style: TextStyle(
-                          fontSize: 15.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
                           color: kPrimaryBlackColor,
                         ),
                       ),
                     ),
                     actions: [
-                      TextButton(
+                      OutlinedButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text(
+                          child: Text(
                             "RE-ENTER AGE",
                             style: TextStyle(
-                              color: kPrimaryBlackColor,
-                            ),
+                                color: kPrimaryBlackColor,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w400),
                           )),
-                      TextButton(
+                      OutlinedButton(
                           onPressed: () async {
                             SessionHelper.age = _ageController.text;
                             widget.pageController.nextPage(
@@ -178,9 +185,10 @@ class _DobScreenState extends State<DobScreen> {
                           },
                           child: Text(
                             "YES, I'M ${_ageController.text}",
-                            style: const TextStyle(
-                              color: kPrimaryBlackColor,
-                            ),
+                            style: TextStyle(
+                                color: kPrimaryBlackColor,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w400),
                           )),
                     ],
                   ),

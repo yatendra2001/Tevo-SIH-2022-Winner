@@ -23,10 +23,13 @@ class StandardElevatedButton extends StatelessWidget {
       ),
       onPressed: isButtonNull ? null : onTap,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 1.2.h, horizontal: 4.w),
+        padding:
+            EdgeInsets.only(left: 2.w, right: 1.5.w, top: 1.h, bottom: 1.4.h),
         child: Text(
           labelText,
-          style: TextStyle(fontSize: 11.5.sp, color: Colors.white),
+
+          style: TextStyle(fontSize: 12.sp, color: Colors.white),
+          textAlign: TextAlign.center,
         ),
       ),
     );

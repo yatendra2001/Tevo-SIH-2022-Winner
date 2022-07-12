@@ -49,16 +49,20 @@ class _UsernameScreenState extends State<UsernameScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 4.h),
                     Text(
                       "Your username",
                       style: TextStyle(fontSize: 20.sp),
                     ),
-                    SizedBox(height: 1.h),
+
+                    SizedBox(height: 3.h),
                     Text(
                       "You can always change it later as per availability.",
-                      style: TextStyle(fontSize: 8.sp),
+                      style: TextStyle(fontSize: 10.sp),
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 8.h),
                     Padding(
@@ -72,14 +76,16 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                 child: TextField(
                                   controller: _usernameController,
                                   focusNode: _focusNode,
+                                  style: TextStyle(fontWeight: FontWeight.w400),
                                   onChanged: (val) {
                                     BlocProvider.of<LoginCubit>(context)
                                         .checkUsername(val);
                                   },
                                   decoration: InputDecoration(
-                                    prefixIcon: const Icon(
+                                    prefixIcon: Icon(
                                       FontAwesomeIcons.at,
-                                      color: kPrimaryBlackColor,
+                                      color:
+                                          kPrimaryBlackColor.withOpacity(0.8),
                                     ),
                                     suffixIcon: (state.usernameStatus ==
                                                 UsernameStatus
@@ -125,7 +131,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                     hintStyle: TextStyle(
                                         fontSize: 12.sp,
                                         color: kPrimaryBlackColor,
-                                        fontWeight: FontWeight.w500),
+                                        fontWeight: FontWeight.w400),
                                   ),
                                 )),
                           ],
