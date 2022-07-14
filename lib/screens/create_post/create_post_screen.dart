@@ -74,33 +74,46 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                                   side: BorderSide(
                                       color: kPrimaryBlackColor, width: 2.0),
                                 ),
-                                title: const Text(
+                                title: Text(
                                   'Delete today\'s post?',
-                                  style: TextStyle(color: kPrimaryBlackColor),
+                                  style: TextStyle(
+                                      color: kPrimaryBlackColor,
+                                      fontFamily: kFontFamily),
                                 ),
                                 content: Text(
                                   'This will permanently delete all today\'s targets and can\'t be undone?',
                                   style: TextStyle(
                                       color:
                                           kPrimaryBlackColor.withOpacity(0.6),
+                                      fontFamily: kFontFamily,
                                       fontWeight: FontWeight.w400),
                                 ),
                                 actions: [
                                   OutlinedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Cancel',
-                                          style: TextStyle(
-                                              color: kPrimaryBlackColor))),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        color: kPrimaryBlackColor,
+                                        fontFamily: kFontFamily,
+                                      ),
+                                    ),
+                                  ),
                                   OutlinedButton(
-                                      onPressed: () {
-                                        _buildDeletePost();
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Yes',
-                                          style: TextStyle(
-                                              color: kPrimaryBlackColor)))
+                                    onPressed: () {
+                                      _buildDeletePost();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      'Yes',
+                                      style: TextStyle(
+                                        color: kPrimaryBlackColor,
+                                        fontFamily: kFontFamily,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               );
                             });
@@ -135,7 +148,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     : Center(
                         child: Text(
                           'No Posts Yet',
-                          style: TextStyle(fontSize: 12.sp),
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontFamily: kFontFamily,
+                          ),
                         ),
                       ),
                 const SizedBox(height: 16),
@@ -149,7 +165,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     Text(
                       "Tasks",
                       style: TextStyle(
-                          fontSize: 16.sp, fontWeight: FontWeight.w500),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: kFontFamily,
+                      ),
                     ),
                     // NeumorphicButton(
                     //   onPressed: () {
@@ -197,7 +216,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                       child: Text(
                         'Add Task',
                         style: TextStyle(
-                            color: kPrimaryWhiteColor, fontSize: 10.sp),
+                          color: kPrimaryWhiteColor,
+                          fontSize: 10.sp,
+                          fontFamily: kFontFamily,
+                        ),
                       ),
                     )
                   ],
@@ -219,7 +241,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                             state.dateTime == null
                                 ? 'Drop your 1st task 🎯'
                                 : 'Winning 🎉',
-                            style: TextStyle(fontSize: 10.sp),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontFamily: kFontFamily,
+                            ),
                           ),
                         ],
                       )
@@ -281,7 +306,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     : Center(
                         child: Text(
                         'No Task Completed',
-                        style: TextStyle(fontSize: 12.sp),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontFamily: kFontFamily,
+                        ),
                       )),
                 const SizedBox(height: 15),
                 state.completedTask.isEmpty
@@ -299,7 +327,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                           SizedBox(height: 2.h),
                           Text(
                             'Complete your 1st task 🚀',
-                            style: TextStyle(fontSize: 10.sp),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontFamily: kFontFamily,
+                            ),
                           ),
                         ],
                       )
@@ -340,6 +371,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
+          fontFamily: kFontFamily,
           fontSize: 22.sp,
         ),
       ),
@@ -350,6 +382,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             style: TextStyle(
               color: kPrimaryBlackColor,
               fontSize: 13.sp,
+              fontFamily: kFontFamily,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -360,6 +393,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             style: TextStyle(
               color: kPrimaryBlackColor,
               fontSize: 13.sp,
+              fontFamily: kFontFamily,
               height: 1,
               letterSpacing: 0,
               fontWeight: FontWeight.w500,
@@ -424,13 +458,20 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               child: Center(
                   child: Text(
                 "Add Task",
-                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: kFontFamily,
+                ),
               )),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: TextField(
-                style: const TextStyle(fontWeight: FontWeight.w400),
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontFamily: kFontFamily,
+                ),
                 autofocus: true,
                 controller: _taskTextEditingController,
                 decoration: InputDecoration(
@@ -438,6 +479,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                   hintStyle: TextStyle(
                       color: Colors.grey,
                       fontSize: 12.sp,
+                      fontFamily: kFontFamily,
                       fontWeight: FontWeight.w500),
                   border: InputBorder.none,
                   focusColor: Colors.grey,
@@ -451,8 +493,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: TextField(
-                style:
-                    TextStyle(fontWeight: FontWeight.w400, fontSize: 10.5.sp),
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 10.5.sp,
+                  fontFamily: kFontFamily,
+                ),
                 controller: _descriptionTextEditingController,
                 keyboardType: TextInputType.multiline,
                 focusNode: _focusNode,
@@ -462,6 +507,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                   hintStyle: TextStyle(
                     color: Colors.grey,
                     fontSize: 10.5.sp,
+                    fontFamily: kFontFamily,
                     fontWeight: FontWeight.w500,
                   ),
                   border: InputBorder.none,
@@ -531,18 +577,21 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           }
           return TimerCountdown(
               format: CountDownTimerFormat.hoursMinutesSeconds,
-              timeTextStyle: const TextStyle(
+              timeTextStyle: TextStyle(
                 color: kPrimaryBlackColor,
+                fontFamily: kFontFamily,
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
               ),
-              colonsTextStyle: const TextStyle(
+              colonsTextStyle: TextStyle(
                 color: kPrimaryBlackColor,
+                fontFamily: kFontFamily,
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
               ),
-              descriptionTextStyle: const TextStyle(
+              descriptionTextStyle: TextStyle(
                 color: kPrimaryBlackColor,
+                fontFamily: kFontFamily,
                 fontSize: 10,
               ),
               spacerWidth: 20,
@@ -563,11 +612,12 @@ class _CreatePostScreenState extends State<CreatePostScreen>
     return showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
+        return AlertDialog(
           title: Text(
             'Your Time is Up',
             style: TextStyle(
               color: Colors.black,
+              fontFamily: kFontFamily,
             ),
           ),
         );

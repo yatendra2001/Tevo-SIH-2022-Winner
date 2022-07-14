@@ -17,32 +17,38 @@ class ProfileInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           displayName.toUpperCase(),
           style: TextStyle(
               fontSize: 18.sp,
+              fontFamily: kFontFamily,
               fontWeight: FontWeight.w500,
               letterSpacing: 2,
-              wordSpacing: 4),
+              wordSpacing: 2),
         ),
         const SizedBox(
-          height: 4,
+          height: 8,
         ),
         Text(
           "@" + username,
           style: TextStyle(
               fontSize: 8.5.sp,
+              fontFamily: kFontFamily,
               fontWeight: FontWeight.w400,
               color: kPrimaryBlackColor.withOpacity(0.7)),
         ),
-        const SizedBox(height: 8.0),
-        Text(
-          bio,
-          textAlign: TextAlign.justify,
-          style: TextStyle(fontSize: 9.5.sp, color: kPrimaryBlackColor),
-        ),
+        if (bio.isNotEmpty) const SizedBox(height: 16.0),
+        if (bio.isNotEmpty)
+          Text(
+            bio,
+            textAlign: TextAlign.justify,
+            style: TextStyle(
+                fontSize: 9.5.sp,
+                fontFamily: kFontFamily,
+                color: kPrimaryBlackColor),
+          ),
       ],
     );
   }

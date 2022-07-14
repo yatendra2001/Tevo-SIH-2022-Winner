@@ -14,7 +14,7 @@ import 'package:tevo/screens/stream_chat/ui/widgets/groups_inbox.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/utils/theme_constants.dart';
-import 'package:tevo/widgets/cutom_appbar.dart';
+import 'package:tevo/widgets/custom_appbar.dart';
 import 'package:tevo/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -151,6 +151,7 @@ class _InboxListItemState extends State<InboxListItem> {
                   targetDisplayName.capitalized(),
                   style: TextStyle(
                       color: kPrimaryBlackColor,
+                      fontFamily: kFontFamily,
                       fontWeight: FontWeight.w500,
                       fontSize: 12.sp),
                 ),
@@ -171,6 +172,7 @@ class _InboxListItemState extends State<InboxListItem> {
                           color: widget.channel.state!.unreadCount > 0
                               ? kPrimaryBlackColor
                               : Colors.grey,
+                          fontFamily: kFontFamily,
                           fontSize: 8.sp),
                     ),
                   ),
@@ -193,12 +195,15 @@ class _InboxListItemState extends State<InboxListItem> {
                       backgroundColor: kPrimaryBlackColor,
                       child: Text('${widget.channel.state?.unreadCount ?? ''}',
                           style: TextStyle(
-                              color: kPrimaryWhiteColor, fontSize: 8.5.sp)),
+                              color: kPrimaryWhiteColor,
+                              fontFamily: kFontFamily,
+                              fontSize: 8.5.sp)),
                     ),
                   Text(
                     '${widget.channel.lastMessageAt != null ? timeago.format(widget.channel.lastMessageAt!) : ''}',
                     style: TextStyle(
                         color: Colors.grey,
+                        fontFamily: kFontFamily,
                         fontSize: 8.5.sp,
                         fontWeight: FontWeight.w400),
                   ),

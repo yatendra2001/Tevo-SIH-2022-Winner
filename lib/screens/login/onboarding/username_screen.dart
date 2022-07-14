@@ -55,13 +55,18 @@ class _UsernameScreenState extends State<UsernameScreen> {
                     SizedBox(height: 4.h),
                     Text(
                       "Your username",
-                      style: TextStyle(fontSize: 20.sp),
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontFamily: kFontFamily,
+                      ),
                     ),
-
                     SizedBox(height: 3.h),
                     Text(
                       "You can always change it later as per availability.",
-                      style: TextStyle(fontSize: 10.sp),
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        fontFamily: kFontFamily,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 8.h),
@@ -129,6 +134,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                     filled: true,
                                     hintText: "username",
                                     hintStyle: TextStyle(
+                                        fontFamily: kFontFamily,
                                         fontSize: 12.sp,
                                         color: kPrimaryBlackColor,
                                         fontWeight: FontWeight.w400),

@@ -7,6 +7,7 @@ import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/search/cubit/search_cubit.dart';
 import 'package:tevo/screens/stream_chat/models/chat_type.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 import '../profile/bloc/profile_bloc.dart';
@@ -68,7 +69,10 @@ class _SearchScreenState extends State<SearchScreen> {
               child: TextField(
                 controller: _textController,
                 autofocus: true,
-                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                    fontSize: 12.sp,
+                    fontFamily: kFontFamily,
+                    fontWeight: FontWeight.w400),
                 decoration: InputDecoration(
                   focusColor: Colors.black,
                   fillColor: const Color(0xffF5F5F5),
@@ -83,7 +87,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         const BorderSide(color: Colors.white, width: 1.0),
                     borderRadius: BorderRadius.circular(20.0),
                   ),
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontFamily: kFontFamily,
+                  ),
                   hintText: 'Search Users @ John',
                   prefixIcon: IconButton(
                     onPressed: () {
@@ -139,12 +146,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                 user.displayName,
                                 style: TextStyle(
                                     fontSize: 10.sp,
+                                    fontFamily: kFontFamily,
                                     fontWeight: FontWeight.w500),
                               ),
                               subtitle: Text(
                                 "@" + user.username,
                                 style: TextStyle(
                                     fontSize: 8.sp,
+                                    fontFamily: kFontFamily,
                                     fontWeight: FontWeight.w400),
                               ),
                               onTap: () => widget.type ==
@@ -171,7 +180,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     widget.type == SearchScreenType.profile
                         ? 'Find People....'
                         : 'So Whom you wanna chat with...',
-                    style: TextStyle(fontSize: 12.sp),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontFamily: kFontFamily,
+                    ),
                   ));
               }
             },

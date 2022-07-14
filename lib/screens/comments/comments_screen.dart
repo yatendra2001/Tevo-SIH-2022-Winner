@@ -71,7 +71,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
               title: Text(
                 'Comments',
-                style: TextStyle(color: kPrimaryBlackColor, fontSize: 15.sp),
+                style: TextStyle(color: kPrimaryBlackColor, fontSize: 15.sp,fontFamily: kFontFamily,),
               ),
               bottom: PreferredSize(
                 child: Padding(
@@ -86,11 +86,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             child: TextField(
                               controller: _commentController,
                               style: TextStyle(
-                                  fontSize: 12.sp, fontWeight: FontWeight.w400),
+                                  fontSize: 12.sp, fontWeight: FontWeight.w400,fontFamily: kFontFamily,),
                               textCapitalization: TextCapitalization.sentences,
                               decoration: InputDecoration.collapsed(
                                 hintText: 'Write a comment...',
                                 hintStyle: TextStyle(
+                                  fontFamily: kFontFamily,
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -138,20 +139,20 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                 text: comment.author.displayName.split(" ")[0],
                                 style: TextStyle(
                                     fontSize: 9.sp,
-                                    fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.w600,fontFamily: kFontFamily,),
                               ),
                               TextSpan(
                                   text: " : " + comment.content,
                                   style: TextStyle(
                                       fontSize: 10.sp,
-                                      fontWeight: FontWeight.w400)),
+                                      fontWeight: FontWeight.w400,fontFamily: kFontFamily,),),
                             ],
                           ),
                         ),
                         subtitle: Text(
                           DateFormat.yMd().add_jm().format(comment.date),
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: Colors.grey[600],fontFamily: kFontFamily,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

@@ -82,7 +82,7 @@ class _ProfileStatsState extends State<ProfileStats> {
             Builder(builder: (context) {
               return _Stats(
                   count: completionRate?.toInt() ?? 0,
-                  label: 'Completion Rate');
+                  label: 'Completion\nRate');
             }),
           ],
         ),
@@ -112,34 +112,30 @@ class _Stats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: kPrimaryBlackColor),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              count.toString(),
-              style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w600,
-                  color: kPrimaryBlackColor),
-            ),
-            SizedBox(height: 8),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 8.5.sp,
-                  fontWeight: FontWeight.w400,
-                  color: kPrimaryBlackColor),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            count.toString(),
+            style: TextStyle(
+                fontSize: 16.sp,
+                fontFamily: kFontFamily,
+                fontWeight: FontWeight.w600,
+                color: kPrimaryBlackColor),
+          ),
+          SizedBox(height: 8),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 8.5.sp,
+                fontFamily: kFontFamily,
+                fontWeight: FontWeight.w400,
+                color: kPrimaryBlackColor),
+          ),
+        ],
       ),
     );
   }

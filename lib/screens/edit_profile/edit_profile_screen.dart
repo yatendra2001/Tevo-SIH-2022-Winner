@@ -55,6 +55,7 @@ class EditProfileScreen extends StatelessWidget {
             'Edit Profile',
             style: TextStyle(
               color: kPrimaryBlackColor,
+              fontFamily: kFontFamily,
               fontSize: 15.sp,
             ),
           ),
@@ -97,13 +98,17 @@ class EditProfileScreen extends StatelessWidget {
                           TextFormField(
                             style: TextStyle(
                               color: kPrimaryBlackColor,
+                              fontFamily: kFontFamily,
                               fontSize: 9.5.sp,
                             ),
                             initialValue: user.username,
                             decoration: InputDecoration(
                               labelText: 'Username',
                               labelStyle: TextStyle(
-                                  color: kPrimaryBlackColor, fontSize: 9.5.sp),
+                                color: kPrimaryBlackColor,
+                                fontSize: 9.5.sp,
+                                fontFamily: kFontFamily,
+                              ),
                               border: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: kPrimaryBlackColor),
@@ -135,8 +140,10 @@ class EditProfileScreen extends StatelessWidget {
                             initialValue: user.username,
                             decoration: InputDecoration(
                               labelText: 'Name',
-                              labelStyle:
-                                  const TextStyle(color: kPrimaryBlackColor),
+                              labelStyle: TextStyle(
+                                color: kPrimaryBlackColor,
+                                fontFamily: kFontFamily,
+                              ),
                               border: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: kPrimaryBlackColor),
@@ -162,6 +169,7 @@ class EditProfileScreen extends StatelessWidget {
                           TextFormField(
                             style: TextStyle(
                               color: kPrimaryBlackColor,
+                              fontFamily: kFontFamily,
                               fontSize: 9.5.sp,
                             ),
                             initialValue: user.bio,
@@ -170,7 +178,10 @@ class EditProfileScreen extends StatelessWidget {
                             decoration: InputDecoration(
                               labelText: 'Bio',
                               labelStyle: TextStyle(
-                                  color: kPrimaryBlackColor, fontSize: 9.5.sp),
+                                color: kPrimaryBlackColor,
+                                fontSize: 9.5.sp,
+                                fontFamily: kFontFamily,
+                              ),
                               border: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: kPrimaryBlackColor),
@@ -193,7 +204,10 @@ class EditProfileScreen extends StatelessWidget {
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               primary: Theme.of(context).primaryColor,
-                              textStyle: const TextStyle(color: Colors.white),
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontFamily: kFontFamily,
+                              ),
                             ),
                             onPressed: () => _submitForm(
                               context,
@@ -203,10 +217,10 @@ class EditProfileScreen extends StatelessWidget {
                               'Update',
                               style: TextStyle(
                                 color: kPrimaryWhiteColor,
+                                fontFamily: kFontFamily,
                                 fontSize: 9.5.sp,
                               ),
                             ),
-
                           ),
                         ],
                       ),

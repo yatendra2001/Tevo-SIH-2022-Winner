@@ -78,7 +78,9 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                         child: Text(
                           "Follow new friends to inspire from their daily progress",
                           style: TextStyle(
-                              fontSize: 15.sp, fontWeight: FontWeight.w500),
+                              fontFamily: kFontFamily,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w500),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -102,6 +104,7 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                             title: Text(
                               state.topFollowersAccount[index].displayName,
                               style: TextStyle(
+                                fontFamily: kFontFamily,
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w500,
                                 color: kPrimaryBlackColor,
@@ -110,6 +113,7 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                             subtitle: Text(
                               "@" + state.topFollowersAccount[index].username,
                               style: TextStyle(
+                                fontFamily: kFontFamily,
                                 fontSize: 9.sp,
                                 fontWeight: FontWeight.w400,
                                 color: kPrimaryBlackColor,
@@ -180,7 +184,11 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                           EdgeInsets.symmetric(horizontal: 140, vertical: 35),
                       child: Text(
                         "Follow ->",
-                        style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                          fontFamily: kFontFamily,
+                        ),
                       ),
                     ),
                   ),

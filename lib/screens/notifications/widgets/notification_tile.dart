@@ -33,6 +33,7 @@ class NotificationTile extends StatelessWidget {
                 text: notification.fromUser.username,
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
+                    fontFamily: kFontFamily,
                     color: kPrimaryBlackColor,
                     fontSize: 11.5.sp),
               ),
@@ -41,6 +42,7 @@ class NotificationTile extends StatelessWidget {
                 text: _getText(notification),
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
+                    fontFamily: kFontFamily,
                     color: kPrimaryBlackColor,
                     fontSize: 11.5.sp),
               ),
@@ -51,6 +53,7 @@ class NotificationTile extends StatelessWidget {
           DateFormat('MMM d, ' 'yyyy' '--').add_jm().format(notification.date),
           style: TextStyle(
             color: Colors.grey[600],
+            fontFamily: kFontFamily,
             fontWeight: FontWeight.w400,
             fontSize: 8.5.sp,
           ),
@@ -82,10 +85,10 @@ class NotificationTile extends StatelessWidget {
   Widget _getTrailing(BuildContext context, Notif notif) {
     if (notification.type == NotifType.like) {
       return _getTrailingIcon(
-          "https://cdn-icons.flaticon.com/png/512/3336/premium/3336149.png?token=exp=1657057179~hmac=087d27a537a334bfefdc36daa856612b");
+          "https://cdn-icons-png.flaticon.com/512/1067/1067346.png");
     } else if (notification.type == NotifType.comment) {
       return _getTrailingIcon(
-          "https://cdn-icons.flaticon.com/png/512/2939/premium/2939460.png?token=exp=1657057302~hmac=7ff825b8d586c7c0b6f14e2d890363ef");
+          "https://cdn-icons-png.flaticon.com/512/134/134819.png");
       // return GestureDetector(
       //   onTap: () => Navigator.of(context).pushNamed(
       //     CommentsScreen.routeName,
@@ -99,15 +102,15 @@ class NotificationTile extends StatelessWidget {
       // );
     } else if (notification.type == NotifType.follow) {
       return _getTrailingIcon(
-          "https://cdn-icons-png.flaticon.com/512/2097/2097705.png");
+          "https://cdn-icons-png.flaticon.com/512/7983/7983049.png");
     }
     return const SizedBox.shrink();
   }
 
   SizedBox _getTrailingIcon(String url) {
     return SizedBox(
-      height: 3.h,
-      width: 3.h,
+      height: 3.5.h,
+      width: 3.5.h,
       child: CachedNetworkImage(imageUrl: url),
     );
   }
