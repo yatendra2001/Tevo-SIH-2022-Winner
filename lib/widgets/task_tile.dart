@@ -52,7 +52,10 @@ class _TaskTileState extends State<TaskTile> {
                 Expanded(
                   child: Text(
                     widget.task.title,
-                    style: TextStyle(fontSize: 10.sp),
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontFamily: kFontFamily,
+                    ),
                   ),
                 ),
                 (widget.view == TaskTileView.createScreenView)
@@ -89,7 +92,10 @@ class _TaskTileState extends State<TaskTile> {
             showDesc
                 ? Text(
                     widget.task.description!,
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: kFontFamily,
+                    ),
                   )
                 : SizedBox.shrink(),
           ],

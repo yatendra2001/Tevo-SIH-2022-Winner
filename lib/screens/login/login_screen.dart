@@ -64,7 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 4.h),
                   Text(
                     "Sign in with your phone number",
-                    style: TextStyle(fontSize: 18.sp),
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontFamily: kFontFamily,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 40),
@@ -76,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                           color: kPrimaryBlackColor,
                           fontSize: 10.sp,
+                          fontFamily: kFontFamily,
                         ),
                         textAlign: TextAlign.center,
                         child: _animatedQuotedTextsMethod(),
@@ -119,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
             text: "By continuing you agree to our ",
             style: TextStyle(
                 color: kPrimaryBlackColor.withOpacity(0.6),
+                fontFamily: kFontFamily,
                 fontSize: 8.sp,
                 fontWeight: FontWeight.w600),
           ),
@@ -126,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
               text: "Terms",
               style: TextStyle(
                   color: Colors.blue,
+                  fontFamily: kFontFamily,
                   fontSize: 8.sp,
                   fontWeight: FontWeight.w600),
               recognizer: TapGestureRecognizer()
@@ -140,13 +146,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 }),
           TextSpan(
             text: " and ",
-            style: TextStyle(color: kPrimaryBlackColor.withOpacity(0.6)),
+            style: TextStyle(
+              color: kPrimaryBlackColor.withOpacity(0.6),
+              fontFamily: kFontFamily,
+            ),
           ),
           TextSpan(
               text: "Privacy Policy",
               style: TextStyle(
                   color: Colors.blue,
                   fontSize: 8.sp,
+                  fontFamily: kFontFamily,
                   fontWeight: FontWeight.w600),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {

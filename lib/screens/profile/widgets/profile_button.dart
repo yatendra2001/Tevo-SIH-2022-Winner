@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttericon/linecons_icons.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
@@ -26,17 +27,29 @@ class ProfileButton extends StatelessWidget {
             children: [
               SizedBox(width: 4.w),
               Expanded(
-                child: TextButton(
+                child: TextButton.icon(
                   style: TextButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                   onPressed: () => Navigator.of(context).pushNamed(
                     EditProfileScreen.routeName,
                     arguments: EditProfileScreenArgs(context: context),
                   ),
-                  child: Text(
+                  icon: const Icon(
+                    Icons.edit,
+                    color: kPrimaryWhiteColor,
+                    size: 19,
+                  ),
+                  label: Text(
                     'Edit Profile',
-                    style: TextStyle(fontSize: 9.5.sp, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 9.5.sp,
+                        fontFamily: kFontFamily,
+                        color: Colors.white),
                   ),
                 ),
               ),
@@ -44,7 +57,11 @@ class ProfileButton extends StatelessWidget {
               Expanded(
                 child: TextButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.grey[50],
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        side: BorderSide(color: Colors.grey)),
                   ),
                   onPressed: () {
                     Share.share(
@@ -53,13 +70,15 @@ class ProfileButton extends StatelessWidget {
                   },
                   icon: const Icon(
                     Icons.share,
-                    color: kPrimaryWhiteColor,
+                    color: kPrimaryBlackColor,
                     size: 19,
                   ),
                   label: Text(
                     'Share ',
-                    style:
-                        TextStyle(fontSize: 9.5.sp, color: kPrimaryWhiteColor),
+                    style: TextStyle(
+                        fontSize: 9.5.sp,
+                        fontFamily: kFontFamily,
+                        color: kPrimaryBlackColor),
                   ),
                 ),
               ),
@@ -71,11 +90,15 @@ class ProfileButton extends StatelessWidget {
             children: [
               SizedBox(width: 4.w),
               Expanded(
-                child: TextButton(
+                child: TextButton.icon(
                   style: TextButton.styleFrom(
                     backgroundColor: isFollowing
                         ? Colors.grey[300]
                         : Theme.of(context).primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                   onPressed: () {
                     if (isRequesting) {
@@ -90,7 +113,7 @@ class ProfileButton extends StatelessWidget {
                               .add(ProfileFollowUser());
                     }
                   },
-                  child: Text(
+                  label: Text(
                     isRequesting
                         ? 'Requested'
                         : isFollowing
@@ -98,16 +121,28 @@ class ProfileButton extends StatelessWidget {
                             : 'Follow',
                     style: TextStyle(
                       fontSize: 9.5.sp,
-                      color: isFollowing ? Colors.black : Colors.white,
+                      fontFamily: kFontFamily,
+                      color: kPrimaryWhiteColor,
                     ),
+                  ),
+                  icon: Icon(
+                    isFollowing
+                        ? Icons.person_remove_outlined
+                        : Icons.person_add_outlined,
+                    color: kPrimaryWhiteColor,
+                    size: 19,
                   ),
                 ),
               ),
               SizedBox(width: 7.w),
               Expanded(
-                child: TextButton(
+                child: TextButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.grey[50],
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        side: BorderSide(color: kPrimaryBlackColor)),
                   ),
                   onPressed: () =>
                       Navigator.of(context).pushNamed(ChannelScreen.routeName,
@@ -120,13 +155,18 @@ class ProfileButton extends StatelessWidget {
                                 .profileImageUrl,
                             chatType: ChatType.oneOnOne,
                           )),
-                  child: Text(
+                  label: Text(
                     "Message",
                     style: TextStyle(
                       fontSize: 9.5.sp,
-                      color:
-                          isFollowing ? kPrimaryWhiteColor : kPrimaryBlackColor,
+                      fontFamily: kFontFamily,
+                      color: kPrimaryBlackColor,
                     ),
+                  ),
+                  icon: const Icon(
+                    Linecons.paper_plane,
+                    color: kPrimaryBlackColor,
+                    size: 19,
                   ),
                 ),
               ),

@@ -61,6 +61,7 @@ class _OnboardingpageviewState extends State<Onboardingpageview> {
                             child: Text(
                               "Skip",
                               style: TextStyle(
+                                fontFamily: kFontFamily,
                                 color: kPrimaryBlackColor.withOpacity(0.5),
                               ),
                             ),

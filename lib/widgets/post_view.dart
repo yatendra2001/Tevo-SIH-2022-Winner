@@ -98,6 +98,7 @@ class _PostViewState extends State<PostView> {
                               children: [
                                 Text(widget.post.author.displayName,
                                     style: TextStyle(
+                                        fontFamily: kFontFamily,
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.w500)),
                                 SizedBox(
@@ -121,6 +122,7 @@ class _PostViewState extends State<PostView> {
                                     content: Text(
                                       'Reporting will unfollow the user and the post will be sent to help@tevo.com.',
                                       style: TextStyle(
+                                        fontFamily: kFontFamily,
                                         fontSize: 10.sp,
                                         fontWeight: FontWeight.w400,
                                       ),
@@ -128,6 +130,7 @@ class _PostViewState extends State<PostView> {
                                     title: Text(
                                       'Report or Unfollow',
                                       style: TextStyle(
+                                        fontFamily: kFontFamily,
                                         fontSize: 12.sp,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
@@ -143,6 +146,7 @@ class _PostViewState extends State<PostView> {
                                         child: Text(
                                           'Report',
                                           style: TextStyle(
+                                              fontFamily: kFontFamily,
                                               fontSize: 9.5.sp,
                                               color: kPrimaryBlackColor),
                                         ),
@@ -155,6 +159,7 @@ class _PostViewState extends State<PostView> {
                                         child: Text(
                                           'Unfollow',
                                           style: TextStyle(
+                                              fontFamily: kFontFamily,
                                               fontSize: 9.5.sp,
                                               color: kPrimaryBlackColor),
                                         ),
@@ -166,7 +171,9 @@ class _PostViewState extends State<PostView> {
                           child: Text(
                             'Following',
                             style: TextStyle(
-                                fontWeight: FontWeight.w400, fontSize: 9.5.sp),
+                                fontWeight: FontWeight.w400,
+                                fontFamily: kFontFamily,
+                                fontSize: 9.5.sp),
                           ),
                           style: ElevatedButton.styleFrom(
                             primary: kPrimaryBlackColor,
@@ -176,6 +183,7 @@ class _PostViewState extends State<PostView> {
                         ),
                       ],
                     ),
+                  const SizedBox(height: 8),
                   ListView.builder(
                     padding: EdgeInsets.all(0),
                     shrinkWrap: true,
@@ -201,7 +209,9 @@ class _PostViewState extends State<PostView> {
                     },
                     itemCount: tasks!.length,
                   ),
+                  const SizedBox(height: 2),
                   _buildFavoriteCommentTitle(widget),
+                  const SizedBox(height: 2),
                   _buildCommentTile(context, widget.post)
                 ],
               ),
@@ -218,6 +228,7 @@ class _PostViewState extends State<PostView> {
           text:
               endOn.isAfter(DateTime.now()) ? "Will end on : " : "Ended on : ",
           style: TextStyle(
+            fontFamily: kFontFamily,
             fontSize: 7.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -225,6 +236,7 @@ class _PostViewState extends State<PostView> {
             TextSpan(
                 text: DateFormat("hh:mm a MMMM dd").format(endOn),
                 style: TextStyle(
+                    fontFamily: kFontFamily,
                     fontSize: 8.sp,
                     fontWeight: FontWeight.w400,
                     fontStyle: FontStyle.normal))
@@ -286,7 +298,8 @@ class _PostViewState extends State<PostView> {
           padding: const EdgeInsets.only(left: 16, top: 0, bottom: 4),
           child: Text(
             '${widget.recentlyLiked ? widget.post.likes + 1 : widget.post.likes} likes',
-            style: const TextStyle(fontWeight: FontWeight.w400),
+            style:
+                TextStyle(fontWeight: FontWeight.w400, fontFamily: kFontFamily),
           ),
         )
       ],
@@ -307,13 +320,18 @@ class _PostViewState extends State<PostView> {
             width: 60.w,
             child: TextField(
               controller: _commentTextController,
-              style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  fontFamily: kFontFamily,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w400),
               decoration: InputDecoration(
                 enabledBorder: InputBorder.none,
                 filled: true,
                 hintText: "Add a comment...",
-                hintStyle:
-                    TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w500),
+                hintStyle: TextStyle(
+                    fontFamily: kFontFamily,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500),
                 fillColor: Colors.white,
                 focusedBorder: InputBorder.none,
                 isDense: true, // Added this

@@ -25,7 +25,11 @@ class NotificationsScreen extends StatelessWidget {
         leadingWidth: 0,
         title: Text(
           "Notifications",
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+            fontFamily: kFontFamily,
+          ),
         ),
       ),
       body: BlocBuilder<NotificationsBloc, NotificationsState>(
@@ -50,6 +54,7 @@ class NotificationsScreen extends StatelessWidget {
                             style: TextStyle(
                                 color: kPrimaryBlackColor.withOpacity(0.7),
                                 fontWeight: FontWeight.w500,
+                                fontFamily: kFontFamily,
                                 height: 1.5,
                                 fontSize: 15.sp),
                             textAlign: TextAlign.center,
@@ -74,7 +79,10 @@ class NotificationsScreen extends StatelessWidget {
                             child: Text(
                               'Follow users',
                               style: TextStyle(
-                                  color: kPrimaryBlackColor, fontSize: 12.sp),
+                                color: kPrimaryBlackColor,
+                                fontSize: 12.sp,
+                                fontFamily: kFontFamily,
+                              ),
                             ),
                           ),
                           Spacer(
@@ -123,9 +131,12 @@ _buildRequestTile(
                 .read<NotificationsBloc>()
                 .add(NotificationIgnoreFollowRequest(request: request));
           },
-          child: const Text(
+          child: Text(
             'Ignore',
-            style: TextStyle(color: kPrimaryBlackColor),
+            style: TextStyle(
+              color: kPrimaryBlackColor,
+              fontFamily: kFontFamily,
+            ),
           ),
         ),
         SizedBox(width: 4),
@@ -136,7 +147,13 @@ _buildRequestTile(
                 .read<NotificationsBloc>()
                 .add(NotificationAcceptFollowRequest(request: request));
           },
-          child: Text('Accept'),
+          child: Text(
+            'Accept',
+            style: TextStyle(
+              color: kPrimaryBlackColor,
+              fontFamily: kFontFamily,
+            ),
+          ),
         ),
       ],
     ),

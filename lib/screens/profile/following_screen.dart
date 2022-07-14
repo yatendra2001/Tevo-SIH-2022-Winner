@@ -6,6 +6,7 @@ import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/models/user_model.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/profile/profile_screen.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 import 'bloc/profile_bloc.dart';
@@ -116,8 +117,9 @@ class _FollowingScreenState extends State<FollowingScreen> {
                               const BorderSide(color: Colors.white, width: 1.0),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
-                        hintStyle:
-                            const TextStyle(fontWeight: FontWeight.normal),
+                        hintStyle: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontFamily: kFontFamily),
                         hintText: 'Search Users @ John',
                         prefixIcon: IconButton(
                           onPressed: () {

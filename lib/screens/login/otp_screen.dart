@@ -81,9 +81,9 @@ class _OtpScreenState extends State<OtpScreen> {
                       children: [
                         SizedBox(height: 4.h),
                         Text(
-
                           "okay, check your texts 💬 - we have sent you a security code",
                           style: TextStyle(
+                            fontFamily: kFontFamily,
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w400,
                           ),
@@ -98,7 +98,9 @@ class _OtpScreenState extends State<OtpScreen> {
                             focusNode: _focusNode,
                             decoration: UnderlineDecoration(
                               textStyle: TextStyle(
-                                  fontSize: 10.sp, color: kPrimaryBlackColor),
+                                  fontFamily: kFontFamily,
+                                  fontSize: 10.sp,
+                                  color: kPrimaryBlackColor),
                               colorBuilder: FixedColorBuilder(
                                   kPrimaryBlackColor.withOpacity(0.6)),
                               lineStrokeCap: StrokeCap.round,
@@ -157,7 +159,10 @@ class _OtpScreenState extends State<OtpScreen> {
       children: [
         Text(
           "Didn't get the code? ",
-          style: TextStyle(fontSize: 10.sp),
+          style: TextStyle(
+            fontSize: 10.sp,
+            fontFamily: kFontFamily,
+          ),
         ),
         TimerButton(
           label: 'Resend',
@@ -169,9 +174,14 @@ class _OtpScreenState extends State<OtpScreen> {
           disabledColor: Colors.grey[50]!,
           buttonType: ButtonType.FlatButton,
           disabledTextStyle: TextStyle(
-              color: kPrimaryBlackColor.withOpacity(0.4), fontSize: 10.sp),
-          activeTextStyle:
-              TextStyle(color: kPrimaryBlackColor, fontSize: 10.sp),
+              fontFamily: kFontFamily,
+              color: kPrimaryBlackColor.withOpacity(0.4),
+              fontSize: 10.sp),
+          activeTextStyle: TextStyle(
+            color: kPrimaryBlackColor,
+            fontSize: 10.sp,
+            fontFamily: kFontFamily,
+          ),
         ),
       ],
     );

@@ -166,18 +166,24 @@ class NavScreen extends StatelessWidget {
               : state.selectedItem == BottomNavItem.create
                   ? 1
                   : 2,
-          tabs: const [
+          tabs: [
             GButton(
               icon: Icons.home_outlined,
               text: 'Home',
+              textStyle:
+                  TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
             ),
             GButton(
               icon: Icons.add,
               text: 'Create',
+              textStyle:
+                  TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
             ),
             GButton(
               icon: Icons.notifications_none_outlined,
               text: 'Notification',
+              textStyle:
+                  TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
             ),
           ],
           onTabChange: (index) {

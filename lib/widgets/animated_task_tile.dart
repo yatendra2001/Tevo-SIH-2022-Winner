@@ -38,7 +38,10 @@ class _AnimatedTaskTileState extends State<AnimatedTaskTile> {
           children: [
             Text(
               widget.task.title,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: kFontFamily,
+              ),
             ),
             Row(
               children: [

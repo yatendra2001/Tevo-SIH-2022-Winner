@@ -34,9 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is AuthUserChanged) {
       yield* _mapAuthUserChangedToState(event);
     } else if (event is AuthLogoutRequested) {
-      await StreamChat.of(event.context)
-          .client
-          .removeDevice(SessionHelper.uid ?? '');
+      await StreamChat.of(event.context).client.disconnectUser();
       await _authRepository.logOut();
     }
   }

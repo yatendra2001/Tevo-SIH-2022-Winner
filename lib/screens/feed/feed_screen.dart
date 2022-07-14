@@ -116,7 +116,10 @@ class _FeedScreenState extends State<FeedScreen> {
                     toolbarHeight: 7.h,
                     title: Text("TEVO",
                         style: TextStyle(
-                            fontSize: 24.sp, fontWeight: FontWeight.w700)),
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: kFontFamily,
+                        )),
                     bottom: PreferredSize(
                         child: Padding(
                           padding: const EdgeInsets.only(
@@ -147,6 +150,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                 hintText: 'Search for accounts',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.normal,
+                                    fontFamily: kFontFamily,
                                     fontSize: 11.sp),
                                 suffixIcon: const Icon(
                                   Icons.search,
@@ -192,8 +196,9 @@ class _FeedScreenState extends State<FeedScreen> {
                                           color: kPrimaryBlackColor),
                                       child: Text(
                                         '${SessionHelper.totalUnreadMessagesCount}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             color: Colors.white,
+                                            fontFamily: kFontFamily,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600),
                                       ),
@@ -264,6 +269,7 @@ class _FeedScreenState extends State<FeedScreen> {
                           style: TextStyle(
                               color: kPrimaryBlackColor.withOpacity(0.7),
                               fontWeight: FontWeight.w500,
+                              fontFamily: kFontFamily,
                               height: 1.5,
                               fontSize: 15.sp),
                           textAlign: TextAlign.center,
@@ -287,7 +293,10 @@ class _FeedScreenState extends State<FeedScreen> {
                         child: Text(
                           'Follow users',
                           style: TextStyle(
-                              color: kPrimaryBlackColor, fontSize: 11.sp),
+                            color: kPrimaryBlackColor,
+                            fontSize: 11.sp,
+                            fontFamily: kFontFamily,
+                          ),
                         ),
                       ),
                     ],

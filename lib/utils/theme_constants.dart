@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const kPrimaryTealColor = Color(0xff009688);
 const kPrimaryWhiteColor = Color.fromARGB(255, 255, 255, 255);
@@ -15,3 +16,5 @@ class Palette {
   static const Color darkBlue = kPrimaryBlackColor;
   static const Color darkOrange = kPrimaryTealColor;
 }
+
+String kFontFamily = GoogleFonts.openSans().fontFamily!;

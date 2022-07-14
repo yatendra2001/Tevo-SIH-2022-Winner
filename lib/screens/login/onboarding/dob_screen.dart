@@ -67,14 +67,20 @@ class _DobScreenState extends State<DobScreen> {
                 SizedBox(height: 4.h),
                 Text(
                   "How old are you? 🍰",
-                  style:
-                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: kFontFamily,
+                  ),
                 ),
                 SizedBox(height: 3.h),
                 Text(
                   "It helps us personalising your experience and will not be visible on your profile.",
-
-                  style: TextStyle(fontSize: 10.sp, height: 1.3),
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    height: 1.3,
+                    fontFamily: kFontFamily,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8.h),
@@ -84,7 +90,10 @@ class _DobScreenState extends State<DobScreen> {
                       height: 8.h,
                       width: 40.w,
                       child: TextField(
-                        style: TextStyle(fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontFamily: kFontFamily,
+                        ),
                         controller: _ageController,
                         keyboardType: TextInputType.number,
                         focusNode: _focusNode,
@@ -120,6 +129,7 @@ class _DobScreenState extends State<DobScreen> {
                           filled: true,
                           hintText: "your age",
                           hintStyle: TextStyle(
+                              fontFamily: kFontFamily,
                               fontSize: 12.sp,
                               color: kPrimaryBlackColor,
                               fontWeight: FontWeight.w400),
@@ -144,6 +154,7 @@ class _DobScreenState extends State<DobScreen> {
                       child: Text(
                         "You're ${_ageController.text} years old. Is it correct?",
                         style: TextStyle(
+                          fontFamily: kFontFamily,
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
                           color: kPrimaryBlackColor,
@@ -156,6 +167,7 @@ class _DobScreenState extends State<DobScreen> {
                           child: Text(
                             "RE-ENTER AGE",
                             style: TextStyle(
+                                fontFamily: kFontFamily,
                                 color: kPrimaryBlackColor,
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w400),
@@ -186,6 +198,7 @@ class _DobScreenState extends State<DobScreen> {
                           child: Text(
                             "YES, I'M ${_ageController.text}",
                             style: TextStyle(
+                                fontFamily: kFontFamily,
                                 color: kPrimaryBlackColor,
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w400),

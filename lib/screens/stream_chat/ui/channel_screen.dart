@@ -117,6 +117,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   : channel.extraData['u2'].toString().capitalized(),
               style: TextStyle(
                 color: kPrimaryBlackColor,
+                fontFamily: kFontFamily,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
               ),
@@ -129,51 +130,28 @@ class _ChannelScreenState extends State<ChannelScreen> {
               onPressed: () => Navigator.of(context).pop(true),
             ),
             onTitleTap: () {
-              Navigator.of(context).pushNamed(ProfileScreen.routeName,
+              Navigator.of(context).pushReplacementNamed(
+                  ProfileScreen.routeName,
                   arguments: ProfileScreenArgs(
                       userId: channel.extraData["u2id"].toString()));
             },
             onBackPressed: () => Navigator.popUntil(context, (route) => false),
             actions: [
               if (channel.extraData['chat_type'] == ChatType.oneOnOne)
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: UserProfileImage(
-                    radius: 14,
-                    profileImageUrl: widget.profileImage!,
-                    iconRadius: 49,
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pushReplacementNamed(
+                      ProfileScreen.routeName,
+                      arguments: ProfileScreenArgs(
+                          userId: channel.extraData["u2id"].toString())),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: UserProfileImage(
+                      radius: 14,
+                      profileImageUrl: widget.profileImage!,
+                      iconRadius: 49,
+                    ),
                   ),
                 ),
-              if (channel.extraData['chat_type'] != ChatType.oneOnOne)
-                SizedBox(
-                  width: 30,
-                  child: PopupMenuButton(
-                      padding: EdgeInsets.zero,
-                      onSelected: (index) {
-                        if (index == 0) {
-                          showModalBottomSheet(
-                              context: context,
-                              clipBehavior: Clip.antiAlias,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(32),
-                                      topRight: Radius.circular(32))),
-                              builder: (context) {
-                                return MembersListSheet(
-                                  channel: channel,
-                                );
-                              });
-                        }
-                      },
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            value: 0,
-                            child: Text('Show Members'),
-                          )
-                        ];
-                      }),
-                )
             ],
           ),
           body: Column(
