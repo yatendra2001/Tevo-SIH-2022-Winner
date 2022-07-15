@@ -209,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             actions: [
               if (state.isCurrentUser)
                 Transform.scale(
-                  scale: 0.7,
+                  scale: 0.6,
                   child: RollingSwitch.icon(
                     onChanged: (bool val) {
                       context
@@ -227,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       text: Text(
                         'Private',
                         style: TextStyle(
-                          fontSize: 11.sp,
+                          fontSize: 12.sp,
                           fontFamily: kFontFamily,
                         ),
                       ),
@@ -238,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       text: Text(
                         'Public',
                         style: TextStyle(
-                          fontSize: 11.sp,
+                          fontSize: 12.sp,
                           fontFamily: kFontFamily,
                         ),
                       ),
@@ -367,7 +367,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   alignment: FractionalOffset.center,
                                   transform: Matrix4.identity()
                                     ..setEntry(2, 3, 0.002)
-                                    ..rotateY(math.pi * _animation.value),
+                                    ..rotateY(-math.pi * _animation.value)
+                                    ..rotateY(-math.pi),
                                   child: GestureDetector(
                                     onTap: () {
                                       if (_animationStatus ==

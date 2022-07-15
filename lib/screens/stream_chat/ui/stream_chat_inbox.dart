@@ -83,14 +83,14 @@ class _InboxListItemState extends State<InboxListItem> {
     log('INBOX PROFILE IMAGE:: $image');
     members.forEach((member) async {
       log('MEMBER IMAGE:: ${member.user!.image}');
-      final user =
-          await UserRepository().getUserWithId(userId: member.user!.id);
+      final user = await UserRepository().getUserWithId(
+          userId:
+              SessionHelper.uid != widget.channel.extraData["u2id"].toString()
+                  ? widget.channel.extraData["u2id"].toString()
+                  : widget.channel.extraData["u1id"].toString());
       setState(() {
-        image = widget.channel.image!;
-        targetDisplayName =
-            widget.channel.extraData['chat_type'] == 'one_on_one'
-                ? member.user!.name
-                : widget.channel.name ?? '';
+        image = user.profileImageUrl;
+        targetDisplayName = user.username.toLowerCase();
       });
     });
 
@@ -148,7 +148,7 @@ class _InboxListItemState extends State<InboxListItem> {
               children: [
                 Spacer(),
                 Text(
-                  targetDisplayName.capitalized(),
+                  targetDisplayName,
                   style: TextStyle(
                       color: kPrimaryBlackColor,
                       fontFamily: kFontFamily,
@@ -159,7 +159,7 @@ class _InboxListItemState extends State<InboxListItem> {
                   height: 2,
                 ),
                 SizedBox(
-                  width: 60.w,
+                  width: 55.w,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 3),
                     child: Text(

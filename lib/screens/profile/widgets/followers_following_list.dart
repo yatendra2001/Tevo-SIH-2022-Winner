@@ -87,6 +87,8 @@ class ListFollowersFollowing extends StatelessWidget {
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
                             onTap: () {
                               Navigator.of(context).pushNamed(
                                   ProfileScreen.routeName,
@@ -101,7 +103,7 @@ class ListFollowersFollowing extends StatelessWidget {
                                     searchResult[index].profileImageUrl),
                             title: Text(searchResult[index].displayName),
                             subtitle: Text("@ ${searchResult[index].username}"),
-                            trailing: Text("Following Button"),
+                            // trailing: Text("Following Button"),
                           ),
                         ),
                         itemCount: searchResult.length,

@@ -112,8 +112,8 @@ class _FeedScreenState extends State<FeedScreen> {
                     automaticallyImplyLeading: false,
                     centerTitle: false,
                     pinned: true,
-                    elevation: 0,
-                    toolbarHeight: 7.h,
+                    elevation: 2,
+                    toolbarHeight: 9.h,
                     title: Text("TEVO",
                         style: TextStyle(
                           fontSize: 24.sp,
@@ -123,7 +123,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     bottom: PreferredSize(
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              right: 16, left: 16, bottom: 8),
+                              right: 16, left: 16, bottom: 16),
                           child: SizedBox(
                             height: 6.5.h,
                             child: TextField(
@@ -140,12 +140,12 @@ class _FeedScreenState extends State<FeedScreen> {
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
                                       color: Colors.white, width: 1.0),
-                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
                                       color: Colors.white, width: 1.0),
-                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 hintText: 'Search for accounts',
                                 hintStyle: TextStyle(
@@ -161,7 +161,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             ),
                           ),
                         ),
-                        preferredSize: Size(double.infinity, 7.45.h)),
+                        preferredSize: Size(double.infinity, 9.h)),
                     actions: [
                       Padding(
                           padding: EdgeInsets.only(right: 16),
@@ -305,7 +305,7 @@ class _FeedScreenState extends State<FeedScreen> {
               : ListView.builder(
                   itemCount: state.posts.length,
                   padding:
-                      EdgeInsets.only(right: 4, left: 4, top: 4, bottom: 100),
+                      EdgeInsets.only(right: 0, left: 0, top: 4, bottom: 100),
                   itemBuilder: (BuildContext context, int index) {
                     final post = state.posts[index];
                     final likedPostsState =

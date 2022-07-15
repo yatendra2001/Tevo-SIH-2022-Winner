@@ -12,6 +12,7 @@ import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/onboarding/add_profile_photo_screen.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
 import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
+import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 
@@ -194,6 +195,8 @@ class _DobScreenState extends State<DobScreen> {
                                     following: 0,
                                     isPrivate: false,
                                     bio: ""));
+                            BlocProvider.of<InitializeStreamChatCubit>(context)
+                                .initializeStreamChat(context);
                           },
                           child: Text(
                             "YES, I'M ${_ageController.text}",

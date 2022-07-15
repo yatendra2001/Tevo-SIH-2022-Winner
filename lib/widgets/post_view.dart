@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttericon/elusive_icons.dart';
+import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:fluttericon/linecons_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -53,11 +55,11 @@ class _PostViewState extends State<PostView> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       color: kPrimaryWhiteColor,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          side: const BorderSide(color: kPrimaryBlackColor)),
+      // shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(4),
+      //     side: const BorderSide(color: kPrimaryBlackColor)),
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -74,7 +76,7 @@ class _PostViewState extends State<PostView> {
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+                // mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   if (widget.post.author.id != SessionHelper.uid)
@@ -211,6 +213,7 @@ class _PostViewState extends State<PostView> {
                   ),
                   const SizedBox(height: 2),
                   _buildFavoriteCommentTitle(widget),
+                  Divider(),
                   const SizedBox(height: 2),
                   _buildCommentTile(context, widget.post)
                 ],
@@ -258,8 +261,8 @@ class _PostViewState extends State<PostView> {
               child: InkWell(
                 onTap: widget.onLike,
                 child: widget.isLiked
-                    ? const Icon(Icons.favorite, color: Colors.pink)
-                    : const Icon(Icons.favorite_outline),
+                    ? const Icon(Elusive.heart, color: Colors.pink)
+                    : const Icon(Linecons.heart),
               ),
             ),
             Padding(
@@ -271,7 +274,7 @@ class _PostViewState extends State<PostView> {
                     arguments: CommentsScreenArgs(post: widget.post),
                   );
                 },
-                child: FaIcon(FontAwesomeIcons.comment),
+                child: const FaIcon(Linecons.comment),
               ),
             ),
             //TODO plane

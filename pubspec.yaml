@@ -78,6 +78,7 @@ dependencies:
   share_plus: ^4.0.10
   webcrypto: ^0.5.2
   rolling_switch: ^0.0.2
+  url_launcher: ^6.1.5
 
 dev_dependencies:
   flutter_test:

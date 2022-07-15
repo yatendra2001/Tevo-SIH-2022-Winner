@@ -41,10 +41,11 @@ class _DmInboxState extends State<DmInbox> {
                   ],
                 ),
               );
+            } else {
+              return Center(
+                child: Text('No Messages yet'),
+              );
             }
-            return Center(
-              child: Text('No Messages yet'),
-            );
           },
           limit: 20,
           pullToRefresh: true,

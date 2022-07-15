@@ -15,6 +15,7 @@ import 'package:tevo/screens/login/widgets/phoneform_widget.dart';
 import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   final PageController controller;
@@ -63,9 +64,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   SizedBox(height: 4.h),
                   Text(
-                    "Sign in with your phone number",
+                    "Sign in with your phone #",
                     style: TextStyle(
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                       fontFamily: kFontFamily,
                     ),
                     textAlign: TextAlign.center,
@@ -127,30 +128,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontSize: 8.sp,
                 fontWeight: FontWeight.w600),
           ),
-          TextSpan(
-              text: "Terms",
-              style: TextStyle(
-                  color: Colors.blue,
-                  fontFamily: kFontFamily,
-                  fontSize: 8.sp,
-                  fontWeight: FontWeight.w600),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  const url = '';
-                  print("Terms tapped");
-                  // if (await canLaunch(url)) {
-                  //   await launch(url);
-                  // } else {
-                  //   throw 'Could not launch $url';
-                  // }
-                }),
-          TextSpan(
-            text: " and ",
-            style: TextStyle(
-              color: kPrimaryBlackColor.withOpacity(0.6),
-              fontFamily: kFontFamily,
-            ),
-          ),
+          // TextSpan(
+          //     text: "Terms",
+          //     style: TextStyle(
+          //         color: Colors.blue,
+          //         fontFamily: kFontFamily,
+          //         fontSize: 8.sp,
+          //         fontWeight: FontWeight.w600),
+          //     recognizer: TapGestureRecognizer()
+          //       ..onTap = () {
+          //         const url = '';
+          //         print("Terms tapped");
+          //         // if (await canLaunch(url)) {
+          //         //   await launch(url);
+          //         // } else {
+          //         //   throw 'Could not launch $url';
+          //         // }
+          //       }),
+          // TextSpan(
+          //   text: " and ",
+          //   style: TextStyle(
+          //     color: kPrimaryBlackColor.withOpacity(0.6),
+          //     fontFamily: kFontFamily,
+          //   ),
+          // ),
           TextSpan(
               text: "Privacy Policy",
               style: TextStyle(
@@ -159,14 +160,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontFamily: kFontFamily,
                   fontWeight: FontWeight.w600),
               recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  const url = '';
+                ..onTap = () async {
+                  const url =
+                      'https://docs.google.com/document/d/1I-HN3dkIZPssPKQEi_5tLnNFJq8bQVqFvv6gINBEgbk/edit';
                   print("Terms tapped");
-                  // if (await canLaunch(url)) {
-                  //   await launch(url);
-                  // } else {
-                  //   throw 'Could not launch $url';
-                  // }
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url));
+                  } else {
+                    throw 'Could not launch $url';
+                  }
                 }),
         ],
       ),
