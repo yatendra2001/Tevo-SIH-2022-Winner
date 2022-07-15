@@ -23,18 +23,18 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-            <queries>
+            <!-- <queries> -->
             <!-- If your app checks for SMS support -->
-            <intent>
+            <!-- <intent>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="sms" />
-            </intent>
+            </intent> -->
             <!-- If your app checks for call support -->
-            <intent>
+            <!-- <intent>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="tel" />
             </intent>
-            </queries>
+            </queries> -->
             <!-- Deep linking -->
             <!-- <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
             <intent-filter android:autoVerify="true">

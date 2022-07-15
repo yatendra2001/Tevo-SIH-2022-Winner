@@ -367,7 +367,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   alignment: FractionalOffset.center,
                                   transform: Matrix4.identity()
                                     ..setEntry(2, 3, 0.002)
-                                    ..rotateY(-math.pi * _animation.value),
+                                    ..rotateY(-math.pi * _animation.value)
+                                    ..rotateY(-math.pi),
                                   child: GestureDetector(
                                     onTap: () {
                                       if (_animationStatus ==
@@ -388,46 +389,40 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   state.user.profileImageUrl,
                                             ),
                                           )
-                                        : Transform(
-                                            alignment: FractionalOffset.center,
-                                            transform: Matrix4.identity()
-                                              ..setEntry(2, 3, 0.002)
-                                              ..rotateY(-math.pi),
-                                            child: SizedBox(
-                                              height: 100.sp,
-                                              width: 100.sp,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    state.posts.length
-                                                            .toString() +
-                                                        "%",
-                                                    style: TextStyle(
-                                                        fontSize: 26.sp,
-                                                        fontFamily: kFontFamily,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        color:
-                                                            kPrimaryBlackColor),
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                  Text(
-                                                    "COMPLETION\nRATE",
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 11.sp,
-                                                        fontFamily: kFontFamily,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            kPrimaryBlackColor),
-                                                  ),
-                                                ],
-                                              ),
+                                        : SizedBox(
+                                            height: 100.sp,
+                                            width: 100.sp,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  state.posts.length
+                                                          .toString() +
+                                                      "%",
+                                                  style: TextStyle(
+                                                      fontSize: 26.sp,
+                                                      fontFamily: kFontFamily,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color:
+                                                          kPrimaryBlackColor),
+                                                ),
+                                                SizedBox(height: 8),
+                                                Text(
+                                                  "COMPLETION\nRATE",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 11.sp,
+                                                      fontFamily: kFontFamily,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color:
+                                                          kPrimaryBlackColor),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                   ),
