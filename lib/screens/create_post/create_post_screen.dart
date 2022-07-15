@@ -469,7 +469,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: TextField(
                 style: TextStyle(
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   fontFamily: kFontFamily,
                 ),
                 autofocus: true,

@@ -113,8 +113,8 @@ class _ChannelScreenState extends State<ChannelScreen> {
             backgroundColor: Colors.white,
             title: Text(
               channel.extraData['u1id'] != SessionHelper.uid
-                  ? channel.extraData['u1'].toString().capitalized()
-                  : channel.extraData['u2'].toString().capitalized(),
+                  ? channel.extraData['u1'].toString()
+                  : channel.extraData['u2'].toString(),
               style: TextStyle(
                 color: kPrimaryBlackColor,
                 fontFamily: kFontFamily,
@@ -140,9 +140,14 @@ class _ChannelScreenState extends State<ChannelScreen> {
               if (channel.extraData['chat_type'] == ChatType.oneOnOne)
                 GestureDetector(
                   onTap: () => Navigator.of(context).pushReplacementNamed(
-                      ProfileScreen.routeName,
-                      arguments: ProfileScreenArgs(
-                          userId: channel.extraData["u2id"].toString())),
+                    ProfileScreen.routeName,
+                    arguments: ProfileScreenArgs(
+                      userId: SessionHelper.uid !=
+                              channel.extraData["u2id"].toString()
+                          ? channel.extraData["u2id"].toString()
+                          : channel.extraData["u1id"].toString(),
+                    ),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: UserProfileImage(

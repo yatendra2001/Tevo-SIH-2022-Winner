@@ -135,12 +135,6 @@ class NavScreen extends StatelessWidget {
           ),
         ],
         color: Color(0xffFFFFFF),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
-          bottomLeft: Radius.zero,
-          bottomRight: Radius.zero,
-        ),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 6.3.w, vertical: 1.h),

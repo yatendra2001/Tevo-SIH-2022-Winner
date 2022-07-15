@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttericon/entypo_icons.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:fluttericon/linearicons_free_icons.dart';
+import 'package:fluttericon/linecons_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 
@@ -82,10 +85,9 @@ class _TaskTileState extends State<TaskTile> {
                         ],
                       )
                     : widget.isComplete
-                        ? Icon(FontAwesome5.check_circle,
+                        ? Icon(LineariconsFree.checkmark_cicle,
                             color: kPrimaryBlackColor)
-                        : Icon(FontAwesomeIcons.clock,
-                            color: kPrimaryBlackColor),
+                        : Icon(Entypo.hourglass, color: kPrimaryBlackColor),
               ],
             ),
             if (showDesc) SizedBox(height: 8),

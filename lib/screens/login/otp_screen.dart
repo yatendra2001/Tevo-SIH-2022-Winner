@@ -84,7 +84,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           "okay, check your texts 💬 - we have sent you a security code",
                           style: TextStyle(
                             fontFamily: kFontFamily,
-                            fontSize: 18.sp,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w400,
                           ),
                           textAlign: TextAlign.center,
