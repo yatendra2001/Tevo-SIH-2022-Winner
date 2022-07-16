@@ -123,9 +123,9 @@ class _FeedScreenState extends State<FeedScreen> {
                     bottom: PreferredSize(
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              right: 16, left: 16, bottom: 16),
+                              right: 16, left: 16, bottom: 10, top: 8),
                           child: SizedBox(
-                            height: 6.5.h,
+                            height: 6.8.h,
                             child: TextField(
                               onTap: () {
                                 Navigator.of(context).pushNamed(
@@ -173,7 +173,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                       userId: SessionHelper.uid!));
                             },
                             child: UserProfileImage(
-                              radius: 15,
+                              radius: 14,
                               iconRadius: 45,
                               profileImageUrl: SessionHelper.profileImageUrl!,
                             ),

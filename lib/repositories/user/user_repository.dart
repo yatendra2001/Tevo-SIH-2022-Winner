@@ -146,15 +146,15 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
-  void followUser({
+  Future<void> followUser({
     required String userId,
     required String followUserId,
     required String? requestId,
-  }) {
+  }) async {
     log("han yeh bhi");
 
     // Add followUser to user's userFollowing.
-    _firebaseFirestore
+    await _firebaseFirestore
         .collection(Paths.following)
         .doc(userId)
         .collection(Paths.userFollowing)
@@ -162,7 +162,7 @@ class UserRepository extends BaseUserRepository {
         .set({});
 
     // Add user to followUser's userFollowers.
-    _firebaseFirestore
+    await _firebaseFirestore
         .collection(Paths.followers)
         .doc(followUserId)
         .collection(Paths.userFollowers)

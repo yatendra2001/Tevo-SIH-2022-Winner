@@ -113,8 +113,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       } else if (isSearchingFollowing == false &&
           _textControllerFollowing.text.isNotEmpty) {
         for (var element in following) {
-          if (element.displayName.contains(_textControllerFollowing.text) ||
-              element.username.contains(_textControllerFollowing.text)) {
+          if (element.displayName.startsWith(_textControllerFollowing.text) ||
+              element.username.startsWith(_textControllerFollowing.text)) {
             if (searchResultFollowing.contains(element) == false) {
               searchResultFollowing.add(element);
             }
@@ -137,8 +137,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       } else if (isSearchingFollowers == false &&
           _textControllerFollowers.text.isNotEmpty) {
         for (var element in followers) {
-          if (element.displayName.contains(_textControllerFollowers.text) ||
-              element.username.contains(_textControllerFollowers.text)) {
+          if (element.displayName.startsWith(_textControllerFollowers.text) ||
+              element.username.startsWith(_textControllerFollowers.text)) {
             if (searchResultFollowers.contains(element) == false) {
               searchResultFollowers.add(element);
             }
@@ -186,136 +186,6 @@ class _ProfileScreenState extends State<ProfileScreen>
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: true,
-            elevation: 0,
-            backgroundColor: Colors.grey[50],
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.arrow_back_ios_new_outlined)),
-            title: Row(
-              children: [
-                Text(
-                  "Profile",
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontFamily: kFontFamily,
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              if (state.isCurrentUser)
-                Transform.scale(
-                  scale: 0.6,
-                  child: RollingSwitch.icon(
-                    onChanged: (bool val) {
-                      context
-                          .read<ProfileBloc>()
-                          .add(ProfileToUpdateUser(isPrivate: val));
-                      String message = '';
-                      setState(() {
-                        message = state.user.isPrivate ? "Public" : "Private";
-                      });
-                      Fluttertoast.showToast(msg: "Profile Updated: $message");
-                    },
-                    rollingInfoRight: RollingIconInfo(
-                      icon: Icons.lock,
-                      backgroundColor: kPrimaryBlackColor,
-                      text: Text(
-                        'Private',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontFamily: kFontFamily,
-                        ),
-                      ),
-                    ),
-                    rollingInfoLeft: RollingIconInfo(
-                      icon: Icons.public,
-                      backgroundColor: Colors.grey,
-                      text: Text(
-                        'Public',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontFamily: kFontFamily,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              if (state.isCurrentUser)
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: IconButton(
-                    icon: SizedBox(
-                      height: 3.2.h,
-                      width: 3.2.h,
-                      child: CachedNetworkImage(
-                          imageUrl:
-                              "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
-                    ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Colors.grey[50],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            side: const BorderSide(
-                                color: kPrimaryBlackColor, width: 2.0),
-                          ),
-                          title: Center(
-                            child: Text(
-                              "Are you sure you want to logout?",
-                              style: TextStyle(
-                                fontSize: 11.5.sp,
-                                fontWeight: FontWeight.w400,
-                                color: kPrimaryBlackColor,
-                                fontFamily: kFontFamily,
-                              ),
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text(
-                                  "No",
-                                  style: TextStyle(
-                                    color: kPrimaryBlackColor,
-                                    fontSize: 8.5.sp,
-                                    fontFamily: kFontFamily,
-                                  ),
-                                )),
-                            TextButton(
-                                onPressed: () {
-                                  context.read<AuthBloc>().add(
-                                      AuthLogoutRequested(context: context));
-                                  context.read<LoginCubit>().logoutRequested();
-                                  context
-                                      .read<LikedPostsCubit>()
-                                      .clearAllLikedPosts();
-                                  MyApp.navigatorKey.currentState!
-                                      .pushReplacementNamed(
-                                          LoginPageView.routeName);
-                                },
-                                child: Text(
-                                  "Yes",
-                                  style: TextStyle(
-                                      color: kPrimaryBlackColor,
-                                      fontFamily: kFontFamily,
-                                      fontSize: 8.5.sp),
-                                )),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-            ],
-          ),
           body: _buildBody(state),
         );
       },
@@ -335,6 +205,141 @@ class _ProfileScreenState extends State<ProfileScreen>
           },
           child: CustomScrollView(
             slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: true,
+                elevation: 0,
+                backgroundColor: Colors.grey[50],
+                leading: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.arrow_back_ios_new_outlined)),
+                title: Row(
+                  children: [
+                    Text(
+                      "Profile",
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontFamily: kFontFamily,
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  if (state.isCurrentUser)
+                    Transform.scale(
+                      scale: 0.6,
+                      child: RollingSwitch.icon(
+                        onChanged: (bool val) {
+                          context
+                              .read<ProfileBloc>()
+                              .add(ProfileToUpdateUser(isPrivate: val));
+                          String message = '';
+                          setState(() {
+                            message =
+                                state.user.isPrivate ? "Public" : "Private";
+                          });
+                          Fluttertoast.showToast(
+                              msg: "Profile Updated: $message");
+                        },
+                        rollingInfoRight: RollingIconInfo(
+                          icon: Icons.lock,
+                          backgroundColor: kPrimaryBlackColor,
+                          text: Text(
+                            'Private',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontFamily: kFontFamily,
+                            ),
+                          ),
+                        ),
+                        rollingInfoLeft: RollingIconInfo(
+                          icon: Icons.public,
+                          backgroundColor: Colors.grey,
+                          text: Text(
+                            'Public',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontFamily: kFontFamily,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (state.isCurrentUser)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4.0),
+                      child: IconButton(
+                        icon: SizedBox(
+                          height: 3.2.h,
+                          width: 3.2.h,
+                          child: CachedNetworkImage(
+                              imageUrl:
+                                  "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Colors.grey[50],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                side: const BorderSide(
+                                    color: kPrimaryBlackColor, width: 2.0),
+                              ),
+                              title: Center(
+                                child: Text(
+                                  "Are you sure you want to logout?",
+                                  style: TextStyle(
+                                    fontSize: 11.5.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: kPrimaryBlackColor,
+                                    fontFamily: kFontFamily,
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(
+                                      "No",
+                                      style: TextStyle(
+                                        color: kPrimaryBlackColor,
+                                        fontSize: 8.5.sp,
+                                        fontFamily: kFontFamily,
+                                      ),
+                                    )),
+                                TextButton(
+                                    onPressed: () {
+                                      context.read<AuthBloc>().add(
+                                          AuthLogoutRequested(
+                                              context: context));
+                                      context
+                                          .read<LoginCubit>()
+                                          .logoutRequested();
+                                      context
+                                          .read<LikedPostsCubit>()
+                                          .clearAllLikedPosts();
+                                      MyApp.navigatorKey.currentState!
+                                          .pushReplacementNamed(
+                                              LoginPageView.routeName);
+                                    },
+                                    child: Text(
+                                      "Yes",
+                                      style: TextStyle(
+                                          color: kPrimaryBlackColor,
+                                          fontFamily: kFontFamily,
+                                          fontSize: 8.5.sp),
+                                    )),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                ],
+              ),
               SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -408,11 +413,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     flex: 3,
                                                     child: Text(
                                                       (((state.user.completed) /
-                                                                      (state.user
-                                                                              .completed +
-                                                                          state
-                                                                              .user
-                                                                              .todo)) *
+                                                                      (state
+                                                                          .user
+                                                                          .todo)) *
                                                                   100)
                                                               .roundToDouble()
                                                               .toString() +

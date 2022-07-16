@@ -99,9 +99,13 @@ class NotificationsScreen extends StatelessWidget {
                           return _buildRequestTile(context, state, request!);
                         } else {
                           final notification = notificationList[index];
-                          return NotificationTile(
-                            notification: notification!,
-                          );
+                          if (notification != null) {
+                            return NotificationTile(
+                              notification: notification,
+                            );
+                          } else {
+                            return SizedBox.shrink();
+                          }
                         }
                       },
                     );
