@@ -9,4 +9,6 @@ class SessionHelper {
   static String? uid;
   static String? profileImageUrl;
   static int totalUnreadMessagesCount = 0;
+  static int? todo;
+  static int? completed;
 }

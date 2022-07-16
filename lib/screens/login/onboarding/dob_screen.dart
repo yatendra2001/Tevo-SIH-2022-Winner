@@ -182,19 +182,22 @@ class _DobScreenState extends State<DobScreen> {
                             FocusScope.of(context).unfocus();
                             Navigator.of(context).pop();
                             await UserRepository().setUser(
-                                user: User(
-                                    id: SessionHelper.uid ?? "",
-                                    username: SessionHelper.username ?? "",
-                                    displayName:
-                                        SessionHelper.displayName ?? "",
-                                    profileImageUrl:
-                                        SessionHelper.profileImageUrl ?? '',
-                                    age: SessionHelper.age ?? '',
-                                    phone: SessionHelper.phone ?? '',
-                                    followers: 0,
-                                    following: 0,
-                                    isPrivate: false,
-                                    bio: ""));
+                              user: User(
+                                id: SessionHelper.uid ?? "",
+                                username: SessionHelper.username ?? "",
+                                displayName: SessionHelper.displayName ?? "",
+                                profileImageUrl:
+                                    SessionHelper.profileImageUrl ?? '',
+                                age: SessionHelper.age ?? '',
+                                phone: SessionHelper.phone ?? '',
+                                followers: 0,
+                                following: 0,
+                                completed: SessionHelper.completed ?? 0,
+                                todo: SessionHelper.todo ?? 0,
+                                isPrivate: false,
+                                bio: "",
+                              ),
+                            );
                             BlocProvider.of<InitializeStreamChatCubit>(context)
                                 .initializeStreamChat(context);
                           },

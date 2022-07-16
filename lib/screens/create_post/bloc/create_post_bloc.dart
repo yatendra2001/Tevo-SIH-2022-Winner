@@ -74,7 +74,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
     List<Task> toDoTask = List<Task>.from(state.todoTask)
       ..insert(event.index, event.task);
-
+    _userRepository.setToDo(1, _authBloc.state.user!.uid);
     yield state.copyWith(todoTask: toDoTask);
     add(const SubmitPost());
   }
@@ -84,11 +84,16 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     List<Task> completeTask = List<Task>.from(state.completedTask)
       ..add(event.task);
     List<Task> toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
+    _userRepository.setComplete(1, _authBloc.state.user!.uid);
     yield state.copyWith(todoTask: toDoTask, completedTask: completeTask);
     add(const SubmitPost());
   }
 
   Stream<CreatePostState> _mapToDeleteTask(DeleteTaskEvent event) async* {
+    _userRepository.setToDo(-1, _authBloc.state.user!.uid);
+    if (state.completedTask.contains(event.task)) {
+      _userRepository.setComplete(-1, _authBloc.state.user!.uid);
+    }
     List<Task> toDoTask = List<Task>.from(state.todoTask)..remove(event.task);
     List<Task> completeTask = List<Task>.from(state.completedTask)
       ..remove(event.task);
@@ -99,6 +104,11 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   Stream<CreatePostState> _mapTodeletePost(DeletePostEvent event) async* {
     if (state.post != null) {
       _postRepository.deletePost(postId: state.post!.id!);
+      _userRepository.setToDo(
+          -state.todoTask.length - state.completedTask.length,
+          _authBloc.state.user!.uid);
+      _userRepository.setComplete(
+          -state.completedTask.length, _authBloc.state.user!.uid);
       add(ClearPost());
     }
   }

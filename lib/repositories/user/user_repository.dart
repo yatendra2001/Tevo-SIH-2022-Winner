@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/config/paths.dart';
@@ -308,5 +307,21 @@ class UserRepository extends BaseUserRepository {
       following.add(user);
     }
     return following;
+  }
+
+  void setToDo(int value, String userId) async {
+    SessionHelper.todo = SessionHelper.todo ?? 0 + value;
+    await _firebaseFirestore
+        .collection(Paths.users)
+        .doc(userId)
+        .update({"todo": FieldValue.increment(value)});
+  }
+
+  void setComplete(int value, String userId) async {
+    SessionHelper.completed = SessionHelper.completed ?? 0 + value;
+    await _firebaseFirestore
+        .collection(Paths.users)
+        .doc(userId)
+        .update({"completed": FieldValue.increment(value)});
   }
 }

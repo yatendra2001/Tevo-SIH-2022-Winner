@@ -50,6 +50,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         SessionHelper.displayName = user.displayName;
         SessionHelper.profileImageUrl = user.profileImageUrl;
         SessionHelper.username = user.username;
+        SessionHelper.completed = user.completed;
+        SessionHelper.todo = user.todo;
       }
       yield AuthState.authenticated(user: event.user!, check: check);
     } else {

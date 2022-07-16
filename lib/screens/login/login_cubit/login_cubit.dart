@@ -87,16 +87,20 @@ class LoginCubit extends Cubit<LoginState> {
         );
       }
       await _userRepository.updateUser(
-          user: User(
-              id: SessionHelper.uid ?? "",
-              username: SessionHelper.username ?? "",
-              displayName: SessionHelper.displayName ?? "",
-              profileImageUrl: SessionHelper.profileImageUrl ?? '',
-              age: SessionHelper.age ?? '',
-              phone: SessionHelper.phone ?? '',
-              followers: 0,
-              following: 0,
-              bio: ""));
+        user: User(
+          id: SessionHelper.uid ?? "",
+          username: SessionHelper.username ?? "",
+          displayName: SessionHelper.displayName ?? "",
+          profileImageUrl: SessionHelper.profileImageUrl ?? '',
+          age: SessionHelper.age ?? '',
+          phone: SessionHelper.phone ?? '',
+          followers: 0,
+          following: 0,
+          completed: SessionHelper.completed ?? 0,
+          todo: SessionHelper.todo ?? 0,
+          bio: "",
+        ),
+      );
       emit(state.copyWith(profilePhotoStatus: ProfilePhotoStatus.uploaded));
     } on Failure catch (err) {
       emit(state.copyWith(
