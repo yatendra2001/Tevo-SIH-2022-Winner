@@ -111,7 +111,8 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> fetchTopFollowers() async {
     try {
       emit(state.copyWith(topFollowersStatus: TopFollowersStatus.loading));
-      final accounts = await _userRepository.getUsersByFollowers();
+      final accounts =
+          await _userRepository.getUsersByFollowers(SessionHelper.uid!);
       emit(state.copyWith(
           topFollowersStatus: TopFollowersStatus.loaded,
           topFollowersAccount: accounts));
