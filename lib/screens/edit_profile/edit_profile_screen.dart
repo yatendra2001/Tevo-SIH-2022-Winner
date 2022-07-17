@@ -137,7 +137,12 @@ class EditProfileScreen extends StatelessWidget {
                             height: 32,
                           ),
                           TextFormField(
-                            initialValue: user.username,
+                            style: TextStyle(
+                              color: kPrimaryBlackColor,
+                              fontFamily: kFontFamily,
+                              fontSize: 9.5.sp,
+                            ),
+                            initialValue: user.displayName,
                             decoration: InputDecoration(
                               labelText: 'Name',
                               labelStyle: TextStyle(

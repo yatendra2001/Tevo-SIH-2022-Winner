@@ -17,7 +17,7 @@ import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
-import 'package:timeago/timeago.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../screens/stream_chat/models/chat_type.dart';
 
@@ -44,11 +44,22 @@ class PostView extends StatefulWidget {
 class _PostViewState extends State<PostView> {
   List<Task>? tasks;
   final _commentTextController = TextEditingController();
+  late int _completionRate;
+
+  _getCompletionRateColor(int completionRate) {
+    return completionRate >= 78
+        ? kPrimaryTealColor
+        : (completionRate < 20 ? kPrimaryRedColor : kSecondaryYellowColor);
+  }
 
   @override
   void initState() {
     tasks = List.from(widget.post.completedTask);
     tasks!.addAll(List.from(widget.post.toDoTask));
+    _completionRate = (((widget.post.completedTask.length) * 100) /
+            (widget.post.toDoTask.length + widget.post.completedTask.length))
+        .roundToDouble()
+        .toInt();
     super.initState();
   }
 
@@ -111,77 +122,95 @@ class _PostViewState extends State<PostView> {
                             ),
                           ],
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        side: const BorderSide(
-                                            color: kPrimaryBlackColor),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    content: Text(
-                                      'Reporting will unfollow the user and the post will be sent to help@tevo.com.',
-                                      style: TextStyle(
-                                        fontFamily: kFontFamily,
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    title: Text(
-                                      'Report or Unfollow',
-                                      style: TextStyle(
-                                        fontFamily: kFontFamily,
-                                        fontSize: 12.sp,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    actions: [
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          widget.onPressed!();
-                                          Navigator.of(context).popAndPushNamed(
-                                              ReportScreen.routeName);
-                                        },
-                                        child: Text(
-                                          'Report',
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  // color: kPrimaryTealColor,
+                                  border: Border.all(
+                                      color: _getCompletionRateColor(
+                                          _completionRate))),
+                              child: Padding(
+                                padding: EdgeInsets.all(9.sp),
+                                child: Text(
+                                  // (((widget.post.completedTask.length) * 100) /
+                                  //             (widget.post.toDoTask.length +
+                                  //                 widget.post.completedTask.length))
+                                  _completionRate.toString() + "%",
+                                  style: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontFamily: kFontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: _getCompletionRateColor(
+                                          _completionRate)),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            side: const BorderSide(
+                                                color: kPrimaryBlackColor),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        content: Text(
+                                          'Reporting will unfollow the user and the post will be sent to help@tevo.com.',
                                           style: TextStyle(
-                                              fontFamily: kFontFamily,
-                                              fontSize: 9.5.sp,
-                                              color: kPrimaryBlackColor),
+                                            fontFamily: kFontFamily,
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
-                                      ),
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          widget.onPressed!();
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          'Unfollow',
+                                        title: Text(
+                                          'Report or Unfollow',
                                           style: TextStyle(
-                                              fontFamily: kFontFamily,
-                                              fontSize: 9.5.sp,
-                                              color: kPrimaryBlackColor),
+                                            fontFamily: kFontFamily,
+                                            fontSize: 12.sp,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
-                          child: Text(
-                            'Following',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontFamily: kFontFamily,
-                                fontSize: 9.5.sp),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: kPrimaryBlackColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0)),
-                          ),
+                                        actions: [
+                                          OutlinedButton(
+                                            onPressed: () {
+                                              widget.onPressed!();
+                                              Navigator.of(context)
+                                                  .popAndPushNamed(
+                                                      ReportScreen.routeName);
+                                            },
+                                            child: Text(
+                                              'Report',
+                                              style: TextStyle(
+                                                  fontFamily: kFontFamily,
+                                                  fontSize: 9.5.sp,
+                                                  color: kPrimaryBlackColor),
+                                            ),
+                                          ),
+                                          OutlinedButton(
+                                            onPressed: () {
+                                              widget.onPressed!();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              'Unfollow',
+                                              style: TextStyle(
+                                                  fontFamily: kFontFamily,
+                                                  fontSize: 9.5.sp,
+                                                  color: kPrimaryBlackColor),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
+                              icon: Icon(FontAwesomeIcons.ellipsisVertical),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -226,24 +255,22 @@ class _PostViewState extends State<PostView> {
   }
 
   _buildTime(DateTime endOn) {
-    return Text.rich(
-      TextSpan(
-          text:
-              endOn.isAfter(DateTime.now()) ? "Will end on : " : "Ended on : ",
-          style: TextStyle(
-            fontFamily: kFontFamily,
-            fontSize: 7.sp,
-            fontWeight: FontWeight.w500,
-          ),
-          children: [
-            TextSpan(
-                text: DateFormat("hh:mm a MMMM dd").format(endOn),
-                style: TextStyle(
-                    fontFamily: kFontFamily,
-                    fontSize: 8.sp,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal))
-          ]),
+    String dateTime;
+    if (endOn.difference(DateTime.now()).inHours > 1) {
+      dateTime = endOn.difference(DateTime.now()).inHours.toString() + " hours";
+    } else {
+      dateTime =
+          endOn.difference(DateTime.now()).inMinutes.toString() + " minutes";
+    }
+    return Text(
+      endOn.isAfter(DateTime.now())
+          ? ("${dateTime} remaining")
+          : ("ended ${timeago.format(endOn)}"),
+      style: TextStyle(
+        fontFamily: kFontFamily,
+        fontSize: 7.sp,
+        fontWeight: FontWeight.w400,
+      ),
     );
   }
 
