@@ -165,6 +165,14 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
   }
 
+  _getCompletionRateColor(double completionRate) {
+    return completionRate == 100
+        ? kPrimaryVioletColor
+        : completionRate >= 78
+            ? kPrimaryTealColor
+            : (completionRate < 20 ? kPrimaryRedColor : kSecondaryYellowColor);
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -362,11 +370,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: Colors.grey[500]!, width: 3),
+                                color: _getCompletionRateColor(
+                                    (state.user.completed + state.user.todo) !=
+                                            0
+                                        ? (((state.user.completed) * 100) /
+                                            (state.user.completed +
+                                                state.user.todo))
+                                        : 0),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: Transform(
                                   alignment: FractionalOffset.center,
                                   transform: Matrix4.identity()
@@ -411,14 +424,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   Expanded(
                                                     flex: 3,
                                                     child: Text(
-                                                      (((state.user.completed) /
-                                                                      (state
-                                                                          .user
-                                                                          .todo)) *
-                                                                  100)
-                                                              .roundToDouble()
-                                                              .toString() +
-                                                          "%",
+                                                      (state.user.completed +
+                                                                  state.user
+                                                                      .todo) !=
+                                                              0
+                                                          ? (((state.user.completed) *
+                                                                          100) /
+                                                                      (state.user
+                                                                              .completed +
+                                                                          state
+                                                                              .user
+                                                                              .todo))
+                                                                  .toStringAsFixed(
+                                                                      1)
+                                                                  .toString() +
+                                                              "%"
+                                                          : "0 %",
                                                       style: TextStyle(
                                                           fontSize: 26.sp,
                                                           fontFamily:
@@ -426,7 +447,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           color:
-                                                              kPrimaryBlackColor),
+                                                              kPrimaryWhiteColor),
                                                     ),
                                                   ),
                                                   SizedBox(height: 8),
@@ -439,7 +460,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         fontWeight:
                                                             FontWeight.w400,
                                                         color:
-                                                            kPrimaryBlackColor),
+                                                            kPrimaryWhiteColor),
                                                   ),
                                                   Spacer(
                                                     flex: 1,

@@ -95,9 +95,9 @@ class _TaskTileState extends State<TaskTile> {
                 ? Text(
                     widget.task.description!,
                     style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: kFontFamily,
-                    ),
+                        color: kPrimaryBlackColor.withOpacity(0.8),
+                        fontFamily: kFontFamily,
+                        fontWeight: FontWeight.w300),
                   )
                 : SizedBox.shrink(),
           ],

@@ -215,7 +215,7 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
     setState(() {
       loading = false;
     });
-    Navigator.of(context).pushNamed(NavScreen.routeName);
+    Navigator.of(context).pushReplacementNamed(NavScreen.routeName);
   }
 
   _builLoadScreen() {

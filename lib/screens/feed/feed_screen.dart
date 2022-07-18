@@ -172,10 +172,14 @@ class _FeedScreenState extends State<FeedScreen> {
                                   arguments: ProfileScreenArgs(
                                       userId: SessionHelper.uid!));
                             },
-                            child: UserProfileImage(
-                              radius: 14,
-                              iconRadius: 45,
-                              profileImageUrl: SessionHelper.profileImageUrl!,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              child: UserProfileImage(
+                                radius: 14,
+                                iconRadius: 42,
+                                profileImageUrl: SessionHelper.profileImageUrl!,
+                              ),
                             ),
                           )),
                       BlocBuilder<InitializeStreamChatCubit,
@@ -332,7 +336,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         context.read<FeedBloc>().add(
                             FeedToUnfollowUser(unfollowUserId: post.author.id));
                         Fluttertoast.showToast(
-                          msg: "${post.author.username} Unfollowed",
+                          msg: "${post.author.username} unfollowed",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
                           backgroundColor: Colors.black54,

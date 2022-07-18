@@ -81,7 +81,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       children: [
                         SizedBox(height: 4.h),
                         Text(
-                          "okay, check your texts 💬 - we have sent you a security code",
+                          "okay, check your texts 💬 - we have sent you a security code!",
                           style: TextStyle(
                             fontFamily: kFontFamily,
                             fontSize: 16.sp,
