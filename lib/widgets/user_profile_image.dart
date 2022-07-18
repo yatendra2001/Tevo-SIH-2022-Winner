@@ -38,7 +38,7 @@ class UserProfileImage extends StatelessWidget {
                 : profileImageUrl.isNotEmpty
                     ? CachedNetworkImageProvider(profileImageUrl)
                     : null as ImageProvider,
-            fit: BoxFit.contain),
+            fit: BoxFit.cover),
       ),
     );
   }

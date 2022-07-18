@@ -365,7 +365,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
       centerTitle: false,
       pinned: true,
       elevation: 1,
-      toolbarHeight: 7.5.h,
+      toolbarHeight: 7.h,
       title: Text(
         "Today",
         style: TextStyle(
@@ -407,11 +407,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             Navigator.pushNamed(context, ProfileScreen.routeName,
                 arguments: ProfileScreenArgs(userId: SessionHelper.uid!));
           }),
-          child: Padding(
-            padding: const EdgeInsets.only(right: 16),
+          child: Container(
+            margin: EdgeInsets.only(right: 16),
             child: UserProfileImage(
               iconRadius: 45,
-              radius: 15,
+              radius: 18,
               profileImageUrl: SessionHelper.profileImageUrl!,
             ),
           ),

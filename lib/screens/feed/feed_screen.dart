@@ -164,7 +164,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         preferredSize: Size(double.infinity, 9.h)),
                     actions: [
                       Padding(
-                          padding: EdgeInsets.only(right: 16),
+                          padding: EdgeInsets.only(right: 0),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.of(context).pushNamed(
@@ -174,10 +174,10 @@ class _FeedScreenState extends State<FeedScreen> {
                             },
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 20.0),
+                                  const EdgeInsets.symmetric(vertical: 14.0),
                               child: UserProfileImage(
-                                radius: 14,
-                                iconRadius: 42,
+                                radius: 16,
+                                iconRadius: 50,
                                 profileImageUrl: SessionHelper.profileImageUrl!,
                               ),
                             ),
@@ -188,7 +188,7 @@ class _FeedScreenState extends State<FeedScreen> {
                           if (state is StreamChatInitializedState) {
                             return Padding(
                               padding: const EdgeInsets.only(
-                                  right: 8, top: 8, bottom: 8),
+                                  right: 8, top: 4, bottom: 4),
                               child: Stack(
                                 children: [
                                   if (SessionHelper.totalUnreadMessagesCount >
@@ -210,6 +210,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                   IconButton(
                                     icon: const Icon(
                                       Linecons.paper_plane,
+                                      size: 20,
                                       color: Colors.black54,
                                     ),
                                     onPressed: () {
