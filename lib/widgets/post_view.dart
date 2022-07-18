@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/elusive_icons.dart';
 import 'package:fluttericon/linearicons_free_icons.dart';
@@ -18,6 +19,7 @@ import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../screens/stream_chat/models/chat_type.dart';
 
@@ -47,19 +49,25 @@ class _PostViewState extends State<PostView> {
   late int _completionRate;
 
   _getCompletionRateColor(int completionRate) {
-    return completionRate >= 78
-        ? kPrimaryTealColor
-        : (completionRate < 20 ? kPrimaryRedColor : kSecondaryYellowColor);
+    return completionRate == 100
+        ? kPrimaryVioletColor
+        : completionRate >= 78
+            ? kPrimaryTealColor
+            : (completionRate < 20 ? kPrimaryRedColor : kSecondaryYellowColor);
   }
 
   @override
   void initState() {
     tasks = List.from(widget.post.completedTask);
     tasks!.addAll(List.from(widget.post.toDoTask));
-    _completionRate = (((widget.post.completedTask.length) * 100) /
-            (widget.post.toDoTask.length + widget.post.completedTask.length))
-        .roundToDouble()
-        .toInt();
+    _completionRate =
+        (widget.post.toDoTask.length + widget.post.completedTask.length) != 0
+            ? (((widget.post.completedTask.length) * 100) /
+                    (widget.post.toDoTask.length +
+                        widget.post.completedTask.length))
+                .roundToDouble()
+                .toInt()
+            : 0;
     super.initState();
   }
 
@@ -159,7 +167,7 @@ class _PostViewState extends State<PostView> {
                                             borderRadius:
                                                 BorderRadius.circular(8)),
                                         content: Text(
-                                          'Reporting will unfollow the user and the post will be sent to help@tevo.com.',
+                                          'Reporting will unfollow the user and the post will be sent to help.tevo@gmail.com.',
                                           style: TextStyle(
                                             fontFamily: kFontFamily,
                                             fontSize: 10.sp,
@@ -177,11 +185,18 @@ class _PostViewState extends State<PostView> {
                                         ),
                                         actions: [
                                           OutlinedButton(
-                                            onPressed: () {
-                                              widget.onPressed!();
-                                              Navigator.of(context)
-                                                  .popAndPushNamed(
-                                                      ReportScreen.routeName);
+                                            onPressed: () async {
+                                              const mailUrl =
+                                                  'mailto:help.tevo@gmail.com';
+                                              try {
+                                                await launchUrl(
+                                                    Uri.parse(mailUrl));
+                                              } catch (e) {
+                                                await Clipboard.setData(
+                                                    const ClipboardData(
+                                                        text:
+                                                            'help.tevo@gmail.com'));
+                                              }
                                             },
                                             child: Text(
                                               'Report',

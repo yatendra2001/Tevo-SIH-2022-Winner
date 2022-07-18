@@ -57,20 +57,28 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
-  Future<List<User>> getUsersByFollowers() async {
+  Future<List<User>> getUsersByFollowers(String userId) async {
+    final snap = await _firebaseFirestore
+        .collection(Paths.following)
+        .doc(userId)
+        .collection(Paths.userFollowing)
+        .get();
+
+    final list = snap.docs.map((val) => val.id).toList();
+
     final userSnap = await _firebaseFirestore
         .collection(Paths.users)
         .orderBy(Paths.followers, descending: true)
         .where("isPrivate", isEqualTo: false)
         .get();
     // log(SessionHelper.uid!);
-    log(SessionHelper.uid ?? " null hai value");
 
     final followersList =
         userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
     List<User> topFollowersList = [];
     for (var element in followersList) {
-      if (element.id != SessionHelper.uid) {
+      if (list.contains(element.id) == false &&
+          element.id != SessionHelper.uid) {
         topFollowersList.add(element);
       }
     }
@@ -146,15 +154,15 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
-  void followUser({
+  Future<void> followUser({
     required String userId,
     required String followUserId,
     required String? requestId,
-  }) {
+  }) async {
     log("han yeh bhi");
 
     // Add followUser to user's userFollowing.
-    _firebaseFirestore
+    await _firebaseFirestore
         .collection(Paths.following)
         .doc(userId)
         .collection(Paths.userFollowing)
@@ -162,7 +170,7 @@ class UserRepository extends BaseUserRepository {
         .set({});
 
     // Add user to followUser's userFollowers.
-    _firebaseFirestore
+    await _firebaseFirestore
         .collection(Paths.followers)
         .doc(followUserId)
         .collection(Paths.userFollowers)

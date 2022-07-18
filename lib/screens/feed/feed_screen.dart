@@ -123,9 +123,9 @@ class _FeedScreenState extends State<FeedScreen> {
                     bottom: PreferredSize(
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              right: 16, left: 16, bottom: 16),
+                              right: 16, left: 16, bottom: 10, top: 8),
                           child: SizedBox(
-                            height: 6.5.h,
+                            height: 6.8.h,
                             child: TextField(
                               onTap: () {
                                 Navigator.of(context).pushNamed(
@@ -172,10 +172,14 @@ class _FeedScreenState extends State<FeedScreen> {
                                   arguments: ProfileScreenArgs(
                                       userId: SessionHelper.uid!));
                             },
-                            child: UserProfileImage(
-                              radius: 15,
-                              iconRadius: 45,
-                              profileImageUrl: SessionHelper.profileImageUrl!,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              child: UserProfileImage(
+                                radius: 14,
+                                iconRadius: 42,
+                                profileImageUrl: SessionHelper.profileImageUrl!,
+                              ),
                             ),
                           )),
                       BlocBuilder<InitializeStreamChatCubit,
@@ -332,7 +336,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         context.read<FeedBloc>().add(
                             FeedToUnfollowUser(unfollowUserId: post.author.id));
                         Fluttertoast.showToast(
-                          msg: "${post.author.username} Unfollowed",
+                          msg: "${post.author.username} unfollowed",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
                           backgroundColor: Colors.black54,

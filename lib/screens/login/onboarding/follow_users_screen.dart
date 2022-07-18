@@ -1,20 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:tevo/models/user_model.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
-import 'package:tevo/screens/login/onboarding/dob_screen.dart';
-import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -27,7 +18,7 @@ class FollowUsersScreen extends StatefulWidget {
     return PageRouteBuilder(
         settings: const RouteSettings(name: routeName),
         transitionDuration: const Duration(seconds: 0),
-        pageBuilder: (context, _, __) => FollowUsersScreen());
+        pageBuilder: (context, _, __) => const FollowUsersScreen());
   }
 
   const FollowUsersScreen({
@@ -40,6 +31,7 @@ class FollowUsersScreen extends StatefulWidget {
 
 class _FollowUsersScreenState extends State<FollowUsersScreen> {
   List<bool> isFollowingList = [];
+  bool loading = false;
 
   @override
   void initState() {
@@ -65,138 +57,186 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
         log(isFollowingList.toString());
 
         return Scaffold(
-          body: state.topFollowersStatus == TopFollowersStatus.loading
-              ? Platform.isIOS
-                  ? const Center(child: CupertinoActivityIndicator())
-                  : const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 52, bottom: 16, right: 16, left: 16),
-                        child: Text(
-                          "Follow new friends to inspire from their daily progress",
-                          style: TextStyle(
-                              fontFamily: kFontFamily,
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: state.topFollowersAccount.length,
-                        padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 5.h),
-                        itemBuilder: (context, index) => Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8.0,
-                          ),
-                          child: ListTile(
-                            leading: UserProfileImage(
-                              iconRadius: 48,
-                              profileImageUrl: state
-                                  .topFollowersAccount[index].profileImageUrl,
-                              radius: 15,
-                            ),
-                            minLeadingWidth: 4,
-                            title: Text(
-                              state.topFollowersAccount[index].displayName,
+          body: loading
+              ? _builLoadScreen()
+              : state.topFollowersStatus == TopFollowersStatus.loading
+                  ? Platform.isIOS
+                      ? const Center(child: CupertinoActivityIndicator())
+                      : const Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 52, bottom: 16, right: 16, left: 16),
+                            child: Text(
+                              "Follow new friends to inspire from their daily progress",
                               style: TextStyle(
-                                fontFamily: kFontFamily,
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w500,
-                                color: kPrimaryBlackColor,
-                              ),
-                            ),
-                            subtitle: Text(
-                              "@" + state.topFollowersAccount[index].username,
-                              style: TextStyle(
-                                fontFamily: kFontFamily,
-                                fontSize: 9.sp,
-                                fontWeight: FontWeight.w400,
-                                color: kPrimaryBlackColor,
-                              ),
-                            ),
-                            trailing: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isFollowingList[index] =
-                                      isFollowingList[index] ? false : true;
-                                });
-                              },
-                              child: isFollowingList[index]
-                                  ? const Icon(Icons.check,
-                                      color: kPrimaryTealColor)
-                                  : const Icon(Icons.add,
-                                      color: kPrimaryBlackColor),
+                                  fontFamily: kFontFamily,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w500),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.topFollowersAccount.length,
+                            padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 5.h),
+                            itemBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                              ),
+                              child: ListTile(
+                                leading: UserProfileImage(
+                                  iconRadius: 48,
+                                  profileImageUrl: state
+                                      .topFollowersAccount[index]
+                                      .profileImageUrl,
+                                  radius: 15,
+                                ),
+                                minLeadingWidth: 4,
+                                title: Text(
+                                  state.topFollowersAccount[index].displayName,
+                                  style: TextStyle(
+                                    fontFamily: kFontFamily,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: kPrimaryBlackColor,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  "@" +
+                                      state.topFollowersAccount[index].username,
+                                  style: TextStyle(
+                                    fontFamily: kFontFamily,
+                                    fontSize: 9.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: kPrimaryBlackColor,
+                                  ),
+                                ),
+                                trailing: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isFollowingList[index] =
+                                          isFollowingList[index] ? false : true;
+                                    });
+                                  },
+                                  child: isFollowingList[index]
+                                      ? const Icon(Icons.check,
+                                          color: kPrimaryTealColor)
+                                      : const Icon(Icons.add,
+                                          color: kPrimaryBlackColor),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-          floatingActionButton: state.topFollowersStatus ==
-                  TopFollowersStatus.loading
-              ? SizedBox()
-              : Container(
-                  height: 13.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Theme.of(context)
-                            .scaffoldBackgroundColor
-                            .withOpacity(0.2),
-                        Theme.of(context).scaffoldBackgroundColor,
-                      ],
                     ),
-                  ),
-                  child: InkWell(
-                    splashColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      for (int i = 0;
-                          i < state.topFollowersAccount.length;
-                          i++) {
-                        if (isFollowingList[i]) {
-                          UserRepository().followUser(
-                              userId: SessionHelper.uid!,
-                              followUserId: state.topFollowersAccount[i].id,
-                              requestId: null);
-                        }
-                      }
-
-                      Navigator.of(context).pushNamed(NavScreen.routeName);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
+          floatingActionButton:
+              state.topFollowersStatus == TopFollowersStatus.loading
+                  ? const SizedBox()
+                  : Container(
+                      height: 13.h,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Colors.black,
-                      ),
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 140, vertical: 35),
-                      child: Text(
-                        "Follow ->",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12.sp,
-                          fontFamily: kFontFamily,
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Theme.of(context)
+                                .scaffoldBackgroundColor
+                                .withOpacity(0.2),
+                            Theme.of(context).scaffoldBackgroundColor,
+                          ],
                         ),
                       ),
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+                          if (loading == false) {
+                            followUser(state);
+                          }
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: loading ? Colors.black38 : Colors.black,
+                            ),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 140, vertical: 35),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Follow",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontFamily: kFontFamily,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                  size: 12,
+                                )
+                              ],
+                            )),
+                      ),
                     ),
-                  ),
-                ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
         );
       },
+    );
+  }
+
+  void followUser(LoginState state) async {
+    setState(() {
+      loading = true;
+    });
+    for (int i = 0; i < state.topFollowersAccount.length; i++) {
+      if (isFollowingList[i]) {
+        await UserRepository().followUser(
+            userId: SessionHelper.uid!,
+            followUserId: state.topFollowersAccount[i].id,
+            requestId: null);
+      }
+    }
+    setState(() {
+      loading = false;
+    });
+    Navigator.of(context).pushReplacementNamed(NavScreen.routeName);
+  }
+
+  _builLoadScreen() {
+    return Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Spacer(),
+          const LinearProgressIndicator(),
+          const SizedBox(
+            height: 16,
+          ),
+          Text(
+            'Please wait while we are setting up your profile',
+            style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w500),
+          ),
+          const Spacer()
+        ],
+      ),
     );
   }
 }

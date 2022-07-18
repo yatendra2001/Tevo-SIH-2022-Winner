@@ -67,8 +67,8 @@ class _FollowingScreenState extends State<FollowingScreen> {
         });
       } else if (isSearching == false && _textController.text.isNotEmpty) {
         for (var element in following) {
-          if (element.displayName.contains(_textController.text) ||
-              element.username.contains(_textController.text)) {
+          if (element.displayName.startsWith(_textController.text) ||
+              element.username.startsWith(_textController.text)) {
             if (searchResult.contains(element) == false) {
               searchResult.add(element);
             }

@@ -13,6 +13,7 @@ import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:tevo/screens/notifications/notifications_screen.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/flutter_toast.dart';
 
 import '../create_post/bloc/create_post_bloc.dart';
 import '../feed/bloc/feed_bloc.dart';
@@ -97,6 +98,17 @@ class NavScreen extends StatelessWidget {
       child: const NotificationsScreen(),
     ),
   };
+  DateTime? currentBackPressTime;
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      flutterToast(msg: 'press again to exit app');
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
 
   @override
   Widget build(BuildContext context) {
