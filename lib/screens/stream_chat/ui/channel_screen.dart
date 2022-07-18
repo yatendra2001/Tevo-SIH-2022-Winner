@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/extensions/string_extension.dart';
@@ -30,9 +31,10 @@ class ChannelScreen extends StatefulWidget {
   static const routeName = '/channel-screen';
 
   static Route route({required ChannelScreenArgs args}) {
-    return MaterialPageRoute(
+    return PageTransition(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => ChannelScreen(
+      type: PageTransitionType.rightToLeft,
+      child: ChannelScreen(
         user: args.user,
         channel: args.channel,
         chatType: args.chatType,

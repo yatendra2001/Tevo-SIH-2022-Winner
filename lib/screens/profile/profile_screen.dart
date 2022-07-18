@@ -194,7 +194,9 @@ class _ProfileScreenState extends State<ProfileScreen>
       },
       builder: (context, state) {
         return Scaffold(
-          body: _buildBody(state),
+          body: GestureDetector(
+              child: _buildBody(state),
+              onTap: () => FocusScope.of(context).unfocus()),
         );
       },
     );
@@ -319,27 +321,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                     )),
                                 TextButton(
-                                    onPressed: () {
-                                      context.read<AuthBloc>().add(
-                                          AuthLogoutRequested(
-                                              context: context));
-                                      context
-                                          .read<LoginCubit>()
-                                          .logoutRequested();
-                                      context
-                                          .read<LikedPostsCubit>()
-                                          .clearAllLikedPosts();
-                                      MyApp.navigatorKey.currentState!
-                                          .pushReplacementNamed(
-                                              LoginPageView.routeName);
-                                    },
-                                    child: Text(
-                                      "Yes",
-                                      style: TextStyle(
-                                          color: kPrimaryBlackColor,
-                                          fontFamily: kFontFamily,
-                                          fontSize: 8.5.sp),
-                                    )),
+                                  onPressed: () {
+                                    context.read<AuthBloc>().add(
+                                        AuthLogoutRequested(context: context));
+                                    context
+                                        .read<LoginCubit>()
+                                        .logoutRequested();
+                                    context
+                                        .read<LikedPostsCubit>()
+                                        .clearAllLikedPosts();
+                                    SessionHelperEmpty();
+                                    MyApp.navigatorKey.currentState!
+                                        .pushReplacementNamed(
+                                            LoginPageView.routeName);
+                                  },
+                                  child: Text(
+                                    "Yes",
+                                    style: TextStyle(
+                                        color: kPrimaryBlackColor,
+                                        fontFamily: kFontFamily,
+                                        fontSize: 8.5.sp),
+                                  ),
+                                ),
                               ],
                             ),
                           );

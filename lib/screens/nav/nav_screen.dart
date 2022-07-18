@@ -162,11 +162,11 @@ class NavScreen extends StatelessWidget {
           gap: 16, // the tab button gap between icon and text
           color: Colors.grey[800], // unselected icon color
           activeColor: kPrimaryWhiteColor, // selected icon and text color
-          iconSize: 28, // tab button icon size
+          iconSize: 24, // tab button icon size
           textSize: 32.sp,
           tabBackgroundColor:
               kPrimaryBlackColor, // selected tab background color
-          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
           selectedIndex: state.selectedItem == BottomNavItem.feed
               ? 0
               : state.selectedItem == BottomNavItem.create
@@ -176,17 +176,20 @@ class NavScreen extends StatelessWidget {
             GButton(
               icon: Icons.home_outlined,
               text: 'Home',
+              gap: 8,
               textStyle:
                   TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
             ),
             GButton(
               icon: Icons.add,
+              gap: 4,
               text: 'Create',
               textStyle:
                   TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
             ),
             GButton(
               icon: Icons.notifications_none_outlined,
+              gap: 4,
               text: 'Notification',
               textStyle:
                   TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),

@@ -25,7 +25,7 @@ class BackButton extends StatelessWidget {
       alignment: Alignment.center,
       icon: Icon(
         Icons.arrow_back_ios_new_outlined,
-        size: 19,
+        size: 22,
       ),
     );
   }

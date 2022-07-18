@@ -303,6 +303,21 @@ class _FeedScreenState extends State<FeedScreen> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 32,
+                      ),
+                      Center(
+                        child: Text(
+                          "Drag to reload",
+                          style: TextStyle(
+                              color: kPrimaryBlackColor.withOpacity(0.7),
+                              fontWeight: FontWeight.w500,
+                              fontFamily: kFontFamily,
+                              height: 1.5,
+                              fontSize: 8.sp),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ],
                   ),
                 )

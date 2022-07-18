@@ -28,19 +28,20 @@ class ListFollowersFollowing extends StatelessWidget {
     return SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 8),
         child: Column(
           children: [
             PreferredSize(
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 child: TextField(
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontFamily: kFontFamily,
-                      fontSize: 8.sp),
+                      fontSize: 10.sp),
                   controller: _textController,
                   decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(20),
                     focusColor: Colors.black,
                     fillColor: const Color(0xffF5F5F5),
                     filled: true,
@@ -52,12 +53,12 @@ class ListFollowersFollowing extends StatelessWidget {
                     enabledBorder: OutlineInputBorder(
                       borderSide:
                           const BorderSide(color: Colors.white, width: 1.0),
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(25.0),
                     ),
                     hintStyle: TextStyle(
                         fontWeight: FontWeight.normal,
                         fontFamily: kFontFamily,
-                        fontSize: 8.sp),
+                        fontSize: 10.sp),
                     hintText: 'Search Users @ John',
                     suffixIcon: IconButton(
                       icon: const Icon(
@@ -74,7 +75,7 @@ class ListFollowersFollowing extends StatelessWidget {
                   textAlignVertical: TextAlignVertical.center,
                 ),
               ),
-              preferredSize: Size(60, 60),
+              preferredSize: Size(0, 0),
             ),
             isLoading
                 ? Center(
@@ -110,25 +111,29 @@ class ListFollowersFollowing extends StatelessWidget {
                       )
                     : ListView.builder(
                         shrinkWrap: true,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            minVerticalPadding: 16,
                             onTap: () {
                               Navigator.of(context).pushNamed(
                                   ProfileScreen.routeName,
                                   arguments: ProfileScreenArgs(
                                       userId: followers[index].id));
                             },
-                            tileColor: Colors.grey[100],
+                            tileColor: Colors.white.withOpacity(0.8),
                             leading: UserProfileImage(
-                                iconRadius: 12,
+                                iconRadius: 40,
                                 radius: 12,
                                 profileImageUrl:
                                     followers[index].profileImageUrl),
                             title: Text(followers[index].displayName),
                             subtitle: Text("@ ${followers[index].username}"),
-                            trailing: Text("Following Button"),
                           ),
                         ),
                         itemCount: followers.length,

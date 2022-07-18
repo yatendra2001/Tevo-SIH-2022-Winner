@@ -8,6 +8,7 @@ import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/custom_appbar.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 
@@ -49,17 +50,7 @@ class EditProfileScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            'Edit Profile',
-            style: TextStyle(
-              color: kPrimaryBlackColor,
-              fontFamily: kFontFamily,
-              fontSize: 15.sp,
-            ),
-          ),
-        ),
+        appBar: customAppbar('Edit Profile'),
         body: BlocConsumer<EditProfileCubit, EditProfileState>(
           listener: (context, state) {
             if (state.status == EditProfileStatus.success) {
@@ -208,6 +199,7 @@ class EditProfileScreen extends StatelessWidget {
                           const SizedBox(height: 28.0),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(8),
                               primary: Theme.of(context).primaryColor,
                               textStyle: TextStyle(
                                 color: Colors.white,
@@ -223,7 +215,7 @@ class EditProfileScreen extends StatelessWidget {
                               style: TextStyle(
                                 color: kPrimaryWhiteColor,
                                 fontFamily: kFontFamily,
-                                fontSize: 9.5.sp,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ),
