@@ -34,15 +34,14 @@ class SplashScreen extends StatelessWidget {
             //Go to navigation screen
             BlocProvider.of<InitializeStreamChatCubit>(context)
                 .initializeStreamChat(context);
-            Navigator.of(context).pushReplacementNamed(
+            Navigator.of(context).pushNamed(
               NavScreen.routeName,
             );
           } else if (state.status == AuthStatus.authenticated &&
               state.isUserExist == false) {
             BlocProvider.of<InitializeStreamChatCubit>(context)
                 .initializeStreamChat(context);
-            Navigator.of(context)
-                .pushReplacementNamed(Onboardingpageview.routeName);
+            Navigator.of(context).pushNamed(Onboardingpageview.routeName);
           }
         },
         child: const Scaffold(

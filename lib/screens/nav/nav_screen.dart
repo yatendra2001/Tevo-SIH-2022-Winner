@@ -176,7 +176,7 @@ class NavScreen extends StatelessWidget {
             GButton(
               icon: Icons.home_outlined,
               text: 'Home',
-              gap: 8,
+              gap: 4,
               textStyle:
                   TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
             ),

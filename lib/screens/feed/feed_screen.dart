@@ -1,20 +1,27 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:sizer/sizer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/cubits/cubits.dart';
+import 'package:tevo/enums/bottom_nav_item.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
+import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/profile/followers_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/default_showcase_widget.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:fluttericon/linecons_icons.dart';
 
@@ -77,6 +84,7 @@ class _FeedScreenState extends State<FeedScreen> {
     super.dispose();
   }
 
+  BuildContext? myContext;
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<FeedBloc, FeedState>(
@@ -164,7 +172,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         preferredSize: Size(double.infinity, 9.h)),
                     actions: [
                       Padding(
-                          padding: EdgeInsets.only(right: 0),
+                          padding: EdgeInsets.only(right: 4),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.of(context).pushNamed(
@@ -177,7 +185,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                   const EdgeInsets.symmetric(vertical: 14.0),
                               child: UserProfileImage(
                                 radius: 16,
-                                iconRadius: 50,
+                                iconRadius: 42,
                                 profileImageUrl: SessionHelper.profileImageUrl!,
                               ),
                             ),
@@ -190,28 +198,32 @@ class _FeedScreenState extends State<FeedScreen> {
                               padding: const EdgeInsets.only(
                                   right: 8, top: 4, bottom: 4),
                               child: Stack(
+                                alignment: Alignment.center,
                                 children: [
                                   if (SessionHelper.totalUnreadMessagesCount >
                                       0)
-                                    Container(
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: kPrimaryBlackColor),
-                                      child: Text(
-                                        '${SessionHelper.totalUnreadMessagesCount}',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: kFontFamily,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600),
+                                    Positioned(
+                                      top: 5,
+                                      left: 5,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(5),
+                                        decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: kPrimaryBlackColor),
+                                        child: Text(
+                                          '${SessionHelper.totalUnreadMessagesCount}',
+                                          style: TextStyle(
+                                              color: kPrimaryWhiteColor,
+                                              fontFamily: kFontFamily,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
+                                        ),
                                       ),
                                     ),
                                   IconButton(
                                     icon: const Icon(
                                       Linecons.paper_plane,
-                                      size: 20,
-                                      color: Colors.black54,
+                                      color: kPrimaryBlackColor,
                                     ),
                                     onPressed: () {
                                       Navigator.pushNamed(

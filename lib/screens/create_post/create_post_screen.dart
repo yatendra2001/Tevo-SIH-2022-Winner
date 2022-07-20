@@ -3,13 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
+import 'package:fluttericon/entypo_icons.dart';
+import 'package:fluttericon/linecons_icons.dart';
+import 'package:fluttericon/typicons_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/screens/profile/profile_screen.dart';
 import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/default_showcase_widget.dart';
 import 'package:tevo/widgets/widgets.dart';
 import '../../models/models.dart';
 import 'bloc/create_post_bloc.dart';
@@ -30,7 +35,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
   final _taskTextEditingController = TextEditingController();
   final _descriptionTextEditingController = TextEditingController();
   final _focusNode = FocusNode();
-
+  final GlobalKey _one = GlobalKey();
+  final GlobalKey _two = GlobalKey();
+  final GlobalKey _three = GlobalKey();
+  final GlobalKey _four = GlobalKey();
+  final GlobalKey _five = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -38,89 +47,98 @@ class _CreatePostScreenState extends State<CreatePostScreen>
     bottomModalSheetController!.duration = const Duration(milliseconds: 300);
   }
 
+  BuildContext? myContext;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CreatePostBloc, CreatePostState>(
       builder: (context, state) {
-        return Scaffold(
-          body: DefaultTabController(
-            length: 2,
-            child: NestedScrollView(
-              controller: _controller,
-              clipBehavior: Clip.none,
-              headerSliverBuilder: (_, __) {
-                return [_buildAppBar()];
-              },
-              body: TabBarView(
-                children: [
-                  _buildRemaining(state),
-                  _buildCompleted(state),
-                ],
+        return ShowCaseWidget(
+          builder: Builder(builder: (context) {
+            myContext = context;
+            return Scaffold(
+              body: DefaultTabController(
+                length: 2,
+                child: NestedScrollView(
+                  controller: _controller,
+                  clipBehavior: Clip.none,
+                  headerSliverBuilder: (_, __) {
+                    return [_buildAppBar()];
+                  },
+                  body: TabBarView(
+                    children: [
+                      _buildRemaining(state),
+                      _buildCompleted(state),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-          floatingActionButton: state.post != null
-              ? Padding(
-                  padding: EdgeInsets.only(bottom: 10.h),
-                  child: FloatingActionButton(
-                      backgroundColor: kPrimaryBlackColor,
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  side: BorderSide(
-                                      color: kPrimaryBlackColor, width: 2.0),
-                                ),
-                                title: Text(
-                                  'Delete today\'s post?',
-                                  style: TextStyle(
-                                      color: kPrimaryBlackColor,
-                                      fontFamily: kFontFamily),
-                                ),
-                                content: Text(
-                                  'This will permanently delete all today\'s targets and can\'t be undone?',
-                                  style: TextStyle(
-                                      color:
-                                          kPrimaryBlackColor.withOpacity(0.6),
-                                      fontFamily: kFontFamily,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                actions: [
-                                  OutlinedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        color: kPrimaryBlackColor,
-                                        fontFamily: kFontFamily,
-                                      ),
+              floatingActionButton: state.post != null
+                  ? Padding(
+                      padding: EdgeInsets.only(bottom: 10.h),
+                      child: FloatingActionButton(
+                          backgroundColor: kPrimaryBlackColor,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      side: BorderSide(
+                                          color: kPrimaryBlackColor,
+                                          width: 2.0),
                                     ),
-                                  ),
-                                  OutlinedButton(
-                                    onPressed: () {
-                                      _buildDeletePost();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'Yes',
+                                    title: Text(
+                                      'Delete today\'s post?',
                                       style: TextStyle(
-                                        color: kPrimaryBlackColor,
-                                        fontFamily: kFontFamily,
-                                      ),
+                                          fontSize: 16.sp,
+                                          color: kPrimaryBlackColor,
+                                          fontFamily: kFontFamily),
                                     ),
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                      child: Icon(Icons.delete_outline_sharp)),
-                )
-              : null,
+                                    content: Text(
+                                      'This will permanently delete all today\'s targets and can\'t be undone?',
+                                      style: TextStyle(
+                                          fontSize: 11.sp,
+                                          color: kPrimaryBlackColor
+                                              .withOpacity(0.6),
+                                          fontFamily: kFontFamily,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    actions: [
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                            color: kPrimaryBlackColor,
+                                            fontFamily: kFontFamily,
+                                          ),
+                                        ),
+                                      ),
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          _buildDeletePost();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'Yes',
+                                          style: TextStyle(
+                                            color: kPrimaryBlackColor,
+                                            fontFamily: kFontFamily,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: Icon(Icons.delete_outline_sharp)),
+                    )
+                  : null,
+            );
+          }),
         );
       },
     );
@@ -158,10 +176,6 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // NeumorphicText(
-                    //   "Tasks",
-                    //   textStyle: NeumorphicTextStyle(fontSize: 18.sp),
-                    // ),
                     Text(
                       "Tasks",
                       style: TextStyle(
@@ -170,34 +184,6 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         fontFamily: kFontFamily,
                       ),
                     ),
-                    // NeumorphicButton(
-                    //   onPressed: () {
-                    //     _taskBottomSheet(onSubmit: (task) {
-                    //       context
-                    //           .read<CreatePostBloc>()
-                    //           .add(AddTaskEvent(task: task));
-                    //     });
-                    //     _scrollDown();
-                    //   },
-                    //   style: NeumorphicStyle(
-                    //     border: NeumorphicBorder(
-                    //       color: kPrimaryWhiteColor,
-                    //       width: 0.8,
-                    //     ),
-                    //     depth: 8,
-                    //     lightSource: LightSource.top,
-                    //     color: kPrimaryBlackColor,
-                    //     shape: NeumorphicShape.flat,
-                    //     boxShape: NeumorphicBoxShape.roundRect(
-                    //         BorderRadius.circular(5)),
-                    //   ),
-                    //   padding: EdgeInsets.symmetric(
-                    //       vertical: 1.5.h, horizontal: 4.w),
-                    //   child: const Text(
-                    //     'Add Task',
-                    //     style: TextStyle(color: Colors.white),
-                    //   ),
-                    // ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           primary: kPrimaryBlackColor,
@@ -213,12 +199,29 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         });
                         _scrollDown();
                       },
-                      child: Text(
-                        'Add Task',
-                        style: TextStyle(
-                          color: kPrimaryWhiteColor,
-                          fontSize: 10.sp,
-                          fontFamily: kFontFamily,
+                      child: DefaultShowcase(
+                        myKey: _two,
+                        disposeOnTap: true,
+                        title: "Add Todo ",
+                        description: "You can add your tasks here",
+                        onTap: () {
+                          return context.read<CreatePostBloc>().add(
+                                AddTaskEvent(
+                                  task: Task(
+                                      title: "Workout",
+                                      priority: 0,
+                                      dateTime: DateTime.now(),
+                                      description: "Hit the gym @5pm"),
+                                ),
+                              );
+                        },
+                        child: Text(
+                          'Add Task',
+                          style: TextStyle(
+                            color: kPrimaryWhiteColor,
+                            fontSize: 10.sp,
+                            fontFamily: kFontFamily,
+                          ),
                         ),
                       ),
                     )
@@ -365,7 +368,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
       centerTitle: false,
       pinned: true,
       elevation: 1,
-      toolbarHeight: 7.h,
+      toolbarHeight: 8.h,
       title: Text(
         "Today",
         style: TextStyle(
@@ -404,18 +407,36 @@ class _CreatePostScreenState extends State<CreatePostScreen>
       actions: [
         GestureDetector(
           onTap: (() {
+            WidgetsBinding.instance.addPostFrameCallback((_) =>
+                ShowCaseWidget.of(myContext!)
+                    .startShowCase([_two, _three, _four, _five]));
+          }),
+          child: Container(
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: kPrimaryBlackColor)),
+            child: const Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Typicons.info,
+                )),
+          ),
+        ),
+        const SizedBox(width: 8),
+        GestureDetector(
+          onTap: (() {
             Navigator.pushNamed(context, ProfileScreen.routeName,
                 arguments: ProfileScreenArgs(userId: SessionHelper.uid!));
           }),
-          child: Container(
-            margin: EdgeInsets.only(right: 16),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: UserProfileImage(
-              iconRadius: 45,
-              radius: 18,
+              radius: 16,
+              iconRadius: 42,
               profileImageUrl: SessionHelper.profileImageUrl!,
             ),
           ),
-        )
+        ),
       ],
     );
   }

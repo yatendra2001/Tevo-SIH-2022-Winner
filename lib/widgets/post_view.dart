@@ -47,13 +47,14 @@ class _PostViewState extends State<PostView> {
   List<Task>? tasks;
   final _commentTextController = TextEditingController();
   late int _completionRate;
+  late int _userCompletionRate;
 
   _getCompletionRateColor(int completionRate) {
-    return completionRate == 100
+    return completionRate >= 90
         ? kPrimaryVioletColor
-        : completionRate >= 78
+        : (completionRate >= 78
             ? kPrimaryTealColor
-            : (completionRate < 20 ? kPrimaryRedColor : kSecondaryYellowColor);
+            : (completionRate < 20 ? kPrimaryRedColor : kSecondaryYellowColor));
   }
 
   @override
@@ -68,6 +69,15 @@ class _PostViewState extends State<PostView> {
                 .roundToDouble()
                 .toInt()
             : 0;
+    _userCompletionRate =
+        (widget.post.author.completed + widget.post.author.todo) != 0
+            ? (((widget.post.author.completed) * 100) /
+                    (widget.post.author.completed + widget.post.author.todo))
+                .roundToDouble()
+                .toInt()
+            : 0;
+    print(
+        "${widget.post.author.displayName} complettion rate: $_userCompletionRate \n ${widget.post.author.todo} \n ");
     super.initState();
   }
 
@@ -79,7 +89,7 @@ class _PostViewState extends State<PostView> {
       // shape: RoundedRectangleBorder(
       //     borderRadius: BorderRadius.circular(4),
       //     side: const BorderSide(color: kPrimaryBlackColor)),
-      elevation: 0,
+      elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -107,11 +117,19 @@ class _PostViewState extends State<PostView> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: UserProfileImage(
-                                iconRadius: 42,
-                                radius: 14,
-                                profileImageUrl:
-                                    widget.post.author.profileImageUrl,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 1,
+                                        color: _getCompletionRateColor(
+                                            _userCompletionRate))),
+                                child: UserProfileImage(
+                                  iconRadius: 42,
+                                  radius: 14,
+                                  profileImageUrl:
+                                      widget.post.author.profileImageUrl,
+                                ),
                               ),
                             ),
                             Column(
