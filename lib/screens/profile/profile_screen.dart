@@ -9,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:rolling_switch/rolling_switch.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:tevo/blocs/blocs.dart';
@@ -25,6 +27,7 @@ import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/default_showcase_widget.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class ProfileScreenArgs {
@@ -34,6 +37,9 @@ class ProfileScreenArgs {
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
+  static const PREFERENCES_IS_FIRST_LAUNCH_STRING =
+      "PREFERENCES_IS_FIRST_LAUNCH_STRING";
+
   final String userId;
   const ProfileScreen({
     Key? key,
@@ -149,6 +155,25 @@ class _ProfileScreenState extends State<ProfileScreen>
         });
       }
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _isFirstLaunch().then((result) {
+        if (result) ShowCaseWidget.of(myContext!).startShowCase([_one]);
+      });
+    });
+  }
+
+  Future<bool> _isFirstLaunch() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    bool isFirstLaunch = sharedPreferences
+            .getBool(ProfileScreen.PREFERENCES_IS_FIRST_LAUNCH_STRING) ??
+        true;
+
+    if (isFirstLaunch) {
+      sharedPreferences.setBool(
+          ProfileScreen.PREFERENCES_IS_FIRST_LAUNCH_STRING, false);
+    }
+
+    return isFirstLaunch;
   }
 
   getfollowing() async {
@@ -166,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   _getCompletionRateColor(double completionRate) {
-    return completionRate == 100
+    return completionRate >= 100
         ? kPrimaryVioletColor
         : completionRate >= 78
             ? kPrimaryTealColor
@@ -181,6 +206,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     super.dispose();
   }
 
+  BuildContext? myContext;
+  final GlobalKey _one = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileBloc, ProfileState>(
@@ -194,9 +221,14 @@ class _ProfileScreenState extends State<ProfileScreen>
       },
       builder: (context, state) {
         return Scaffold(
-          body: GestureDetector(
-              child: _buildBody(state),
-              onTap: () => FocusScope.of(context).unfocus()),
+          body: ShowCaseWidget(
+            builder: Builder(builder: (context) {
+              myContext = context;
+              return GestureDetector(
+                  child: _buildBody(state),
+                  onTap: () => FocusScope.of(context).unfocus());
+            }),
+          ),
         );
       },
     );
@@ -401,11 +433,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         ? SizedBox(
                                             height: 100.sp,
                                             width: 100.sp,
-                                            child: UserProfileImage(
-                                              iconRadius: 35.sp,
-                                              radius: 35.sp,
-                                              profileImageUrl:
-                                                  state.user.profileImageUrl,
+                                            child: DefaultShowcase(
+                                              myKey: _one,
+                                              title: "Profile Image",
+                                              description:
+                                                  "Tap on this to find completion rate",
+                                              disposeOnTap: false,
+                                              onTap: () {
+                                                if (_animationStatus ==
+                                                    AnimationStatus.dismissed) {
+                                                  _animationController
+                                                      .forward();
+                                                } else {
+                                                  _animationController
+                                                      .reverse();
+                                                }
+                                              },
+                                              child: UserProfileImage(
+                                                iconRadius: 35.sp,
+                                                radius: 35.sp,
+                                                profileImageUrl:
+                                                    state.user.profileImageUrl,
+                                              ),
                                             ),
                                           )
                                         : Transform(
@@ -517,6 +566,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                         isFollowing: state.isFollowing,
                       ),
                     ),
+                    const SizedBox(
+                      height: 8,
+                    ),
                     // const SizedBox(
                     //   height: 16,
                     // ),
@@ -530,10 +582,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                     //   userId: widget.userId,
                     // ),
                     Container(
-                      height: 2.h,
+                      height: 1.h,
                       color: kPrimaryWhiteColor,
                       child: Container(
-                        height: 2.h,
+                        height: 1.h,
                         decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(50),
@@ -547,10 +599,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                       color: kPrimaryWhiteColor,
                     ),
                     Container(
-                      height: 2.h,
+                      height: 1.h,
                       color: kPrimaryWhiteColor,
                       child: Container(
-                          height: 2.h,
+                          height: 1.h,
                           decoration: BoxDecoration(
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(50),
@@ -649,7 +701,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ),
                           )
                         : Padding(
-                            padding: const EdgeInsets.only(top: 32.0),
+                            padding: const EdgeInsets.only(top: 0.0),
                             child: ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {

@@ -80,6 +80,7 @@ dependencies:
   rolling_switch: ^0.0.2
   url_launcher: ^6.1.5
   showcaseview: ^1.1.7
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
