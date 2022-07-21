@@ -148,7 +148,8 @@ class _FollowingScreenState extends State<FollowingScreen> {
                 ),
                 isLoading
                     ? Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                            color: kPrimaryBlackColor),
                       )
                     : isSearching == true
                         ? ListView.builder(

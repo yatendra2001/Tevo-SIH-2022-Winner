@@ -6,6 +6,7 @@ import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/profile/profile_screen.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/user_profile_image.dart';
 
 import '../../blocs/blocs.dart';
@@ -147,7 +148,8 @@ class _FollowerScreenState extends State<FollowerScreen> {
                 ),
                 isLoading
                     ? Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                            color: kPrimaryBlackColor),
                       )
                     : isSearching == true
                         ? ListView.builder(

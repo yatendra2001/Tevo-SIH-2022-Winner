@@ -69,8 +69,10 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
                 if (state.profilePhotoStatus == ProfilePhotoStatus.uploading) {
                   Center(
                       child: Platform.isIOS
-                          ? const CupertinoActivityIndicator()
-                          : const CircularProgressIndicator());
+                          ? const CupertinoActivityIndicator(
+                              color: kPrimaryBlackColor)
+                          : const CircularProgressIndicator(
+                              color: kPrimaryBlackColor));
                 }
               },
               child: GestureDetector(

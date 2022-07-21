@@ -15,6 +15,7 @@ import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/widgets.dart';
 
 class DobScreen extends StatefulWidget {
   final PageController pageController;
@@ -142,76 +143,82 @@ class _DobScreenState extends State<DobScreen> {
             StandardElevatedButton(
               labelText: "Continue →",
               onTap: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (context) => AlertDialog(
-                    backgroundColor: Colors.grey[50],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      // side: BorderSide(color: kPrimaryBlackColor, width: 2.0),
-                    ),
-                    title: Center(
-                      child: Text(
-                        "You're ${_ageController.text} years old. Is it correct?",
-                        style: TextStyle(
-                          fontFamily: kFontFamily,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: kPrimaryBlackColor,
+                final age = int.parse(_ageController.text);
+                if (age >= 13) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: Colors.grey[50],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        // side: BorderSide(color: kPrimaryBlackColor, width: 2.0),
+                      ),
+                      title: Center(
+                        child: Text(
+                          "You're ${_ageController.text} years old. Is it correct?",
+                          style: TextStyle(
+                            fontFamily: kFontFamily,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: kPrimaryBlackColor,
+                          ),
                         ),
                       ),
+                      actions: [
+                        OutlinedButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(
+                              "RE-ENTER AGE",
+                              style: TextStyle(
+                                  fontFamily: kFontFamily,
+                                  color: kPrimaryBlackColor,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w400),
+                            )),
+                        OutlinedButton(
+                            onPressed: () async {
+                              SessionHelper.age = _ageController.text;
+                              widget.pageController.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeIn);
+                              FocusScope.of(context).unfocus();
+                              Navigator.of(context).pop();
+                              await UserRepository().setUser(
+                                user: User(
+                                  id: SessionHelper.uid ?? "",
+                                  username: SessionHelper.username ?? "",
+                                  displayName: SessionHelper.displayName ?? "",
+                                  profileImageUrl:
+                                      SessionHelper.profileImageUrl ?? '',
+                                  age: SessionHelper.age ?? '',
+                                  phone: SessionHelper.phone ?? '',
+                                  followers: 0,
+                                  following: 0,
+                                  completed: SessionHelper.completed ?? 0,
+                                  todo: SessionHelper.todo ?? 0,
+                                  isPrivate: false,
+                                  bio: "",
+                                ),
+                              );
+                              BlocProvider.of<InitializeStreamChatCubit>(
+                                      context)
+                                  .initializeStreamChat(context);
+                            },
+                            child: Text(
+                              "YES, I'M ${_ageController.text}",
+                              style: TextStyle(
+                                  fontFamily: kFontFamily,
+                                  color: kPrimaryBlackColor,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w400),
+                            )),
+                      ],
                     ),
-                    actions: [
-                      OutlinedButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(
-                            "RE-ENTER AGE",
-                            style: TextStyle(
-                                fontFamily: kFontFamily,
-                                color: kPrimaryBlackColor,
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w400),
-                          )),
-                      OutlinedButton(
-                          onPressed: () async {
-                            SessionHelper.age = _ageController.text;
-                            widget.pageController.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeIn);
-                            FocusScope.of(context).unfocus();
-                            Navigator.of(context).pop();
-                            await UserRepository().setUser(
-                              user: User(
-                                id: SessionHelper.uid ?? "",
-                                username: SessionHelper.username ?? "",
-                                displayName: SessionHelper.displayName ?? "",
-                                profileImageUrl:
-                                    SessionHelper.profileImageUrl ?? '',
-                                age: SessionHelper.age ?? '',
-                                phone: SessionHelper.phone ?? '',
-                                followers: 0,
-                                following: 0,
-                                completed: SessionHelper.completed ?? 0,
-                                todo: SessionHelper.todo ?? 0,
-                                isPrivate: false,
-                                bio: "",
-                              ),
-                            );
-                            BlocProvider.of<InitializeStreamChatCubit>(context)
-                                .initializeStreamChat(context);
-                          },
-                          child: Text(
-                            "YES, I'M ${_ageController.text}",
-                            style: TextStyle(
-                                fontFamily: kFontFamily,
-                                color: kPrimaryBlackColor,
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w400),
-                          )),
-                    ],
-                  ),
-                );
+                  );
+                } else {
+                  flutterToast(msg: "sorry, below 13 not allowed");
+                }
               },
               isButtonNull: isButtonNotActive,
             ),

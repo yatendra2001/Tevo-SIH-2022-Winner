@@ -79,7 +79,7 @@ class ListFollowersFollowing extends StatelessWidget {
             ),
             isLoading
                 ? Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(color: kPrimaryBlackColor),
                   )
                 : isSearching == true
                     ? ListView.builder(

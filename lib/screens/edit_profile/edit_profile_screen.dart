@@ -68,15 +68,26 @@ class EditProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   if (state.status == EditProfileStatus.submitting)
-                    const LinearProgressIndicator(),
+                    const LinearProgressIndicator(
+                      color: kPrimaryBlackColor,
+                    ),
                   const SizedBox(height: 32.0),
                   GestureDetector(
                     onTap: () => _selectProfileImage(context),
-                    child: UserProfileImage(
-                      iconRadius: 80,
-                      radius: 80.0,
-                      profileImageUrl: user.profileImageUrl,
-                      profileImage: state.profileImage,
+                    child: Card(
+                      elevation: 3,
+                      shape: const CircleBorder(
+                          side:
+                              BorderSide(color: kPrimaryBlackColor, width: 3)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: UserProfileImage(
+                          iconRadius: 80,
+                          radius: 80.0,
+                          profileImageUrl: user.profileImageUrl,
+                          profileImage: state.profileImage,
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -91,6 +102,7 @@ class EditProfileScreen extends StatelessWidget {
                               color: kPrimaryBlackColor,
                               fontFamily: kFontFamily,
                               fontSize: 9.5.sp,
+                              fontWeight: FontWeight.bold,
                             ),
                             initialValue: user.username,
                             decoration: InputDecoration(
@@ -132,6 +144,7 @@ class EditProfileScreen extends StatelessWidget {
                               color: kPrimaryBlackColor,
                               fontFamily: kFontFamily,
                               fontSize: 9.5.sp,
+                              fontWeight: FontWeight.bold,
                             ),
                             initialValue: user.displayName,
                             decoration: InputDecoration(
@@ -167,6 +180,7 @@ class EditProfileScreen extends StatelessWidget {
                               color: kPrimaryBlackColor,
                               fontFamily: kFontFamily,
                               fontSize: 9.5.sp,
+                              fontWeight: FontWeight.bold,
                             ),
                             initialValue: user.bio,
                             maxLines: 3,

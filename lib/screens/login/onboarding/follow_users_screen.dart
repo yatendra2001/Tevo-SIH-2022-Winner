@@ -61,8 +61,12 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
               ? _builLoadScreen()
               : state.topFollowersStatus == TopFollowersStatus.loading
                   ? Platform.isIOS
-                      ? const Center(child: CupertinoActivityIndicator())
-                      : const Center(child: CircularProgressIndicator())
+                      ? const Center(
+                          child: CupertinoActivityIndicator(
+                              color: kPrimaryBlackColor))
+                      : const Center(
+                          child: CircularProgressIndicator(
+                              color: kPrimaryBlackColor))
                   : SingleChildScrollView(
                       child: Column(
                         children: [
@@ -88,6 +92,13 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                                 vertical: 8.0,
                               ),
                               child: ListTile(
+                                onTap: () {
+                                  setState(() {
+                                    isFollowingList[index] =
+                                        isFollowingList[index] ? false : true;
+                                  });
+                                },
+                                selectedTileColor: null,
                                 leading: UserProfileImage(
                                   iconRadius: 48,
                                   profileImageUrl: state
@@ -105,16 +116,19 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                                     color: kPrimaryBlackColor,
                                   ),
                                 ),
-                                subtitle: Text(
-                                  "@" +
-                                      state.topFollowersAccount[index].username,
-                                  style: TextStyle(
-                                    fontFamily: kFontFamily,
-                                    fontSize: 9.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: kPrimaryBlackColor,
-                                  ),
-                                ),
+                                subtitle: state.topFollowersAccount[index].bio
+                                        .isNotEmpty
+                                    ? Text(
+                                        state.topFollowersAccount[index].bio,
+                                        style: TextStyle(
+                                          fontFamily: kFontFamily,
+                                          fontSize: 7.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: kPrimaryBlackColor
+                                              .withOpacity(0.7),
+                                        ),
+                                      )
+                                    : null,
                                 trailing: GestureDetector(
                                   onTap: () {
                                     setState(() {
@@ -169,27 +183,13 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                             ),
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 140, vertical: 35),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Follow",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontFamily: kFontFamily,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                  size: 12,
-                                )
-                              ],
+                            child: Text(
+                              "Follow →",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12.sp,
+                                fontFamily: kFontFamily,
+                              ),
                             )),
                       ),
                     ),
@@ -226,7 +226,7 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          const LinearProgressIndicator(),
+          const LinearProgressIndicator(color: kPrimaryBlackColor),
           const SizedBox(
             height: 16,
           ),

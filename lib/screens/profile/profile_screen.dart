@@ -237,7 +237,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   Widget _buildBody(ProfileState state) {
     switch (state.status) {
       case ProfileStatus.loading:
-        return const Center(child: CircularProgressIndicator());
+        return const Center(
+            child: CircularProgressIndicator(color: kPrimaryBlackColor));
       default:
         return RefreshIndicator(
           onRefresh: () async {
@@ -281,8 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             message =
                                 state.user.isPrivate ? "Public" : "Private";
                           });
-                          Fluttertoast.showToast(
-                              msg: "Profile Updated: $message");
+                          flutterToast(msg: "Profile Updated: $message");
                         },
                         rollingInfoRight: RollingIconInfo(
                           icon: Icons.lock,
@@ -438,7 +438,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               title: "Profile Image",
                                               description:
                                                   "Tap on this to find completion rate",
-                                              disposeOnTap: false,
+                                              disposeOnTap: true,
                                               onTap: () {
                                                 if (_animationStatus ==
                                                     AnimationStatus.dismissed) {
@@ -450,8 +450,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 }
                                               },
                                               child: UserProfileImage(
-                                                iconRadius: 35.sp,
-                                                radius: 35.sp,
+                                                iconRadius: 38.sp,
+                                                radius: 38.sp,
                                                 profileImageUrl:
                                                     state.user.profileImageUrl,
                                               ),
@@ -663,7 +663,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               child: Column(
                                 children: [
                                   Text(
-                                    "Make your first post 🚀",
+                                    "Create your first post 🚀",
                                     style: TextStyle(
                                         color:
                                             kPrimaryBlackColor.withOpacity(0.7),

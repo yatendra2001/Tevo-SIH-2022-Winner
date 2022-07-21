@@ -129,7 +129,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 case SearchStatus.error:
                   return CenteredText(text: state.failure.message);
                 case SearchStatus.loading:
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child:
+                          CircularProgressIndicator(color: kPrimaryBlackColor));
                 case SearchStatus.loaded:
                   return state.users.isNotEmpty
                       ? ListView.builder(

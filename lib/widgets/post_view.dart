@@ -6,6 +6,7 @@ import 'package:fluttericon/elusive_icons.dart';
 import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:fluttericon/linecons_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/extensions/extensions.dart';
@@ -48,6 +49,7 @@ class _PostViewState extends State<PostView> {
   final _commentTextController = TextEditingController();
   late int _completionRate;
   late int _userCompletionRate;
+  bool isButtonActive = false;
 
   _getCompletionRateColor(int completionRate) {
     return completionRate >= 90
@@ -76,6 +78,12 @@ class _PostViewState extends State<PostView> {
                 .roundToDouble()
                 .toInt()
             : 0;
+
+    _commentTextController.addListener(() {
+      setState(() {
+        isButtonActive = _commentTextController.text.isNotEmpty;
+      });
+    });
     print(
         "${widget.post.author.displayName} complettion rate: $_userCompletionRate \n ${widget.post.author.todo} \n ");
     super.initState();
@@ -135,11 +143,18 @@ class _PostViewState extends State<PostView> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(widget.post.author.displayName,
-                                    style: TextStyle(
-                                        fontFamily: kFontFamily,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500)),
+                                Text(
+                                  widget.post.author.displayName,
+                                  style:
+                                      // GoogleFonts.roboto(
+                                      //   fontWeight: FontWeight.w400,
+                                      //   fontSize: 12.sp,
+                                      // ),
+                                      TextStyle(
+                                          fontFamily: kFontFamily,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w500),
+                                ),
                                 SizedBox(
                                   height: 1.5,
                                 ),
@@ -298,12 +313,12 @@ class _PostViewState extends State<PostView> {
     return Text(
       endOn.isAfter(DateTime.now())
           ? ("${dateTime} remaining")
-          : ("ended ${timeago.format(endOn)}"),
+          : ("closed ${timeago.format(endOn)}"),
       style: TextStyle(
-        fontFamily: kFontFamily,
-        fontSize: 7.sp,
-        fontWeight: FontWeight.w400,
-      ),
+          fontFamily: kFontFamily,
+          fontSize: 7.sp,
+          fontWeight: FontWeight.w300,
+          color: kPrimaryBlackColor.withOpacity(0.7)),
     );
   }
 
@@ -401,9 +416,14 @@ class _PostViewState extends State<PostView> {
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           IconButton(
-            icon: Icon(Icons.send),
+            icon: Center(
+              child: Icon(
+                Icons.send_rounded,
+                color: !isButtonActive ? Colors.grey : kPrimaryBlackColor,
+              ),
+            ),
             onPressed: () async {
               if (_commentTextController.text.trim().isNotEmpty) {
                 PostRepository().createComment(
