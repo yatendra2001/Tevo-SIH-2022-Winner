@@ -40,7 +40,8 @@ class NotificationsScreen extends StatelessWidget {
             case NotificationsStatus.error:
               return CenteredText(text: state.failure.message);
             case NotificationsStatus.loading:
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                  child: CircularProgressIndicator(color: kPrimaryBlackColor));
             case NotificationsStatus.loaded:
               return requestlist.isEmpty && notificationList.isEmpty
                   ? Center(
@@ -110,7 +111,8 @@ class NotificationsScreen extends StatelessWidget {
                       },
                     );
             default:
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                  child: CircularProgressIndicator(color: kPrimaryBlackColor));
           }
         },
       ),

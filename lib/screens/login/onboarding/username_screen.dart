@@ -132,10 +132,11 @@ class _UsernameScreenState extends State<UsernameScreen> {
                                       ),
                                     ),
                                     filled: true,
+                                    helperText: "*atleast 4 letters required",
                                     hintText: "username",
                                     hintStyle: TextStyle(
                                         fontFamily: kFontFamily,
-                                        fontSize: 12.sp,
+                                        fontSize: 10.sp,
                                         color: kPrimaryBlackColor,
                                         fontWeight: FontWeight.w400),
                                   ),

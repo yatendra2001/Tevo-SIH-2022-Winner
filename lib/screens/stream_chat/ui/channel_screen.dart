@@ -135,8 +135,12 @@ class _ChannelScreenState extends State<ChannelScreen> {
               Navigator.of(context).pushReplacementNamed(
                   ProfileScreen.routeName,
                   arguments: ProfileScreenArgs(
-                      userId: channel.extraData["u2id"].toString()));
+                      userId: SessionHelper.uid !=
+                              channel.extraData["u2id"].toString()
+                          ? channel.extraData["u2id"].toString()
+                          : channel.extraData["u1id"].toString()));
             },
+
             onBackPressed: () => Navigator.popUntil(context, (route) => false),
             actions: [
               if (channel.extraData['chat_type'] == ChatType.oneOnOne)

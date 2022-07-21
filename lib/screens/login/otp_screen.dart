@@ -129,7 +129,8 @@ class _OtpScreenState extends State<OtpScreen> {
                             child: (Platform.isIOS)
                                 ? const CupertinoActivityIndicator(
                                     color: kPrimaryBlackColor)
-                                : const CircularProgressIndicator(),
+                                : const CircularProgressIndicator(
+                                    color: kPrimaryBlackColor),
                           )
                         : StandardElevatedButton(
                             labelText: "Continue →",

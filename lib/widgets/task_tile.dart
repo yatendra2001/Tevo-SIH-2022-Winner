@@ -56,9 +56,9 @@ class _TaskTileState extends State<TaskTile> {
                   child: Text(
                     widget.task.title,
                     style: TextStyle(
-                      fontSize: 10.sp,
-                      fontFamily: kFontFamily,
-                    ),
+                        fontSize: 10.sp,
+                        fontFamily: kFontFamily,
+                        fontWeight: FontWeight.w500),
                   ),
                 ),
                 (widget.view == TaskTileView.createScreenView)
@@ -67,30 +67,31 @@ class _TaskTileState extends State<TaskTile> {
                         children: [
                           if (widget.isComplete == false)
                             IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: Icon(Icons.repeat),
+                              padding: const EdgeInsets.all(0),
+                              icon: const Icon(Icons.repeat),
                               onPressed: () {},
                             ),
                           if (widget.isComplete == false)
                             IconButton(
-                              padding: EdgeInsets.all(0),
-                              icon: Icon(Icons.edit),
+                              padding: const EdgeInsets.all(0),
+                              icon: const Icon(Icons.edit),
                               onPressed: widget.isEditing,
                             ),
                           IconButton(
-                            padding: EdgeInsets.all(0),
-                            icon: Icon(Icons.delete),
+                            padding: const EdgeInsets.all(0),
+                            icon: const Icon(Icons.delete),
                             onPressed: widget.isDeleted,
                           ),
                         ],
                       )
                     : widget.isComplete
-                        ? Icon(LineariconsFree.checkmark_cicle,
+                        ? const Icon(LineariconsFree.checkmark_cicle,
                             color: kPrimaryBlackColor)
-                        : Icon(Entypo.hourglass, color: kPrimaryBlackColor),
+                        : const Icon(Entypo.hourglass,
+                            color: kPrimaryBlackColor),
               ],
             ),
-            if (showDesc) SizedBox(height: 8),
+            if (showDesc) const SizedBox(height: 8),
             showDesc
                 ? Text(
                     widget.task.description!,

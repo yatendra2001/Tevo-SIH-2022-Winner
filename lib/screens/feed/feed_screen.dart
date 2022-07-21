@@ -172,7 +172,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         preferredSize: Size(double.infinity, 9.h)),
                     actions: [
                       Padding(
-                          padding: EdgeInsets.only(right: 4),
+                          padding: const EdgeInsets.only(right: 8),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.of(context).pushNamed(
@@ -266,7 +266,8 @@ class _FeedScreenState extends State<FeedScreen> {
   _buildBody(FeedState state) {
     switch (state.status) {
       case FeedStatus.loading:
-        return const Center(child: CircularProgressIndicator());
+        return const Center(
+            child: CircularProgressIndicator(color: kPrimaryBlackColor));
       default:
         return RefreshIndicator(
           onRefresh: () async {

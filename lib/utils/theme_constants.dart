@@ -18,4 +18,5 @@ class Palette {
   static const Color darkOrange = kPrimaryTealColor;
 }
 
-String kFontFamily = GoogleFonts.openSans().fontFamily!;
+String kFontFamily = GoogleFonts.roboto().fontFamily!;
+// GoogleFonts.roboto().fontFamily!;

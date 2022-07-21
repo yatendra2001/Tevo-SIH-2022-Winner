@@ -10,11 +10,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/screens/profile/profile_screen.dart';
 import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/default_showcase_widget.dart';
+import 'package:tevo/widgets/modal_bottom_sheet.dart';
 import 'package:tevo/widgets/widgets.dart';
 import '../../models/models.dart';
 import 'bloc/create_post_bloc.dart';
@@ -35,11 +37,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
   final _taskTextEditingController = TextEditingController();
   final _descriptionTextEditingController = TextEditingController();
   final _focusNode = FocusNode();
-  final GlobalKey _one = GlobalKey();
-  final GlobalKey _two = GlobalKey();
-  final GlobalKey _three = GlobalKey();
-  final GlobalKey _four = GlobalKey();
-  final GlobalKey _five = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -152,7 +150,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
     final todoTask = state.todoTask;
     return state.status == CreatePostStateStatus.loading
         ? Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: kPrimaryBlackColor),
           )
         : AnimatedPadding(
             duration: const Duration(seconds: 2),
@@ -196,32 +194,17 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                           context
                               .read<CreatePostBloc>()
                               .add(AddTaskEvent(task: task));
+                          print(
+                              "right now state length is : ${state.todoTask.length}");
                         });
                         _scrollDown();
                       },
-                      child: DefaultShowcase(
-                        myKey: _two,
-                        disposeOnTap: true,
-                        title: "Add Todo ",
-                        description: "You can add your tasks here",
-                        onTap: () {
-                          return context.read<CreatePostBloc>().add(
-                                AddTaskEvent(
-                                  task: Task(
-                                      title: "Workout",
-                                      priority: 0,
-                                      dateTime: DateTime.now(),
-                                      description: "Hit the gym @5pm"),
-                                ),
-                              );
-                        },
-                        child: Text(
-                          'Add Task',
-                          style: TextStyle(
-                            color: kPrimaryWhiteColor,
-                            fontSize: 10.sp,
-                            fontFamily: kFontFamily,
-                          ),
+                      child: Text(
+                        'Add Task',
+                        style: TextStyle(
+                          color: kPrimaryWhiteColor,
+                          fontSize: 10.sp,
+                          fontFamily: kFontFamily,
                         ),
                       ),
                     )
@@ -255,33 +238,47 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         child: ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (_, index) {
-                            return Dismissible(
-                              key: Key(todoTask[index].dateTime.toString()),
-                              onDismissed: (_) {
-                                context.read<CreatePostBloc>().add(
-                                    CompleteTaskEvent(task: todoTask[index]));
-                              },
-                              child: TaskTile(
-                                isComplete: false,
-                                view: TaskTileView.createScreenView,
-                                isEditing: () {
-                                  _taskBottomSheet(
-                                    onSubmit: (task) {
+                            return index == 0
+                                ? TaskTile(
+                                    view: TaskTileView.createScreenView,
+                                    isEditing: () {},
+                                    task: state.completedTask[index],
+                                    isComplete: true,
+                                    isDeleted: () => context
+                                        .read<CreatePostBloc>()
+                                        .add(DeleteTaskEvent(
+                                            task: state.completedTask[index])),
+                                  )
+                                : Dismissible(
+                                    key: Key(
+                                        todoTask[index].dateTime.toString()),
+                                    onDismissed: (_) {
                                       context.read<CreatePostBloc>().add(
-                                          UpdateTask(task: task, index: index));
+                                          CompleteTaskEvent(
+                                              task: todoTask[index]));
                                     },
-                                    task: todoTask[index],
+                                    child: TaskTile(
+                                      isComplete: false,
+                                      view: TaskTileView.createScreenView,
+                                      isEditing: () {
+                                        _taskBottomSheet(
+                                          onSubmit: (task) {
+                                            context.read<CreatePostBloc>().add(
+                                                UpdateTask(
+                                                    task: task, index: index));
+                                          },
+                                          task: todoTask[index],
+                                        );
+                                      },
+                                      task: todoTask[index],
+                                      isDeleted: () =>
+                                          context.read<CreatePostBloc>().add(
+                                                DeleteTaskEvent(
+                                                  task: state.todoTask[index],
+                                                ),
+                                              ),
+                                    ),
                                   );
-                                },
-                                task: todoTask[index],
-                                isDeleted: () =>
-                                    context.read<CreatePostBloc>().add(
-                                          DeleteTaskEvent(
-                                            task: state.todoTask[index],
-                                          ),
-                                        ),
-                              ),
-                            );
                           },
                           itemCount: todoTask.length,
                         ),
@@ -294,7 +291,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
   _buildCompleted(CreatePostState state) {
     return state.status == CreatePostStateStatus.loading
         ? Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: kPrimaryBlackColor),
           )
         : Padding(
             padding: const EdgeInsets.all(16.0),
@@ -397,20 +394,138 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               color: kPrimaryBlackColor,
               fontSize: 13.sp,
               fontFamily: kFontFamily,
-              height: 1,
-              letterSpacing: 0,
               fontWeight: FontWeight.w500,
             ),
           ),
         ),
       ]),
       actions: [
-        GestureDetector(
-          onTap: (() {
-            WidgetsBinding.instance.addPostFrameCallback((_) =>
-                ShowCaseWidget.of(myContext!)
-                    .startShowCase([_two, _three, _four, _five]));
+        TextButton(
+          onPressed: (() {
+            customBottomSheet(
+              context,
+              Padding(
+                padding: const EdgeInsets.only(
+                    right: 16.0, left: 16.0, bottom: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(
+                      indent: 38.w,
+                      endIndent: 38.w,
+                      thickness: 2,
+                      color: kPrimaryBlackColor,
+                    ),
+                    const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Guide To Create Post",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 15.5.sp,
+                            color: kPrimaryBlackColor,
+                            fontFamily: kFontFamily,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    Text(
+                      "• Tap on add task button to create tasks",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Once you have created your first task, Tevo will start your 24 hour cycle",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          fontWeight: FontWeight.bold,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Meanwhile you can add as many tasks as you want to complete in this time frame",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Swipe task left or right to mark it as complete",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Once you swipe your task, it will be shifted to completed section and gets reflected on your post view",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• You can edit, delete or even make it a recurring task by tapping appropriate icon buttons present on task tile",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• If needed, You can delete the entire post by tapping on the floating delete button",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Higher the number of completed tasks, Higher the completion rate 🚀",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 32),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Transform.scale(
+                          scale: 0.9,
+                          child: StandardElevatedButton(
+                              labelText: "Request Feature", onTap: () {}),
+                        ),
+                        Transform.scale(
+                          scale: 0.9,
+                          child: StandardElevatedButton(
+                              labelText: "Report Bug", onTap: () {}),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
           }),
+          style: TextButton.styleFrom(primary: kPrimaryBlackColor),
           child: Container(
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -419,6 +534,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                 padding: const EdgeInsets.all(8.0),
                 child: Icon(
                   Typicons.info,
+                  color: kPrimaryBlackColor,
                 )),
           ),
         ),
@@ -552,7 +668,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               child: IconButton(
                 onPressed: () {
                   if (_taskTextEditingController.text.isEmpty) {
-                    Fluttertoast.showToast(msg: "Title cannont be empty.");
+                    flutterToast(msg: "Title cannont be empty.");
                   } else {
                     onSubmit(
                       Task(

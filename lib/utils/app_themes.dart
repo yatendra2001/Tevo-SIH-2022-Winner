@@ -8,7 +8,7 @@ import 'theme_constants.dart';
 class AppThemes {
   AppThemes._();
   static final ThemeData lightTheme = ThemeData(
-    fontFamily: GoogleFonts.montserrat().fontFamily,
+    fontFamily: GoogleFonts.roboto().fontFamily,
     brightness: Brightness.light,
   ).copyWith(
     primaryColor: kPrimaryBlackColor,

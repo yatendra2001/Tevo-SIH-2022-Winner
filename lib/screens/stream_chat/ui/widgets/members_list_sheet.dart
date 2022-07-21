@@ -79,8 +79,10 @@ class _MembersListSheetState extends State<MembersListSheet> {
                     }
                     return Center(
                         child: (Platform.isIOS)
-                            ? CupertinoActivityIndicator()
-                            : CircularProgressIndicator());
+                            ? CupertinoActivityIndicator(
+                                color: kPrimaryBlackColor)
+                            : CircularProgressIndicator(
+                                color: kPrimaryBlackColor));
                   }),
             ),
           ],

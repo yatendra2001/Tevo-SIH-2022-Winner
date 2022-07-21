@@ -9,6 +9,7 @@ import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class CommentsScreenArgs {
   final Post post;
@@ -71,7 +72,11 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
               title: Text(
                 'Comments',
-                style: TextStyle(color: kPrimaryBlackColor, fontSize: 15.sp,fontFamily: kFontFamily,),
+                style: TextStyle(
+                  color: kPrimaryBlackColor,
+                  fontSize: 15.sp,
+                  fontFamily: kFontFamily,
+                ),
               ),
               bottom: PreferredSize(
                 child: Padding(
@@ -86,12 +91,15 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             child: TextField(
                               controller: _commentController,
                               style: TextStyle(
-                                  fontSize: 12.sp, fontWeight: FontWeight.w400,fontFamily: kFontFamily,),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: kFontFamily,
+                              ),
                               textCapitalization: TextCapitalization.sentences,
                               decoration: InputDecoration.collapsed(
                                 hintText: 'Write a comment...',
                                 hintStyle: TextStyle(
-                                  fontFamily: kFontFamily,
+                                    fontFamily: kFontFamily,
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -112,7 +120,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
                         ],
                       ),
                       if (state.status == CommentsStatus.submitting)
-                        const LinearProgressIndicator(),
+                        const LinearProgressIndicator(
+                            color: kPrimaryBlackColor),
                     ],
                   ),
                 ),
@@ -120,7 +129,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
             ),
             body: state.status == CommentsStatus.loading
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(
+                    color: kPrimaryBlackColor,
+                  )
                 : ListView.builder(
                     padding: const EdgeInsets.only(bottom: 60.0),
                     itemCount: state.comments.length,
@@ -138,21 +149,27 @@ class _CommentsScreenState extends State<CommentsScreen> {
                               TextSpan(
                                 text: comment.author.displayName.split(" ")[0],
                                 style: TextStyle(
-                                    fontSize: 9.sp,
-                                    fontWeight: FontWeight.w600,fontFamily: kFontFamily,),
+                                  fontSize: 9.sp,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: kFontFamily,
+                                ),
                               ),
                               TextSpan(
-                                  text: " : " + comment.content,
-                                  style: TextStyle(
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w400,fontFamily: kFontFamily,),),
+                                text: " : " + comment.content,
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: kFontFamily,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         subtitle: Text(
-                          DateFormat.yMd().add_jm().format(comment.date),
+                          timeago.format(comment.date),
                           style: TextStyle(
-                            color: Colors.grey[600],fontFamily: kFontFamily,
+                            color: Colors.grey[600],
+                            fontFamily: kFontFamily,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
