@@ -238,49 +238,35 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         child: ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (_, index) {
-                            return index == 0
-                                ? TaskTile(
-                                    view: TaskTileView.createScreenView,
-                                    isEditing: () {},
-                                    task: state.completedTask[index],
-                                    isComplete: true,
-                                    isDeleted: () => context
-                                        .read<CreatePostBloc>()
-                                        .add(DeleteTaskEvent(
-                                            task: state.completedTask[index])),
-                                  )
-                                : Dismissible(
-                                    key: Key(
-                                        todoTask[index].dateTime.toString()),
-                                    onDismissed: (_) {
+                            return Dismissible(
+                              key: Key(todoTask[index].dateTime.toString()),
+                              onDismissed: (_) {
+                                context.read<CreatePostBloc>().add(
+                                    CompleteTaskEvent(task: todoTask[index]));
+                              },
+                              child: TaskTile(
+                                isComplete: false,
+                                view: TaskTileView.createScreenView,
+                                isEditing: () {
+                                  _taskBottomSheet(
+                                    onSubmit: (task) {
                                       context.read<CreatePostBloc>().add(
-                                          CompleteTaskEvent(
-                                              task: todoTask[index]));
+                                          UpdateTask(task: task, index: index));
                                     },
-                                    child: TaskTile(
-                                      isComplete: false,
-                                      view: TaskTileView.createScreenView,
-                                      isEditing: () {
-                                        _taskBottomSheet(
-                                          onSubmit: (task) {
-                                            context.read<CreatePostBloc>().add(
-                                                UpdateTask(
-                                                    task: task, index: index));
-                                          },
-                                          task: todoTask[index],
-                                        );
-                                      },
-                                      task: todoTask[index],
-                                      isDeleted: () =>
-                                          context.read<CreatePostBloc>().add(
-                                                DeleteTaskEvent(
-                                                  task: state.todoTask[index],
-                                                ),
-                                              ),
-                                    ),
+                                    task: todoTask[index],
                                   );
+                                },
+                                task: todoTask[index],
+                                isDeleted: () =>
+                                    context.read<CreatePostBloc>().add(
+                                          DeleteTaskEvent(
+                                            task: state.todoTask[index],
+                                          ),
+                                        ),
+                              ),
+                            );
                           },
-                          itemCount: todoTask.length,
+                          itemCount: state.todoTask.length,
                         ),
                       ),
               ],
