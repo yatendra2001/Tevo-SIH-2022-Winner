@@ -71,7 +71,7 @@ class _LikesScreenState extends State<LikesScreen> {
                   child: Text(
                     "No Likes Yet",
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 12.sp,
                       fontFamily: kFontFamily,
                       color: kPrimaryBlackColor.withOpacity(0.5),
                     ),

@@ -150,8 +150,8 @@ class PostRepository extends BasePostRepository {
           .collection(Paths.feeds)
           .doc(userId)
           .collection(Paths.userFeed)
-          .orderBy('enddate')
-          .limit(3)
+          .orderBy('enddate', descending: true)
+          .limit(8)
           .get();
     } else {
       final lastPostDoc = await _firebaseFirestore
@@ -171,7 +171,7 @@ class PostRepository extends BasePostRepository {
           .collection(Paths.userFeed)
           .where('enddate')
           .startAfterDocument(lastPostDoc)
-          .limit(3)
+          .limit(8)
           .get();
     }
 

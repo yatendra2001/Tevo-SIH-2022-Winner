@@ -149,8 +149,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
                               TextSpan(
                                 text: comment.author.displayName.split(" ")[0],
                                 style: TextStyle(
-                                  fontSize: 9.sp,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w500,
                                   fontFamily: kFontFamily,
                                 ),
                               ),

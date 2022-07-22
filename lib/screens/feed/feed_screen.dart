@@ -289,6 +289,7 @@ class _FeedScreenState extends State<FeedScreen> {
         );
       default:
         return RefreshIndicator(
+          color: kPrimaryBlackColor,
           onRefresh: () async {
             context.read<FeedBloc>().add(FeedFetchPosts());
             context.read<LikedPostsCubit>().clearAllLikedPosts();
