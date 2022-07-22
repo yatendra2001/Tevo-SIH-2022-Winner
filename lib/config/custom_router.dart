@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tevo/screens/likes_screen.dart';
 import 'package:tevo/screens/login/onboarding/add_profile_photo_screen.dart';
 import 'package:tevo/screens/login/onboarding/dob_screen.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
@@ -59,6 +60,11 @@ class CustomRouter {
         );
       case StreamChatInbox.routeName:
         return StreamChatInbox.route();
+
+      case LikesScreen.routeName:
+        return LikesScreen.route(
+          args: settings.arguments as LikesScreenArgs,
+        );
 
       case FollowUsersScreen.routeName:
         return FollowUsersScreen.route();

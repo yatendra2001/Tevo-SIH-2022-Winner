@@ -332,4 +332,33 @@ class UserRepository extends BaseUserRepository {
         .doc(userId)
         .update({"completed": FieldValue.increment(value)});
   }
+
+  Future<List<User>> postLikeUsers(String postId) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.likes)
+        .doc(postId)
+        .collection(Paths.postLikes)
+        .get();
+    List<User> likeUsers = [];
+    for (var element in userSnap.docs) {
+      final user = await getUserWithId(userId: element.id);
+      likeUsers.add(user);
+    }
+    return likeUsers;
+  }
+
+  Future<User?> postOneLikeUser(String postId) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.likes)
+        .doc(postId)
+        .collection(Paths.postLikes)
+        .get();
+    User? likeUser;
+    for (var element in userSnap.docs) {
+      final user = await getUserWithId(userId: element.id);
+      likeUser = user;
+      break;
+    }
+    return likeUser;
+  }
 }

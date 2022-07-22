@@ -109,153 +109,161 @@ class _FeedScreenState extends State<FeedScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
             backgroundColor: Colors.white70,
-            body: NestedScrollView(
-              clipBehavior: Clip.none,
-              controller: _scrollController,
-              headerSliverBuilder: (_, __) {
-                return [
-                  SliverAppBar(
-                    floating: true,
-                    snap: true,
-                    automaticallyImplyLeading: false,
-                    centerTitle: false,
-                    pinned: true,
-                    elevation: 2,
-                    toolbarHeight: 9.h,
-                    title: Text("TEVO",
-                        style: TextStyle(
-                          fontSize: 24.sp,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: kFontFamily,
-                        )),
-                    bottom: PreferredSize(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              right: 16, left: 16, bottom: 10, top: 8),
-                          child: SizedBox(
-                            height: 6.8.h,
-                            child: TextField(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    SearchScreen.routeName,
-                                    arguments: SearchScreenArgs(
-                                        type: SearchScreenType.profile));
-                              },
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                fillColor: const Color(0xffF5F5F5),
-                                filled: true,
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.white, width: 1.0),
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.white, width: 1.0),
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                hintText: 'Search for accounts',
-                                hintStyle: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontFamily: kFontFamily,
-                                    fontSize: 11.sp),
-                                suffixIcon: const Icon(
-                                  Icons.search,
-                                  color: Colors.black38,
-                                  size: 30,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        preferredSize: Size(double.infinity, 9.h)),
-                    actions: [
-                      Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  ProfileScreen.routeName,
-                                  arguments: ProfileScreenArgs(
-                                      userId: SessionHelper.uid!));
-                            },
+            body: SingleChildScrollView(
+              child: SizedBox(
+                height: 100.h,
+                child: NestedScrollView(
+                  clipBehavior: Clip.none,
+                  controller: _scrollController,
+                  physics: NeverScrollableScrollPhysics(),
+                  headerSliverBuilder: (_, __) {
+                    return [
+                      SliverAppBar(
+                        floating: true,
+                        snap: true,
+                        automaticallyImplyLeading: false,
+                        centerTitle: false,
+                        pinned: true,
+                        elevation: 2,
+                        toolbarHeight: 9.h,
+                        title: Text("TEVO",
+                            style: TextStyle(
+                              fontSize: 24.sp,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: kFontFamily,
+                            )),
+                        bottom: PreferredSize(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 14.0),
-                              child: UserProfileImage(
-                                radius: 16,
-                                iconRadius: 42,
-                                profileImageUrl: SessionHelper.profileImageUrl!,
-                              ),
-                            ),
-                          )),
-                      BlocBuilder<InitializeStreamChatCubit,
-                          InitializeStreamChatState>(
-                        builder: (context, state) {
-                          if (state is StreamChatInitializedState) {
-                            return Padding(
                               padding: const EdgeInsets.only(
-                                  right: 8, top: 4, bottom: 4),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  if (SessionHelper.totalUnreadMessagesCount >
-                                      0)
-                                    Positioned(
-                                      top: 5,
-                                      left: 5,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(5),
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: kPrimaryBlackColor),
-                                        child: Text(
-                                          '${SessionHelper.totalUnreadMessagesCount}',
-                                          style: TextStyle(
-                                              color: kPrimaryWhiteColor,
-                                              fontFamily: kFontFamily,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
+                                  right: 16, left: 16, bottom: 10, top: 8),
+                              child: SizedBox(
+                                height: 6.8.h,
+                                child: TextField(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        SearchScreen.routeName,
+                                        arguments: SearchScreenArgs(
+                                            type: SearchScreenType.profile));
+                                  },
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    fillColor: const Color(0xffF5F5F5),
+                                    filled: true,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: Colors.white, width: 1.0),
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Linecons.paper_plane,
-                                      color: kPrimaryBlackColor,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: Colors.white, width: 1.0),
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, StreamChatInbox.routeName);
-                                    },
+                                    hintText: 'Search for accounts',
+                                    hintStyle: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: kFontFamily,
+                                        fontSize: 11.sp),
+                                    suffixIcon: const Icon(
+                                      Icons.search,
+                                      color: Colors.black38,
+                                      size: 30,
+                                    ),
                                   ),
-                                ],
+                                ),
                               ),
-                            );
-                          }
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: IconButton(
-                              icon: const Icon(
-                                Linecons.paper_plane,
-                                color: kPrimaryBlackColor,
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, StreamChatInbox.routeName);
-                              },
                             ),
-                          );
-                        },
+                            preferredSize: Size(double.infinity, 9.h)),
+                        actions: [
+                          Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                      ProfileScreen.routeName,
+                                      arguments: ProfileScreenArgs(
+                                          userId: SessionHelper.uid!));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 14.0),
+                                  child: UserProfileImage(
+                                    radius: 16,
+                                    iconRadius: 42,
+                                    profileImageUrl:
+                                        SessionHelper.profileImageUrl!,
+                                  ),
+                                ),
+                              )),
+                          BlocBuilder<InitializeStreamChatCubit,
+                              InitializeStreamChatState>(
+                            builder: (context, state) {
+                              if (state is StreamChatInitializedState) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8, top: 4, bottom: 4),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      if (SessionHelper
+                                              .totalUnreadMessagesCount >
+                                          0)
+                                        Positioned(
+                                          top: 5,
+                                          left: 5,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(5),
+                                            decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: kPrimaryBlackColor),
+                                            child: Text(
+                                              '${SessionHelper.totalUnreadMessagesCount}',
+                                              style: TextStyle(
+                                                  color: kPrimaryWhiteColor,
+                                                  fontFamily: kFontFamily,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Linecons.paper_plane,
+                                          color: kPrimaryBlackColor,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pushNamed(context,
+                                              StreamChatInbox.routeName);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Linecons.paper_plane,
+                                    color: kPrimaryBlackColor,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, StreamChatInbox.routeName);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ];
-              },
-              body: _buildBody(state),
-              floatHeaderSlivers: true,
+                    ];
+                  },
+                  body: _buildBody(state),
+                  floatHeaderSlivers: true,
+                ),
+              ),
             ),
           ),
         );
@@ -266,8 +274,19 @@ class _FeedScreenState extends State<FeedScreen> {
   _buildBody(FeedState state) {
     switch (state.status) {
       case FeedStatus.loading:
-        return const Center(
-            child: CircularProgressIndicator(color: kPrimaryBlackColor));
+        return Column(
+          children: [
+            Spacer(
+              flex: 2,
+            ),
+            Center(
+              child: CircularProgressIndicator(color: kPrimaryBlackColor),
+            ),
+            Spacer(
+              flex: 3,
+            )
+          ],
+        );
       default:
         return RefreshIndicator(
           onRefresh: () async {

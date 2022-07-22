@@ -13,6 +13,11 @@ class AppThemes {
   ).copyWith(
     primaryColor: kPrimaryBlackColor,
     scaffoldBackgroundColor: Colors.grey[50],
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: kPrimaryBlackColor,
+      selectionColor: kPrimaryBlackColor,
+      selectionHandleColor: kPrimaryBlackColor,
+    ),
     textTheme: TextTheme(
       displayLarge: ThemeData.light()
           .textTheme
