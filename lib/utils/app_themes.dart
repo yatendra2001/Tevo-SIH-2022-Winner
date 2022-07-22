@@ -55,6 +55,7 @@ class AppThemes {
         ),
       ).headline6,
     ),
+    accentColor: Colors.black,
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
 }

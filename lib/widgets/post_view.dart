@@ -202,7 +202,7 @@ class _PostViewState extends State<PostView> {
                                             side: const BorderSide(
                                                 color: kPrimaryBlackColor),
                                             borderRadius:
-                                                BorderRadius.circular(8)),
+                                                BorderRadius.circular(16)),
                                         content: Text(
                                           'Reporting will unfollow the user and the post will be sent to help.tevo@gmail.com.',
                                           style: TextStyle(
@@ -238,9 +238,17 @@ class _PostViewState extends State<PostView> {
                                             child: Text(
                                               'Report',
                                               style: TextStyle(
-                                                  fontFamily: kFontFamily,
-                                                  fontSize: 9.5.sp,
-                                                  color: kPrimaryBlackColor),
+                                                fontFamily: kFontFamily,
+                                                fontSize: 10.sp,
+                                                color: kPrimaryBlackColor
+                                                    .withOpacity(0.6),
+                                              ),
+                                            ),
+                                            style: ButtonStyle(
+                                              overlayColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.black
+                                                          .withOpacity(0.1)),
                                             ),
                                           ),
                                           OutlinedButton(
@@ -251,14 +259,23 @@ class _PostViewState extends State<PostView> {
                                             child: Text(
                                               'Unfollow',
                                               style: TextStyle(
-                                                  fontFamily: kFontFamily,
-                                                  fontSize: 9.5.sp,
-                                                  color: kPrimaryBlackColor),
+                                                fontFamily: kFontFamily,
+                                                fontSize: 10.sp,
+                                                color: kPrimaryBlackColor
+                                                    .withOpacity(0.6),
+                                              ),
+                                            ),
+                                            style: ButtonStyle(
+                                              overlayColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.black
+                                                          .withOpacity(0.1)),
                                             ),
                                           ),
                                         ],
                                       );
-                                    });
+                                    },
+                                    useSafeArea: true);
                               },
                               icon:
                                   const Icon(FontAwesomeIcons.ellipsisVertical),

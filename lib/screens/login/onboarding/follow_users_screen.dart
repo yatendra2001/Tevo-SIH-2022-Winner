@@ -231,8 +231,8 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
             height: 16,
           ),
           Text(
-            'Please wait while we are setting up your profile',
-            style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w500),
+            'Setting up your profile',
+            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400),
           ),
           const Spacer()
         ],
