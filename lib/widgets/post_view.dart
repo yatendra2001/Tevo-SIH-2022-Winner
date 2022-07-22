@@ -409,14 +409,6 @@ class _PostViewState extends State<PostView> {
             child: _buildLike(widget.recentlyLiked
                 ? widget.post.likes + 1
                 : widget.post.likes),
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  width: 1,
-                  color: Colors.black,
-                ),
-              ),
-            ),
           ),
         )
       ],
@@ -440,7 +432,7 @@ class _PostViewState extends State<PostView> {
         return Text(
           'No likes',
           style: TextStyle(
-            fontSize: 8.sp,
+            fontSize: 9.sp,
             fontWeight: FontWeight.w400,
             fontFamily: kFontFamily,
             color: kPrimaryBlackColor.withOpacity(0.7),
@@ -453,7 +445,7 @@ class _PostViewState extends State<PostView> {
               TextSpan(
                 text: 'Liked by ',
                 style: TextStyle(
-                  fontSize: 8.sp,
+                  fontSize: 9.sp,
                   fontWeight: FontWeight.w400,
                   fontFamily: kFontFamily,
                   color: kPrimaryBlackColor.withOpacity(0.7),
@@ -464,8 +456,8 @@ class _PostViewState extends State<PostView> {
                     ? "You"
                     : likeUser!.displayName,
                 style: TextStyle(
-                  fontSize: 8.sp,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 9.sp,
+                  fontWeight: FontWeight.w600,
                   fontFamily: kFontFamily,
                 ),
               ),
@@ -479,7 +471,7 @@ class _PostViewState extends State<PostView> {
             TextSpan(
               text: 'Liked by ',
               style: TextStyle(
-                fontSize: 8.sp,
+                fontSize: 9.sp,
                 fontWeight: FontWeight.w400,
                 fontFamily: kFontFamily,
                 color: kPrimaryBlackColor.withOpacity(0.7),
@@ -490,25 +482,25 @@ class _PostViewState extends State<PostView> {
                   ? "You"
                   : likeUser!.displayName,
               style: TextStyle(
-                fontSize: 8.sp,
-                fontWeight: FontWeight.w500,
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w600,
                 fontFamily: kFontFamily,
               ),
             ),
             TextSpan(
               text: ' and ',
               style: TextStyle(
-                fontSize: 8.sp,
+                fontSize: 9.sp,
                 fontWeight: FontWeight.w400,
                 fontFamily: kFontFamily,
                 color: kPrimaryBlackColor.withOpacity(0.7),
               ),
             ),
             TextSpan(
-              text: '${likes - 1} others',
+              text: (likes - 1) != 1 ? '${likes - 1} others' : '1 other',
               style: TextStyle(
-                fontSize: 8.sp,
-                fontWeight: FontWeight.w500,
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w600,
                 fontFamily: kFontFamily,
               ),
             ),
