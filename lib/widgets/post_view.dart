@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -195,87 +196,101 @@ class _PostViewState extends State<PostView> {
                             IconButton(
                               onPressed: () {
                                 showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                            side: const BorderSide(
-                                                color: kPrimaryBlackColor),
-                                            borderRadius:
-                                                BorderRadius.circular(16)),
-                                        content: Text(
-                                          'Reporting will unfollow the user and the post will be sent to help.tevo@gmail.com.',
-                                          style: TextStyle(
-                                            fontFamily: kFontFamily,
-                                            fontSize: 10.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        title: Text(
-                                          'Report or Unfollow',
-                                          style: TextStyle(
-                                            fontFamily: kFontFamily,
-                                            fontSize: 12.sp,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        actions: [
-                                          OutlinedButton(
-                                            onPressed: () async {
-                                              const mailUrl =
-                                                  'mailto:help.tevo@gmail.com';
-                                              try {
-                                                await launchUrl(
-                                                    Uri.parse(mailUrl));
-                                              } catch (e) {
-                                                await Clipboard.setData(
-                                                    const ClipboardData(
-                                                        text:
-                                                            'help.tevo@gmail.com'));
-                                              }
-                                            },
-                                            child: Text(
-                                              'Report',
-                                              style: TextStyle(
-                                                fontFamily: kFontFamily,
-                                                fontSize: 10.sp,
-                                                color: kPrimaryBlackColor
-                                                    .withOpacity(0.6),
-                                              ),
-                                            ),
-                                            style: ButtonStyle(
-                                              overlayColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.black
-                                                          .withOpacity(0.1)),
-                                            ),
-                                          ),
-                                          OutlinedButton(
-                                            onPressed: () {
-                                              widget.onPressed!();
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text(
-                                              'Unfollow',
-                                              style: TextStyle(
-                                                fontFamily: kFontFamily,
-                                                fontSize: 10.sp,
-                                                color: kPrimaryBlackColor
-                                                    .withOpacity(0.6),
-                                              ),
-                                            ),
-                                            style: ButtonStyle(
-                                              overlayColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.black
-                                                          .withOpacity(0.1)),
-                                            ),
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          side: const BorderSide(
+                                              color: kPrimaryBlackColor),
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      content: Text.rich(TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                              text:
+                                                  'We request you to  send the screenshots at '),
+                                          TextSpan(
+                                            text: "help.tevo@gmail.com.",
+                                            style: const TextStyle(
+                                                color: Colors.blue,
+                                                decoration:
+                                                    TextDecoration.underline),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () async {
+                                                const mailUrl =
+                                                    'mailto:help.tevo@gmail.com';
+                                                try {
+                                                  await launchUrl(
+                                                      Uri.parse(mailUrl));
+                                                } catch (e) {
+                                                  await Clipboard.setData(
+                                                      const ClipboardData(
+                                                          text:
+                                                              'help.tevo@gmail.com'));
+                                                }
+                                              },
                                           ),
                                         ],
-                                      );
-                                    },
-                                    useSafeArea: true);
+                                        style: TextStyle(
+                                          fontFamily: kFontFamily,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      )),
+                                      title: Text(
+                                        'Inappropriate Content',
+                                        style: TextStyle(
+                                          fontFamily: kFontFamily,
+                                          fontSize: 12.sp,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      actions: [
+                                        OutlinedButton(
+                                          onPressed: () async {},
+                                          child: Text(
+                                            'Block',
+                                            style: TextStyle(
+                                              fontFamily: kFontFamily,
+                                              fontSize: 10.sp,
+                                              color: kPrimaryBlackColor
+                                                  .withOpacity(0.6),
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                            overlayColor:
+                                                MaterialStateProperty.all(Colors
+                                                    .black
+                                                    .withOpacity(0.1)),
+                                          ),
+                                        ),
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            widget.onPressed!();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'Unfollow',
+                                            style: TextStyle(
+                                              fontFamily: kFontFamily,
+                                              fontSize: 10.sp,
+                                              color: kPrimaryBlackColor
+                                                  .withOpacity(0.6),
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                            overlayColor:
+                                                MaterialStateProperty.all(Colors
+                                                    .black
+                                                    .withOpacity(0.1)),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  useSafeArea: true,
+                                );
                               },
                               icon:
                                   const Icon(FontAwesomeIcons.ellipsisVertical),
