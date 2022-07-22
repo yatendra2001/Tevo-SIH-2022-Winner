@@ -181,7 +181,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           ? 'Find People....'
                           : 'So Whom you wanna chat with...',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 12.sp,
                         fontFamily: kFontFamily,
                         color: kPrimaryBlackColor.withOpacity(0.5),
                       ),

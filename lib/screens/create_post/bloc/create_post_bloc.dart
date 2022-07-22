@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -72,10 +73,16 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   }
 
   Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
-    List<Task> toDoTask = List<Task>.from(state.todoTask)
-      ..insert(event.index, event.task);
+    List<Task> toDoTask = [];
+    List<Task> repeatTask = [];
+    toDoTask = List<Task>.from(state.todoTask)..insert(event.index, event.task);
     _userRepository.setToDo(1, _authBloc.state.user!.uid);
-    yield state.copyWith(todoTask: toDoTask);
+
+    if (state.todoTask.isEmpty && state.post == null) {
+      repeatTask =
+          await _userRepository.getRepeatTask(_authBloc.state.user!.uid);
+    }
+    yield state.copyWith(todoTask: toDoTask, repeatTask: repeatTask);
     add(const SubmitPost());
   }
 
@@ -114,6 +121,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   }
 
   Stream<CreatePostState> _mapToUpdateTask(UpdateTask event) async* {
+    log(event.task.toString());
     List<Task> toDoTask = List<Task>.from(state.todoTask);
     toDoTask[event.index] = event.task;
     yield state.copyWith(todoTask: toDoTask);
@@ -148,5 +156,15 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     } else {
       _postRepository.updatePost(post: post);
     }
+  }
+
+  void repeatTask(Task task, bool repeat) {
+    List<Task> repeatTask = [];
+    if (repeat == false) {
+      repeatTask = List<Task>.from(state.repeatTask)..remove(task);
+    } else {
+      repeatTask = List<Task>.from(state.repeatTask)..add(task);
+    }
+    _userRepository.repeatTaskUpdate(_authBloc.state.user!.uid, repeatTask);
   }
 }

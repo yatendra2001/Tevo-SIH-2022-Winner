@@ -308,6 +308,7 @@ class _PostViewState extends State<PostView> {
                   itemBuilder: (context, index) {
                     if (index < widget.post.completedTask.length) {
                       return TaskTile(
+                        onRepeat: (_) {},
                         task: tasks![index],
                         view: TaskTileView.feedScreen,
                         isComplete: true,
@@ -316,6 +317,7 @@ class _PostViewState extends State<PostView> {
                       );
                     } else {
                       return TaskTile(
+                        onRepeat: (_) {},
                         task: tasks![index],
                         view: TaskTileView.feedScreen,
                         isComplete: false,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
@@ -246,6 +248,15 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                               },
                               child: TaskTile(
                                 isComplete: false,
+                                onRepeat: (repeat) {
+                                  context
+                                      .read<CreatePostBloc>()
+                                      .repeatTask(todoTask[index], repeat);
+                                  final newTask =
+                                      todoTask[index].copyWith(repeat: repeat);
+                                  context.read<CreatePostBloc>().add(
+                                      UpdateTask(task: newTask, index: index));
+                                },
                                 view: TaskTileView.createScreenView,
                                 isEditing: () {
                                   _taskBottomSheet(
@@ -324,6 +335,16 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (_, index) => TaskTile(
+                          onRepeat: (repeat) {
+                            context
+                                .read<CreatePostBloc>()
+                                .repeatTask(state.completedTask[index], repeat);
+                            final newTask = state.completedTask[index]
+                                .copyWith(repeat: repeat);
+                            context
+                                .read<CreatePostBloc>()
+                                .add(UpdateTask(task: newTask, index: index));
+                          },
                           view: TaskTileView.createScreenView,
                           isEditing: () {},
                           task: state.completedTask[index],

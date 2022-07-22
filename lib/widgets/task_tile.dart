@@ -14,6 +14,7 @@ enum TaskTileView { profileView, feedScreen, createScreenView }
 class TaskTile extends StatefulWidget {
   final Task task;
   final bool isComplete;
+  final Function(bool) onRepeat;
   final TaskTileView view;
   final Function() isDeleted;
   final Function() isEditing;
@@ -23,6 +24,7 @@ class TaskTile extends StatefulWidget {
     required this.task,
     required this.isComplete,
     required this.view,
+    required this.onRepeat,
     required this.isDeleted,
     required this.isEditing,
   }) : super(key: key);
@@ -33,6 +35,14 @@ class TaskTile extends StatefulWidget {
 
 class _TaskTileState extends State<TaskTile> {
   bool showDesc = false;
+  late bool taskRepeat;
+
+  @override
+  void initState() {
+    taskRepeat = widget.task.repeat;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -65,12 +75,17 @@ class _TaskTileState extends State<TaskTile> {
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (widget.isComplete == false)
-                            IconButton(
-                              padding: const EdgeInsets.all(0),
-                              icon: const Icon(Icons.repeat),
-                              onPressed: () {},
-                            ),
+                          IconButton(
+                            padding: const EdgeInsets.all(0),
+                            icon: taskRepeat
+                                ? Icon(Icons.abc)
+                                : Icon(Icons.repeat),
+                            onPressed: () {
+                              taskRepeat = !taskRepeat;
+                              widget.onRepeat(taskRepeat);
+                              setState(() {});
+                            },
+                          ),
                           if (widget.isComplete == false)
                             IconButton(
                               padding: const EdgeInsets.all(0),
