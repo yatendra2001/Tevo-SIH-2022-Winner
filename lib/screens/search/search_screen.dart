@@ -10,8 +10,6 @@ import 'package:tevo/screens/stream_chat/models/chat_type.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 
-import '../profile/bloc/profile_bloc.dart';
-
 enum SearchScreenType { profile, message }
 
 class SearchScreenArgs {
@@ -178,15 +176,17 @@ class _SearchScreenState extends State<SearchScreen> {
                       : const CenteredText(text: 'No users found');
                 default:
                   return Center(
-                      child: Text(
-                    widget.type == SearchScreenType.profile
-                        ? 'Find People....'
-                        : 'So Whom you wanna chat with...',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontFamily: kFontFamily,
+                    child: Text(
+                      widget.type == SearchScreenType.profile
+                          ? 'Find People....'
+                          : 'So Whom you wanna chat with...',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontFamily: kFontFamily,
+                        color: kPrimaryBlackColor.withOpacity(0.5),
+                      ),
                     ),
-                  ));
+                  );
               }
             },
           ),
