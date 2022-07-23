@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -151,7 +153,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
   _buildRemaining(CreatePostState state) {
     final todoTask = state.todoTask;
     return state.status == CreatePostStateStatus.loading
-        ? Center(
+        ? const Center(
             child: CircularProgressIndicator(color: kPrimaryBlackColor),
           )
         : AnimatedPadding(
@@ -228,9 +230,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                           Text(
                             state.dateTime == null
                                 ? 'Drop your 1st task 🎯'
-                                : 'Winning 🎉',
+                                : 'Yayyy... All tasks completed 🎉',
                             style: TextStyle(
-                              fontSize: 10.sp,
+                              fontSize: 11.sp,
+                              color: kPrimaryBlackColor,
+                              fontWeight: FontWeight.w500,
                               fontFamily: kFontFamily,
                             ),
                           ),
@@ -248,6 +252,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                               },
                               child: TaskTile(
                                 isComplete: false,
+                                onRepeat: (repeat) {
+                                  context.read<CreatePostBloc>().add(RepeatTask(
+                                      task: todoTask[index], index: index));
+                                },
                                 view: TaskTileView.createScreenView,
                                 isEditing: () {
                                   _taskBottomSheet(
@@ -326,6 +334,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (_, index) => TaskTile(
+                          onRepeat: (repeat) {
+                            context.read<CreatePostBloc>().add(RepeatTask(
+                                task: state.completedTask[index],
+                                index: index));
+                          },
                           view: TaskTileView.createScreenView,
                           isEditing: () {},
                           task: state.completedTask[index],
@@ -471,6 +484,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                       style: TextStyle(
                           fontSize: 9.5.sp,
                           color: kPrimaryBlackColor,
+                          fontWeight: FontWeight.bold,
                           fontFamily: kFontFamily),
                     ),
                     const SizedBox(height: 16),
@@ -642,6 +656,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                   fontWeight: FontWeight.w400,
                   fontSize: 10.5.sp,
                   fontFamily: kFontFamily,
+                  color: kPrimaryBlackColor.withOpacity(0.8),
                 ),
                 controller: _descriptionTextEditingController,
                 keyboardType: TextInputType.multiline,

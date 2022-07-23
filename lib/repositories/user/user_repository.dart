@@ -361,4 +361,26 @@ class UserRepository extends BaseUserRepository {
     }
     return likeUser;
   }
+
+  void repeatTaskUpdate(String userId, List<Task> tasks) {
+    _firebaseFirestore
+        .collection(Paths.repeatTask)
+        .doc(userId)
+        .set({"repeat": tasks.map((task) => task.toMap()).toList()});
+  }
+
+  Future<List<Task>> getRepeatTask(String userId) async {
+    final userSnap =
+        await _firebaseFirestore.collection(Paths.repeatTask).doc(userId).get();
+    final ele = userSnap.data();
+    log(ele.toString());
+    if (ele == null) {
+      return [];
+    }
+    List<Task> tasks = [];
+    for (var element in ele["repeat"]) {
+      tasks.add(Task.fromMap(element));
+    }
+    return tasks;
+  }
 }
