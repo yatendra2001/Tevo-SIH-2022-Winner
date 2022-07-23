@@ -151,7 +151,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
   _buildRemaining(CreatePostState state) {
     final todoTask = state.todoTask;
     return state.status == CreatePostStateStatus.loading
-        ? Center(
+        ? const Center(
             child: CircularProgressIndicator(color: kPrimaryBlackColor),
           )
         : AnimatedPadding(
@@ -249,13 +249,8 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                               child: TaskTile(
                                 isComplete: false,
                                 onRepeat: (repeat) {
-                                  context
-                                      .read<CreatePostBloc>()
-                                      .repeatTask(todoTask[index], repeat);
-                                  final newTask =
-                                      todoTask[index].copyWith(repeat: repeat);
-                                  context.read<CreatePostBloc>().add(
-                                      UpdateTask(task: newTask, index: index));
+                                  context.read<CreatePostBloc>().add(RepeatTask(
+                                      task: todoTask[index], index: index));
                                 },
                                 view: TaskTileView.createScreenView,
                                 isEditing: () {
@@ -336,14 +331,9 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         shrinkWrap: true,
                         itemBuilder: (_, index) => TaskTile(
                           onRepeat: (repeat) {
-                            context
-                                .read<CreatePostBloc>()
-                                .repeatTask(state.completedTask[index], repeat);
-                            final newTask = state.completedTask[index]
-                                .copyWith(repeat: repeat);
-                            context
-                                .read<CreatePostBloc>()
-                                .add(UpdateTask(task: newTask, index: index));
+                            context.read<CreatePostBloc>().add(RepeatTask(
+                                task: state.completedTask[index],
+                                index: index));
                           },
                           view: TaskTileView.createScreenView,
                           isEditing: () {},

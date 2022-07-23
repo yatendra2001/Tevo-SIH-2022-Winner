@@ -48,6 +48,8 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       yield* _mapToClearPost(event);
     } else if (event is SubmitPost) {
       yield* _mapToSubmitPost(event);
+    } else if (event is RepeatTask) {
+      yield* _mapToRepeatTask(event);
     }
   }
 
@@ -74,14 +76,15 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
 
   Stream<CreatePostState> _mapToAddTaskEvent(AddTaskEvent event) async* {
     List<Task> toDoTask = [];
-    List<Task> repeatTask = [];
+    List<Task> repeatTask = state.todoTask;
     toDoTask = List<Task>.from(state.todoTask)..insert(event.index, event.task);
     _userRepository.setToDo(1, _authBloc.state.user!.uid);
-
-    if (state.todoTask.isEmpty && state.post == null) {
+    if (state.post == null) {
       repeatTask =
           await _userRepository.getRepeatTask(_authBloc.state.user!.uid);
+      toDoTask.addAll(repeatTask);
     }
+
     yield state.copyWith(todoTask: toDoTask, repeatTask: repeatTask);
     add(const SubmitPost());
   }
@@ -116,7 +119,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
           _authBloc.state.user!.uid);
       _userRepository.setComplete(
           -state.completedTask.length, _authBloc.state.user!.uid);
-      add(ClearPost());
+      add(const ClearPost());
     }
   }
 
@@ -158,13 +161,23 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     }
   }
 
-  void repeatTask(Task task, bool repeat) {
-    List<Task> repeatTask = [];
-    if (repeat == false) {
-      repeatTask = List<Task>.from(state.repeatTask)..remove(task);
+  Stream<CreatePostState> _mapToRepeatTask(RepeatTask event) async* {
+    List<Task> repeatTask;
+    Task task = event.task.copyWith(repeat: !event.task.repeat);
+    if (task.repeat == false) {
+      repeatTask = List<Task>.from(state.repeatTask)..remove(event.task);
     } else {
-      repeatTask = List<Task>.from(state.repeatTask)..add(task);
+      log(state.repeatTask.toString());
+      repeatTask = List<Task>.from(state.repeatTask)
+        ..add(
+          task,
+        );
     }
+    List<Task> toDoTask = List<Task>.from(state.todoTask);
+    toDoTask[event.index] = task;
+    yield state.copyWith(repeatTask: repeatTask, todoTask: toDoTask);
+    log(repeatTask.toString());
     _userRepository.repeatTaskUpdate(_authBloc.state.user!.uid, repeatTask);
+    add(const SubmitPost());
   }
 }

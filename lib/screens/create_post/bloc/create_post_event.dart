@@ -74,3 +74,14 @@ class SubmitPost extends CreatePostEvent {
   @override
   List<Object> get props => [];
 }
+
+class RepeatTask extends CreatePostEvent {
+  final Task task;
+  final int index;
+  const RepeatTask({
+    required this.task,
+    required this.index,
+  });
+  @override
+  List<Object> get props => [task, index];
+}
