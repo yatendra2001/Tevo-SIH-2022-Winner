@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -18,6 +19,7 @@ import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/default_showcase_widget.dart';
 import 'package:tevo/widgets/modal_bottom_sheet.dart';
 import 'package:tevo/widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../models/models.dart';
 import 'bloc/create_post_bloc.dart';
 
@@ -266,7 +268,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                               ),
                             );
                           },
-                          itemCount: state.todoTask.length,
+                          itemCount: todoTask.length,
                         ),
                       ),
               ],
@@ -497,12 +499,32 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         Transform.scale(
                           scale: 0.9,
                           child: StandardElevatedButton(
-                              labelText: "Request Feature", onTap: () {}),
+                            labelText: "Request Feature",
+                            onTap: () async {
+                              const mailUrl = 'mailto:request@tevo.social';
+                              try {
+                                await launchUrl(Uri.parse(mailUrl));
+                              } catch (e) {
+                                await Clipboard.setData(const ClipboardData(
+                                    text: 'request@tevo.social'));
+                              }
+                            },
+                          ),
                         ),
                         Transform.scale(
                           scale: 0.9,
                           child: StandardElevatedButton(
-                              labelText: "Report Bug", onTap: () {}),
+                            labelText: "Report Bug",
+                            onTap: () async {
+                              const mailUrl = 'mailto:report@tevo.social';
+                              try {
+                                await launchUrl(Uri.parse(mailUrl));
+                              } catch (e) {
+                                await Clipboard.setData(const ClipboardData(
+                                    text: 'report@tevo.social'));
+                              }
+                            },
+                          ),
                         ),
                       ],
                     )

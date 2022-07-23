@@ -28,54 +28,51 @@ class ListFollowersFollowing extends StatelessWidget {
     return SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
           children: [
-            PreferredSize(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextField(
-                  style: TextStyle(
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: TextField(
+                style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontFamily: kFontFamily,
+                    fontSize: 10.sp),
+                controller: _textController,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(20),
+                  focusColor: Colors.black,
+                  fillColor: const Color(0xffF5F5F5),
+                  filled: true,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        const BorderSide(color: Colors.white, width: 1.0),
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        const BorderSide(color: Colors.white, width: 1.0),
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  hintStyle: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontFamily: kFontFamily,
                       fontSize: 10.sp),
-                  controller: _textController,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(20),
-                    focusColor: Colors.black,
-                    fillColor: const Color(0xffF5F5F5),
-                    filled: true,
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
-                      borderRadius: BorderRadius.circular(30.0),
+                  hintText: 'Search Users @ John',
+                  suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.black38,
+                      size: 21,
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    hintStyle: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontFamily: kFontFamily,
-                        fontSize: 10.sp),
-                    hintText: 'Search Users @ John',
-                    suffixIcon: IconButton(
-                      icon: const Icon(
-                        Icons.clear,
-                        color: Colors.black38,
-                        size: 21,
-                      ),
-                      onPressed: () {
-                        _textController.clear();
-                      },
-                    ),
+                    onPressed: () {
+                      _textController.clear();
+                    },
                   ),
-                  textInputAction: TextInputAction.search,
-                  textAlignVertical: TextAlignVertical.center,
                 ),
+                textInputAction: TextInputAction.search,
+                textAlignVertical: TextAlignVertical.center,
               ),
-              preferredSize: Size(0, 0),
             ),
             isLoading
                 ? Center(

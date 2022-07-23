@@ -132,8 +132,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 ? const CircularProgressIndicator(
                     color: kPrimaryBlackColor,
                   )
-                : ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 60.0),
+                : ListView.separated(
+                    separatorBuilder: (__, _) => const Divider(),
+                    // padding: const EdgeInsets.only(bottom: 30.0),
                     itemCount: state.comments.length,
                     itemBuilder: (BuildContext context, int index) {
                       final comment = state.comments[index];
@@ -150,12 +151,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                 text: comment.author.displayName.split(" ")[0],
                                 style: TextStyle(
                                   fontSize: 11.sp,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                   fontFamily: kFontFamily,
                                 ),
                               ),
                               TextSpan(
-                                text: " : " + comment.content,
+                                text: "  " + comment.content,
                                 style: TextStyle(
                                   fontSize: 10.sp,
                                   fontWeight: FontWeight.w400,
