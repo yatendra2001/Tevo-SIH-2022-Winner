@@ -450,7 +450,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 }
                                               },
                                               child: UserProfileImage(
-                                                iconRadius: 38.sp,
+                                                iconRadius: 100.sp,
                                                 radius: 38.sp,
                                                 profileImageUrl:
                                                     state.user.profileImageUrl,

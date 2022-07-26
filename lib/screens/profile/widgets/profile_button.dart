@@ -66,7 +66,7 @@ class ProfileButton extends StatelessWidget {
                   onPressed: () {
                     Share.share(
                         '👋Hey-You should join us on Tevo. I share my everyday progress there on health, career and personal interests to stay inspired!.\n\nHere is the link:  \nhttps://app.tevo.social/download',
-                        subject: 'Noobs Assemble!');
+                        subject: 'Tevo!');
                   },
                   icon: const Icon(
                     Icons.share,

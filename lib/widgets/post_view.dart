@@ -208,9 +208,9 @@ class _PostViewState extends State<PostView> {
                                         children: [
                                           const TextSpan(
                                               text:
-                                                  'We request you to  send the screenshots at '),
+                                                  'We request you to report this post along with the screenshots at '),
                                           TextSpan(
-                                            text: "help.tevo@gmail.com.",
+                                            text: "help@tevo.social.",
                                             style: const TextStyle(
                                                 color: Colors.blue,
                                                 decoration:
@@ -218,7 +218,7 @@ class _PostViewState extends State<PostView> {
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () async {
                                                 const mailUrl =
-                                                    'mailto:help.tevo@gmail.com';
+                                                    'mailto:help@tevo.social';
                                                 try {
                                                   await launchUrl(
                                                       Uri.parse(mailUrl));
@@ -226,7 +226,7 @@ class _PostViewState extends State<PostView> {
                                                   await Clipboard.setData(
                                                       const ClipboardData(
                                                           text:
-                                                              'help.tevo@gmail.com'));
+                                                              'help@tevo.social'));
                                                 }
                                               },
                                           ),
@@ -247,24 +247,24 @@ class _PostViewState extends State<PostView> {
                                         ),
                                       ),
                                       actions: [
-                                        OutlinedButton(
-                                          onPressed: () async {},
-                                          child: Text(
-                                            'Block',
-                                            style: TextStyle(
-                                              fontFamily: kFontFamily,
-                                              fontSize: 10.sp,
-                                              color: kPrimaryBlackColor
-                                                  .withOpacity(0.6),
-                                            ),
-                                          ),
-                                          style: ButtonStyle(
-                                            overlayColor:
-                                                MaterialStateProperty.all(Colors
-                                                    .black
-                                                    .withOpacity(0.1)),
-                                          ),
-                                        ),
+                                        // OutlinedButton(
+                                        //   onPressed: () async {},
+                                        //   child: Text(
+                                        //     'Block',
+                                        //     style: TextStyle(
+                                        //       fontFamily: kFontFamily,
+                                        //       fontSize: 10.sp,
+                                        //       color: kPrimaryBlackColor
+                                        //           .withOpacity(0.6),
+                                        //     ),
+                                        //   ),
+                                        //   style: ButtonStyle(
+                                        //     overlayColor:
+                                        //         MaterialStateProperty.all(Colors
+                                        //             .black
+                                        //             .withOpacity(0.1)),
+                                        //   ),
+                                        // ),
                                         OutlinedButton(
                                           onPressed: () {
                                             widget.onPressed!();
@@ -292,8 +292,10 @@ class _PostViewState extends State<PostView> {
                                   useSafeArea: true,
                                 );
                               },
-                              icon:
-                                  const Icon(FontAwesomeIcons.ellipsisVertical),
+                              icon: const Icon(
+                                FontAwesomeIcons.flag,
+                                color: kPrimaryBlackColor,
+                              ),
                             ),
                           ],
                         ),
@@ -437,7 +439,7 @@ class _PostViewState extends State<PostView> {
       return Text(
         '$likes likes',
         style: TextStyle(
-          fontSize: 8.sp,
+          fontSize: 9.sp,
           fontWeight: FontWeight.w400,
           fontFamily: kFontFamily,
           color: kPrimaryBlackColor.withOpacity(0.7),

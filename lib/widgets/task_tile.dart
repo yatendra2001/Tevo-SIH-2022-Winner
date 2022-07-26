@@ -8,6 +8,7 @@ import 'package:sizer/sizer.dart';
 
 import 'package:tevo/models/task_model.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/widgets.dart';
 
 enum TaskTileView { profileView, feedScreen, createScreenView }
 
@@ -78,12 +79,17 @@ class _TaskTileState extends State<TaskTile> {
                           IconButton(
                             padding: const EdgeInsets.all(0),
                             icon: taskRepeat
-                                ? Icon(Icons.abc)
-                                : Icon(Icons.repeat),
+                                ? Icon(Icons.repeat_on_rounded)
+                                : Icon(Icons.repeat_rounded),
                             onPressed: () {
-                              taskRepeat = !taskRepeat;
+                              setState(() {
+                                taskRepeat = !taskRepeat;
+                              });
                               widget.onRepeat(taskRepeat);
-                              setState(() {});
+                              flutterToast(
+                                  msg: taskRepeat
+                                      ? "Task updated to recurring"
+                                      : "Task updated to non-recurring");
                             },
                           ),
                           if (widget.isComplete == false)

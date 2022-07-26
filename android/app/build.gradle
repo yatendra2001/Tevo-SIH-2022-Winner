@@ -52,8 +52,8 @@ android {
         applicationId "com.superawesomeapps.tevo"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 2
+        versionName "1.0.3"
         multiDexEnabled true
     }
     signingConfigs {

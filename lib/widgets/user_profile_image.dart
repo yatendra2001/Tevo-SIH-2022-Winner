@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tevo/utils/theme_constants.dart';
 
 class UserProfileImage extends StatelessWidget {
@@ -46,8 +48,8 @@ class UserProfileImage extends StatelessWidget {
   Icon? _noProfileIcon() {
     if (profileImage == null && profileImageUrl.isEmpty) {
       return Icon(
-        Icons.account_circle,
-        color: Colors.black54,
+        FontAwesomeIcons.solidCircleUser,
+        color: kPrimaryBlackColor.withOpacity(0.85),
         size: iconRadius,
       );
     }
