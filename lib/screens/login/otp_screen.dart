@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:tevo/widgets/flutter_toast.dart';
 import 'package:timer_button/timer_button.dart';
 
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
@@ -63,7 +64,7 @@ class _OtpScreenState extends State<OtpScreen> {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.status == LoginStatus.error) {
-          Fluttertoast.showToast(msg: state.failure.message);
+          flutterToast(msg: state.failure.message);
           _otpController.text = '';
         }
       },

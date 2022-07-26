@@ -39,25 +39,50 @@ class UserRepository extends BaseUserRepository {
 
   @override
   Future<List<User>> searchUsers({required String query}) async {
-    List<User> list;
+    List<User> list1, list2;
+
+    final blockSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockingIds)
+        .get();
+
+    List<String> blockedIds = blockSnap.docs.map((doc) => doc.id).toList();
 
     final userNameSnap = await _firebaseFirestore
         .collection(Paths.users)
-        .where('name', isGreaterThanOrEqualTo: query)
+        .where('displayName', isGreaterThanOrEqualTo: query)
         .get();
-    list = userNameSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+    list1 = userNameSnap.docs.map((doc) => User.fromDocument(doc)).toList();
 
     final nameSnap = await _firebaseFirestore
         .collection(Paths.users)
         .where('username', isGreaterThanOrEqualTo: query)
         .get();
 
-    list.addAll(nameSnap.docs.map((doc) => User.fromDocument(doc)).toList());
-    return list;
+    list2 = nameSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+    list1.removeWhere((user) => list2.contains(user));
+    list1.addAll(list2);
+    list1.removeWhere((user) => blockedIds.contains(user.id));
+    return list1;
   }
 
   @override
   Future<List<User>> getUsersByFollowers(String userId) async {
+    final blockSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockingIds)
+        .get();
+
+    final blockedSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockedIds)
+        .get();
+
+    List<String> blockedIds = blockSnap.docs.map((doc) => doc.id).toList();
+    blockedIds.addAll(blockedSnap.docs.map((doc) => doc.id).toList());
     final snap = await _firebaseFirestore
         .collection(Paths.following)
         .doc(userId)
@@ -82,6 +107,8 @@ class UserRepository extends BaseUserRepository {
         topFollowersList.add(element);
       }
     }
+
+    topFollowersList.removeWhere((user) => blockedIds.contains(user.id));
     return topFollowersList;
   }
 
@@ -373,7 +400,7 @@ class UserRepository extends BaseUserRepository {
     final userSnap =
         await _firebaseFirestore.collection(Paths.repeatTask).doc(userId).get();
     final ele = userSnap.data();
-    log(ele.toString());
+
     if (ele == null) {
       return [];
     }
@@ -382,5 +409,47 @@ class UserRepository extends BaseUserRepository {
       tasks.add(Task.fromMap(element));
     }
     return tasks;
+  }
+
+  Future<void> blockUser(
+      String currUserId, String blockId, bool isIdBlocked) async {
+    if (isIdBlocked) {
+      _firebaseFirestore
+          .collection(Paths.blockUser)
+          .doc(currUserId)
+          .collection(Paths.userblockedIds)
+          .doc(blockId)
+          .set({});
+      _firebaseFirestore
+          .collection(Paths.blockUser)
+          .doc(blockId)
+          .collection(Paths.userblockingIds)
+          .doc(currUserId)
+          .set({});
+    } else {
+      _firebaseFirestore
+          .collection(Paths.blockUser)
+          .doc(currUserId)
+          .collection(Paths.userblockedIds)
+          .doc(blockId)
+          .delete();
+      _firebaseFirestore
+          .collection(Paths.blockUser)
+          .doc(blockId)
+          .collection(Paths.userblockingIds)
+          .doc(currUserId)
+          .delete();
+    }
+  }
+
+  Future<bool> getblockUserId(String currUserId, String idBlocked) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(currUserId)
+        .collection(Paths.userblockedIds)
+        .doc(idBlocked)
+        .get();
+
+    return userSnap.exists;
   }
 }

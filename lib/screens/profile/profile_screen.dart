@@ -27,6 +27,7 @@ import 'package:tevo/screens/profile/widgets/widgets.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/custom_appbar.dart';
 import 'package:tevo/widgets/default_showcase_widget.dart';
 import 'package:tevo/widgets/widgets.dart';
 
@@ -91,11 +92,14 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool isLoadingFollowers = true;
   bool isSearchingFollowers = false;
 
+  bool isIdBlocked = false;
+
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    checkUserBlocked();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
     _animation = Tween(end: 1.0, begin: 0.0).animate(_animationController)
       ..addListener(() {
         setState(() {});
@@ -162,6 +166,11 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
   }
 
+  checkUserBlocked() async {
+    isIdBlocked =
+        await context.read<ProfileBloc>().checkIsUserBlocked(widget.userId);
+  }
+
   Future<bool> _isFirstLaunch() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     bool isFirstLaunch = sharedPreferences
@@ -225,7 +234,31 @@ class _ProfileScreenState extends State<ProfileScreen>
             builder: Builder(builder: (context) {
               myContext = context;
               return GestureDetector(
-                  child: _buildBody(state),
+                  child: isIdBlocked == false
+                      ? _buildBody(state)
+                      : Container(
+                          width: double.infinity,
+                          child: Column(
+                            children: [
+                              customAppbar(""),
+                              Spacer(),
+                              Text("The user is Blocked"),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              OutlinedButton(
+                                  onPressed: () {
+                                    context
+                                        .read<ProfileBloc>()
+                                        .blockUser(false, widget.userId);
+                                    isIdBlocked = false;
+                                    setState(() {});
+                                  },
+                                  child: Text("Unblock")),
+                              Spacer()
+                            ],
+                          ),
+                        ),
                   onTap: () => FocusScope.of(context).unfocus());
             }),
           ),
@@ -256,7 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    icon: Icon(Icons.arrow_back_ios_new_outlined)),
+                    icon: const Icon(Icons.arrow_back_ios_new_outlined)),
                 title: Row(
                   children: [
                     Text(
@@ -308,79 +341,140 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
                     ),
-                  if (state.isCurrentUser)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: IconButton(
-                        icon: SizedBox(
-                          height: 3.2.h,
-                          width: 3.2.h,
-                          child: CachedNetworkImage(
-                              imageUrl:
-                                  "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
-                        ),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (context) => AlertDialog(
-                              backgroundColor: Colors.grey[50],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                side: const BorderSide(
-                                    color: kPrimaryBlackColor, width: 2.0),
-                              ),
-                              title: Center(
-                                child: Text(
-                                  "Are you sure you want to logout?",
-                                  style: TextStyle(
-                                    fontSize: 11.5.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: kPrimaryBlackColor,
-                                    fontFamily: kFontFamily,
+                  state.isCurrentUser
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: IconButton(
+                            icon: SizedBox(
+                              height: 3.2.h,
+                              width: 3.2.h,
+                              child: CachedNetworkImage(
+                                  imageUrl:
+                                      "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: Colors.grey[50],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: const BorderSide(
+                                        color: kPrimaryBlackColor, width: 2.0),
+                                  ),
+                                  title: Center(
+                                    child: Text(
+                                      "Are you sure you want to logout?",
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: kPrimaryBlackColor,
+                                        fontFamily: kFontFamily,
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    OutlinedButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text(
+                                          "No",
+                                          style: TextStyle(
+                                            color: kPrimaryBlackColor,
+                                            fontSize: 10.sp,
+                                            fontFamily: kFontFamily,
+                                          ),
+                                        )),
+                                    OutlinedButton(
+                                      onPressed: () {
+                                        context.read<AuthBloc>().add(
+                                            AuthLogoutRequested(
+                                                context: context));
+                                        context
+                                            .read<LoginCubit>()
+                                            .logoutRequested();
+                                        context
+                                            .read<LikedPostsCubit>()
+                                            .clearAllLikedPosts();
+                                        SessionHelperEmpty();
+                                        MyApp.navigatorKey.currentState!
+                                            .pushReplacementNamed(
+                                                LoginPageView.routeName);
+                                      },
+                                      child: Text(
+                                        "Yes",
+                                        style: TextStyle(
+                                            color: kPrimaryBlackColor,
+                                            fontFamily: kFontFamily,
+                                            fontSize: 10.sp),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (context) => AlertDialog(
+                                backgroundColor: Colors.grey[50],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: const BorderSide(
+                                      color: kPrimaryBlackColor, width: 2.0),
+                                ),
+                                title: Center(
+                                  child: Text(
+                                    "Are you sure you want to block the user?",
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: kPrimaryBlackColor,
+                                      fontFamily: kFontFamily,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              actions: [
-                                TextButton(
+                                actions: [
+                                  OutlinedButton(
                                     onPressed: () => Navigator.pop(context),
                                     child: Text(
                                       "No",
                                       style: TextStyle(
                                         color: kPrimaryBlackColor,
-                                        fontSize: 8.5.sp,
+                                        fontSize: 10.sp,
                                         fontFamily: kFontFamily,
                                       ),
-                                    )),
-                                TextButton(
-                                  onPressed: () {
-                                    context.read<AuthBloc>().add(
-                                        AuthLogoutRequested(context: context));
-                                    context
-                                        .read<LoginCubit>()
-                                        .logoutRequested();
-                                    context
-                                        .read<LikedPostsCubit>()
-                                        .clearAllLikedPosts();
-                                    SessionHelperEmpty();
-                                    MyApp.navigatorKey.currentState!
-                                        .pushReplacementNamed(
-                                            LoginPageView.routeName);
-                                  },
-                                  child: Text(
-                                    "Yes",
-                                    style: TextStyle(
+                                    ),
+                                  ),
+                                  OutlinedButton(
+                                    onPressed: () {
+                                      isIdBlocked = !isIdBlocked;
+                                      context.read<ProfileBloc>().blockUser(
+                                          isIdBlocked, widget.userId);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "Yes",
+                                      style: TextStyle(
                                         color: kPrimaryBlackColor,
                                         fontFamily: kFontFamily,
-                                        fontSize: 8.5.sp),
+                                        fontSize: 10.sp,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                                ],
+                              ),
+                            );
+                          },
+                          icon: isIdBlocked
+                              ? const Icon(Icons.lock)
+                              : const Icon(Icons.lock_open),
+                        )
                 ],
               ),
               SliverToBoxAdapter(
@@ -401,7 +495,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 _animationStatus == AnimationStatus.dismissed
                                     ? 3
                                     : 3,
-                            shape: CircleBorder(),
+                            shape: const CircleBorder(),
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -470,7 +564,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
-                                                  Spacer(
+                                                  const Spacer(
                                                     flex: 1,
                                                   ),
                                                   Expanded(
@@ -502,7 +596,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               kPrimaryWhiteColor),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
                                                     "COMPLETION\nRATE",
                                                     textAlign: TextAlign.center,
@@ -514,7 +608,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         color:
                                                             kPrimaryWhiteColor),
                                                   ),
-                                                  Spacer(
+                                                  const Spacer(
                                                     flex: 1,
                                                   ),
                                                 ],
@@ -703,7 +797,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         : Padding(
                             padding: const EdgeInsets.only(top: 0.0),
                             child: ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 final post = state.posts[index];
                                 final date = post!.enddate.toDate();
@@ -742,7 +836,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       },
                                       onPressed: null,
                                     ),
-                                    SizedBox(height: 32),
+                                    const SizedBox(height: 32),
                                   ],
                                 );
                               },
@@ -795,7 +889,7 @@ class _Statistics extends StatelessWidget {
                 fontFamily: kFontFamily,
                 color: kPrimaryBlackColor),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             label,
             textAlign: TextAlign.center,

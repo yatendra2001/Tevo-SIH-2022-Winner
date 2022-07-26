@@ -176,4 +176,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<List<User>> getFollowing(String userId) {
     return _userRepository.getFollowing(userId);
   }
+
+  void blockUser(bool isIdBlocked, String blockId) {
+    _userRepository.blockUser(_authBloc.state.user!.uid, blockId, isIdBlocked);
+    if (isIdBlocked) {
+      _userRepository.unfollowUser(
+        userId: _authBloc.state.user!.uid,
+        unfollowUserId: blockId,
+      );
+      _userRepository.unfollowUser(
+        unfollowUserId: _authBloc.state.user!.uid,
+        userId: blockId,
+      );
+    }
+  }
+
+  Future<bool> checkIsUserBlocked(String blockId) async {
+    return await _userRepository.getblockUserId(
+        _authBloc.state.user!.uid, blockId);
+  }
 }
