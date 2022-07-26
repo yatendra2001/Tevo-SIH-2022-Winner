@@ -7,6 +7,7 @@ import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationTile extends StatelessWidget {
   final Notif notification;
@@ -50,7 +51,7 @@ class NotificationTile extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          DateFormat('MMM d, ' 'yyyy' '--').add_jm().format(notification.date),
+          timeago.format(notification.date),
           style: TextStyle(
             color: Colors.grey[600],
             fontFamily: kFontFamily,
