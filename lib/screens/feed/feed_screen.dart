@@ -72,7 +72,7 @@ class _FeedScreenState extends State<FeedScreen> {
         .where((Event event) => event.totalUnreadCount != null)
         .listen((Event event) {
       setState(() {
-        SessionHelper.totalUnreadMessagesCount = event.totalUnreadCount!;
+        SessionHelper.totalUnreadMessagesCount = event.totalUnreadCount ?? 0;
       });
     });
   }
@@ -191,7 +191,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                     radius: 16,
                                     iconRadius: 42,
                                     profileImageUrl:
-                                        SessionHelper.profileImageUrl!,
+                                        SessionHelper.profileImageUrl ?? '',
                                   ),
                                 ),
                               )),

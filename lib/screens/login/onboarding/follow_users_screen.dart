@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:fluttericon/linearicons_free_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
@@ -181,15 +184,27 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                               borderRadius: BorderRadius.circular(25),
                               color: loading ? Colors.black38 : Colors.black,
                             ),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 140, vertical: 35),
-                            child: Text(
-                              "Follow →",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.sp,
-                                fontFamily: kFontFamily,
-                              ),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 34.w, vertical: 4.h),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Follow",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontFamily: kFontFamily,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Icon(
+                                  LineariconsFree.arrow_right,
+                                  color: kPrimaryWhiteColor,
+                                  size: 14.sp,
+                                )
+                              ],
                             )),
                       ),
                     ),

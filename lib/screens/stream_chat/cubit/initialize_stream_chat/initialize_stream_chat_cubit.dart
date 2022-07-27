@@ -15,6 +15,7 @@ part 'initialize_stream_chat_state.dart';
 class InitializeStreamChatCubit extends Cubit<InitializeStreamChatState> {
   InitializeStreamChatCubit() : super(InitializeStreamChatInitial());
   initializeStreamChat(BuildContext context) async {
+    await StreamChat.of(context).client.disconnectUser();
     await JwtProvider.tokenProvider(context.read<AuthBloc>().state.user!.uid)
         .then((value) async {
       var user = User(
@@ -23,7 +24,7 @@ class InitializeStreamChatCubit extends Cubit<InitializeStreamChatState> {
         image: "",
         // extraData: {'publicKey': publicKey!},
       );
-      await StreamChat.of(context).client.disconnectUser();
+
       var chatUser = await StreamChat.of(context).client.connectUser(
             user,
             value,

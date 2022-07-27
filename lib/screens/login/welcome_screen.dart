@@ -45,7 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             SizedBox(height: 40.h),
             StandardElevatedButton(
-              labelText: "🍾  Come on in! →",
+              labelText: "🍾  Come on in!",
               onTap: () {
                 widget.controller.nextPage(
                     duration: const Duration(milliseconds: 300),

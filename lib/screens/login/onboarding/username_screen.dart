@@ -146,7 +146,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
                   ],
                 ),
                 StandardElevatedButton(
-                  labelText: "Continue →",
+                  labelText: "Continue",
                   onTap: () {
                     SessionHelper.username = _usernameController.text;
                     widget.pageController.nextPage(

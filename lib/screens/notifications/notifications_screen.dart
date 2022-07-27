@@ -97,7 +97,11 @@ class NotificationsScreen extends StatelessWidget {
                       itemBuilder: (BuildContext context, int index) {
                         if (index < requestlist.length) {
                           final request = requestlist[index];
-                          return _buildRequestTile(context, state, request!);
+                          if (request != null) {
+                            return _buildRequestTile(context, state, request!);
+                          } else {
+                            return SizedBox.shrink();
+                          }
                         } else {
                           final notification = notificationList[index];
                           if (notification != null) {
@@ -125,10 +129,32 @@ _buildRequestTile(
   return ListTile(
     leading: UserProfileImage(
       radius: 18.0,
-      iconRadius: 12,
+      iconRadius: 24.sp,
       profileImageUrl: request.fromUser.profileImageUrl,
     ),
-    title: Text('${request.fromUser.username} requested to follow you'),
+    title: Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: request.fromUser.username,
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontFamily: kFontFamily,
+                color: kPrimaryBlackColor,
+                fontSize: 11.5.sp),
+          ),
+          const TextSpan(text: '  '),
+          TextSpan(
+            text: "requested to follow you",
+            style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontFamily: kFontFamily,
+                color: kPrimaryBlackColor,
+                fontSize: 11.5.sp),
+          ),
+        ],
+      ),
+    ),
     trailing: Wrap(
       children: [
         OutlinedButton(
@@ -156,7 +182,7 @@ _buildRequestTile(
           child: Text(
             'Accept',
             style: TextStyle(
-              color: kPrimaryBlackColor,
+              color: kPrimaryWhiteColor,
               fontFamily: kFontFamily,
             ),
           ),

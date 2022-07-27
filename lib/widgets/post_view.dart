@@ -536,7 +536,7 @@ class _PostViewState extends State<PostView> {
         children: [
           UserProfileImage(
               radius: 10,
-              profileImageUrl: SessionHelper.profileImageUrl!,
+              profileImageUrl: SessionHelper.profileImageUrl ?? '',
               iconRadius: 30),
           SizedBox(
             width: 60.w,

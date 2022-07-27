@@ -188,7 +188,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ],
             ),
             StandardElevatedButton(
-              labelText: "Continue →",
+              labelText: "Continue",
               onTap: () {
                 widget.pageController.nextPage(
                     duration: const Duration(milliseconds: 300),
