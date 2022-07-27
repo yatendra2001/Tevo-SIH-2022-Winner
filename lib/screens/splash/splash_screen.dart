@@ -9,6 +9,7 @@ import 'package:tevo/screens/login/welcome_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/flutter_toast.dart';
 
 class SplashScreen extends StatelessWidget {
   static const String routeName = '/splash';

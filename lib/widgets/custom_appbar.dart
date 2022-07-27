@@ -9,7 +9,7 @@ customAppbar(String title) {
     automaticallyImplyLeading: false,
     leading: BackButton(),
     elevation: 0,
-    centerTitle: true,
+    centerTitle: false,
   );
 }
 

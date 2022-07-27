@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 2.h),
               StandardElevatedButton(
-                  labelText: "Continue →",
+                  labelText: "Continue",
                   onTap: () {
                     widget.controller.nextPage(
                         duration: const Duration(milliseconds: 300),

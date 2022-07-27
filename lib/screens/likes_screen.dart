@@ -89,7 +89,7 @@ class _LikesScreenState extends State<LikesScreen> {
                                 ProfileScreenArgs(userId: likedBy[index].id));
                       },
                       leading: UserProfileImage(
-                          iconRadius: 12,
+                          iconRadius: 25.sp,
                           radius: 12,
                           profileImageUrl: likedBy[index].profileImageUrl),
                       title: Text(

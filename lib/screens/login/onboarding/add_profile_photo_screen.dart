@@ -97,7 +97,7 @@ class _AddProfilePhotoScreenState extends State<AddProfilePhotoScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 StandardElevatedButton(
-                  labelText: "Continue →",
+                  labelText: "Continue",
                   onTap: () async {
                     BlocProvider.of<LoginCubit>(context)
                         .updateProfilePhoto(profileImage);

@@ -141,7 +141,7 @@ class _DobScreenState extends State<DobScreen> {
               ],
             ),
             StandardElevatedButton(
-              labelText: "Continue →",
+              labelText: "Continue",
               onTap: () {
                 final age = int.parse(_ageController.text);
                 if (age >= 13) {

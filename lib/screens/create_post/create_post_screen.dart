@@ -41,6 +41,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
   final _taskTextEditingController = TextEditingController();
   final _descriptionTextEditingController = TextEditingController();
   final _focusNode = FocusNode();
+  bool isEditing = false;
 
   @override
   void initState() {
@@ -194,6 +195,11 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                               side: const BorderSide(color: kPrimaryBlackColor),
                               borderRadius: BorderRadius.circular(5))),
                       onPressed: () {
+                        setState(() {
+                          isEditing = false;
+                        });
+                        _taskTextEditingController.clear();
+                        _descriptionTextEditingController.clear();
                         _taskBottomSheet(onSubmit: (task) {
                           context
                               .read<CreatePostBloc>()
@@ -258,6 +264,9 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                                 },
                                 view: TaskTileView.createScreenView,
                                 isEditing: () {
+                                  setState(() {
+                                    isEditing = true;
+                                  });
                                   _taskBottomSheet(
                                     onSubmit: (task) {
                                       context.read<CreatePostBloc>().add(
@@ -571,7 +580,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             child: UserProfileImage(
               radius: 16,
               iconRadius: 42,
-              profileImageUrl: SessionHelper.profileImageUrl!,
+              profileImageUrl: SessionHelper.profileImageUrl ?? '',
             ),
           ),
         ),
@@ -616,7 +625,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               padding: EdgeInsets.all(2.w),
               child: Center(
                   child: Text(
-                "Add Task",
+                isEditing ? "Edit Task" : "Add Task",
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,

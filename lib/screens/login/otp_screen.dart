@@ -134,7 +134,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     color: kPrimaryBlackColor),
                           )
                         : StandardElevatedButton(
-                            labelText: "Continue →",
+                            labelText: "Continue",
                             onTap: () {
                               BlocProvider.of<LoginCubit>(context)
                                   .verifyOtp(otp: _otpController.text);

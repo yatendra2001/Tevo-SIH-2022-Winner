@@ -246,15 +246,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                               SizedBox(
                                 height: 16,
                               ),
-                              OutlinedButton(
-                                  onPressed: () {
-                                    context
-                                        .read<ProfileBloc>()
-                                        .blockUser(false, widget.userId);
-                                    isIdBlocked = false;
-                                    setState(() {});
-                                  },
-                                  child: Text("Unblock")),
+                              InkWell(
+                                splashColor:
+                                    kPrimaryBlackColor.withOpacity(0.4),
+                                child: OutlinedButton(
+                                    onPressed: () {
+                                      context
+                                          .read<ProfileBloc>()
+                                          .blockUser(false, widget.userId);
+                                      isIdBlocked = false;
+                                      setState(() {});
+                                    },
+                                    child: Text(
+                                      "Unblock",
+                                      style:
+                                          TextStyle(color: kPrimaryBlackColor),
+                                    )),
+                              ),
                               Spacer()
                             ],
                           ),
@@ -274,6 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             child: CircularProgressIndicator(color: kPrimaryBlackColor));
       default:
         return RefreshIndicator(
+          color: kPrimaryBlackColor,
           onRefresh: () async {
             context
                 .read<ProfileBloc>()
@@ -581,6 +590,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           state
                                                                               .user
                                                                               .todo))
+                                                                  .abs()
                                                                   .toStringAsFixed(
                                                                       1)
                                                                   .toString() +

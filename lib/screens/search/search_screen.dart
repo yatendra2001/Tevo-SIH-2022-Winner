@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 
@@ -61,6 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: kPrimaryWhiteColor,
           appBar: PreferredSize(
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -176,16 +179,10 @@ class _SearchScreenState extends State<SearchScreen> {
                       : const CenteredText(text: 'No users found');
                 default:
                   return Center(
-                    child: Text(
-                      widget.type == SearchScreenType.profile
-                          ? 'Find People....'
-                          : 'So Whom you wanna chat with...',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontFamily: kFontFamily,
-                        color: kPrimaryBlackColor.withOpacity(0.5),
-                      ),
-                    ),
+                    child: SizedBox(
+                        height: 100.h,
+                        child: Lottie.network(
+                            "https://assets4.lottiefiles.com/packages/lf20_xbf1be8x.json")),
                   );
               }
             },

@@ -24,7 +24,7 @@ class NotificationTile extends StatelessWidget {
       child: ListTile(
         leading: UserProfileImage(
           radius: 18.0,
-          iconRadius: 12,
+          iconRadius: 24.sp,
           profileImageUrl: notification.fromUser.profileImageUrl,
         ),
         title: Text.rich(
@@ -101,7 +101,8 @@ class NotificationTile extends StatelessWidget {
       //     child: PostView(post: notification.post!),
       //   ),
       // );
-    } else if (notification.type == NotifType.follow) {
+    } else if (notification.type == NotifType.follow ||
+        notification.type == NotifType.requestAccepted) {
       return _getTrailingIcon(
           "https://cdn-icons-png.flaticon.com/512/7983/7983049.png");
     }
