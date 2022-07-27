@@ -317,6 +317,13 @@ class UserRepository extends BaseUserRepository {
   }
 
   Future<List<User>> getFollowers(String userId) async {
+    final blockSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockingIds)
+        .get();
+
+    List<String> blockedIds = blockSnap.docs.map((doc) => doc.id).toList();
     final userSnap = await _firebaseFirestore
         .collection(Paths.followers)
         .doc(userId)
@@ -324,6 +331,7 @@ class UserRepository extends BaseUserRepository {
         .get();
     List<User> followers = [];
     for (var element in userSnap.docs) {
+      if (blockedIds.contains(element.id)) continue;
       final user = await getUserWithId(userId: element.id);
       followers.add(user);
     }
@@ -337,7 +345,17 @@ class UserRepository extends BaseUserRepository {
         .collection(Paths.userFollowing)
         .get();
     List<User> following = [];
+
+    final blockSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockingIds)
+        .get();
+
+    List<String> blockedIds = blockSnap.docs.map((doc) => doc.id).toList();
+
     for (var element in userSnap.docs) {
+      if (blockedIds.contains(element.id)) continue;
       final user = await getUserWithId(userId: element.id);
       following.add(user);
     }
