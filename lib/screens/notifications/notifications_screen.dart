@@ -10,10 +10,18 @@ import 'package:tevo/widgets/widgets.dart';
 import '../../models/models.dart';
 import '../screens.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   static const String routeName = '/notifications';
 
   const NotificationsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  List<Notif?> requestlist = [];
+  List<Notif?> notificationList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +42,8 @@ class NotificationsScreen extends StatelessWidget {
       ),
       body: BlocBuilder<NotificationsBloc, NotificationsState>(
         builder: (context, state) {
-          final requestlist = state.requests;
-          final notificationList = state.notifications;
+          requestlist = state.requests;
+          notificationList = state.notifications;
           switch (state.status) {
             case NotificationsStatus.error:
               return CenteredText(text: state.failure.message);
@@ -93,16 +101,17 @@ class NotificationsScreen extends StatelessWidget {
                       ),
                     )
                   : ListView.builder(
-                      itemCount: requestlist.length + notificationList.length,
+                      itemCount: (requestlist.length + notificationList.length),
                       itemBuilder: (BuildContext context, int index) {
                         if (index < requestlist.length) {
                           final request = requestlist[index];
                           if (request != null) {
-                            return _buildRequestTile(context, state, request!);
+                            return _buildRequestTile(context, state, request);
                           } else {
                             return SizedBox.shrink();
                           }
-                        } else {
+                        } else if (index >= requestlist.length &&
+                            index < notificationList.length) {
                           final notification = notificationList[index];
                           if (notification != null) {
                             return NotificationTile(
@@ -112,6 +121,7 @@ class NotificationsScreen extends StatelessWidget {
                             return SizedBox.shrink();
                           }
                         }
+                        return SizedBox.shrink();
                       },
                     );
             default:
