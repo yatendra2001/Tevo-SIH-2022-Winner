@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "71721129063-607a6v8i89p93l8htinc0hf6ipo2niaq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superawesomeapps.tevo",
+            "certificate_hash": "85446b113eadc34f6fa1b4b3ab59263036f17944"
+          }
+        },
+        {
           "client_id": "71721129063-8b9vtl1d8i80ak11id7ot9d6kt9hmtbs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.superawesomeapps.tevo",
             "certificate_hash": "1e4d43531e1920997d4fbc10c8c6151292d70ad3"
+          }
+        },
+        {
+          "client_id": "71721129063-929aac78t7uv3ser9ba8vdp7b4qjspn1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superawesomeapps.tevo",
+            "certificate_hash": "673e04588d1d7b2d4e8b5bede9add248e1ac320a"
           }
         },
         {

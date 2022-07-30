@@ -45,6 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             SizedBox(height: 40.h),
             StandardElevatedButton(
+              isArrowButton: true,
               labelText: "🍾  Come on in!",
               onTap: () {
                 widget.controller.nextPage(

@@ -95,8 +95,8 @@ class ListFollowersFollowing extends StatelessWidget {
                             },
                             tileColor: Colors.grey[100],
                             leading: UserProfileImage(
-                                iconRadius: 12,
-                                radius: 12,
+                                iconRadius: 28.sp,
+                                radius: 12.sp,
                                 profileImageUrl:
                                     searchResult[index].profileImageUrl),
                             title: Text(searchResult[index].displayName),

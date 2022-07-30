@@ -38,11 +38,14 @@ class _OtpScreenState extends State<OtpScreen> {
   bool isButtonNotActive = true;
   final TextEditingController _otpController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  _initSmsRetriever() async {
+    await SmsAutoFill().listenForCode();
+  }
 
   @override
   void initState() {
     _focusNode.requestFocus();
-    SmsAutoFill().listenForCode();
+    _initSmsRetriever();
     _otpController.addListener(() {
       final isButtonNotActive = _otpController.text.length != 6;
       setState(() {
@@ -134,6 +137,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     color: kPrimaryBlackColor),
                           )
                         : StandardElevatedButton(
+                            isArrowButton: true,
                             labelText: "Continue",
                             onTap: () {
                               BlocProvider.of<LoginCubit>(context)

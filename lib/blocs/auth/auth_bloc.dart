@@ -48,6 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             await UserRepository().getUserWithId(userId: event.user!.uid);
         SessionHelper.uid = user.id;
         SessionHelper.displayName = user.displayName;
+        SessionHelper.phone = user.phone;
         SessionHelper.profileImageUrl = user.profileImageUrl;
         SessionHelper.username = user.username;
         SessionHelper.completed = user.completed;

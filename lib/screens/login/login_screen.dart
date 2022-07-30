@@ -95,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 2.h),
               StandardElevatedButton(
+                  isArrowButton: true,
                   labelText: "Continue",
                   onTap: () {
                     widget.controller.nextPage(

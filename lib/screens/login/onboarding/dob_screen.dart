@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tevo/blocs/auth/auth_bloc.dart';
 
 import 'package:tevo/models/user_model.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
@@ -141,6 +142,7 @@ class _DobScreenState extends State<DobScreen> {
               ],
             ),
             StandardElevatedButton(
+              isArrowButton: true,
               labelText: "Continue",
               onTap: () {
                 final age = int.parse(_ageController.text);
@@ -186,13 +188,23 @@ class _DobScreenState extends State<DobScreen> {
                               Navigator.of(context).pop();
                               await UserRepository().setUser(
                                 user: User(
-                                  id: SessionHelper.uid ?? "",
+                                  id: context
+                                          .read<AuthBloc>()
+                                          .state
+                                          .user
+                                          ?.uid ??
+                                      "",
                                   username: SessionHelper.username ?? "",
                                   displayName: SessionHelper.displayName ?? "",
                                   profileImageUrl:
                                       SessionHelper.profileImageUrl ?? '',
                                   age: SessionHelper.age ?? '',
-                                  phone: SessionHelper.phone ?? '',
+                                  phone: context
+                                          .read<AuthBloc>()
+                                          .state
+                                          .user
+                                          ?.phoneNumber ??
+                                      '',
                                   followers: 0,
                                   following: 0,
                                   completed: SessionHelper.completed ?? 0,

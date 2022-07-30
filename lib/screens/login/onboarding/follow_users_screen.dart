@@ -241,7 +241,10 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          const LinearProgressIndicator(color: kPrimaryBlackColor),
+          LinearProgressIndicator(
+            color: kPrimaryBlackColor,
+            backgroundColor: kPrimaryBlackColor.withOpacity(0.3),
+          ),
           const SizedBox(
             height: 16,
           ),

@@ -188,6 +188,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ],
             ),
             StandardElevatedButton(
+              isArrowButton: true,
               labelText: "Continue",
               onTap: () {
                 widget.pageController.nextPage(
