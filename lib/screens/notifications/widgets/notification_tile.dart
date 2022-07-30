@@ -77,7 +77,7 @@ class NotificationTile extends StatelessWidget {
       case NotifType.follow:
         return 'followed you.';
       case NotifType.requestAccepted:
-        return 'accepted your follow request.';
+        return '  accepted your follow request.';
       default:
         return '';
     }

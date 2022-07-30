@@ -438,7 +438,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
                                 title: Center(
                                   child: Text(
-                                    "Are you sure you want to block the user?",
+                                    "Are you sure you want to block this user?",
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w400,
@@ -482,7 +482,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           },
                           icon: isIdBlocked
                               ? const Icon(Icons.lock)
-                              : const Icon(Icons.lock_open),
+                              : const Icon(Icons.block),
                         )
                 ],
               ),
@@ -509,11 +509,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: _getCompletionRateColor(
-                                    (state.user.completed + state.user.todo) !=
-                                            0
+                                    (state.user.todo) != 0
                                         ? (((state.user.completed) * 100) /
-                                            (state.user.completed +
-                                                state.user.todo))
+                                            (state.user.todo))
                                         : 0),
                               ),
                               child: Padding(
@@ -579,17 +577,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   Expanded(
                                                     flex: 3,
                                                     child: Text(
-                                                      (state.user.completed +
-                                                                  state.user
-                                                                      .todo) !=
-                                                              0
+                                                      (state.user.todo) != 0
                                                           ? (((state.user.completed) *
                                                                           100) /
-                                                                      (state.user
-                                                                              .completed +
-                                                                          state
-                                                                              .user
-                                                                              .todo))
+                                                                      (state
+                                                                          .user
+                                                                          .todo))
                                                                   .abs()
                                                                   .toStringAsFixed(
                                                                       1)

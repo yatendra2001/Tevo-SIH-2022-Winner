@@ -72,80 +72,75 @@ class _UsernameScreenState extends State<UsernameScreen> {
                     SizedBox(height: 8.h),
                     Padding(
                         padding: EdgeInsets.symmetric(horizontal: 2.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                height: 8.h,
-                                width: 50.w,
-                                child: TextField(
-                                  controller: _usernameController,
-                                  focusNode: _focusNode,
-                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                  onChanged: (val) {
-                                    BlocProvider.of<LoginCubit>(context)
-                                        .checkUsername(val);
-                                  },
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      FontAwesomeIcons.at,
-                                      color:
-                                          kPrimaryBlackColor.withOpacity(0.8),
-                                    ),
-                                    suffixIcon: (state.usernameStatus ==
-                                                UsernameStatus
-                                                    .usernameAvailable &&
-                                            _usernameController.text.isNotEmpty)
-                                        ? const Icon(Icons.check_circle,
-                                            color: Colors.green)
-                                        : (state.usernameStatus ==
-                                                    UsernameStatus
-                                                        .usernameExists ||
-                                                _usernameController
-                                                    .text.isEmpty)
-                                            ? const Icon(Icons.close_rounded,
-                                                color: Colors.red)
-                                            : null,
-                                    border: const OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: kPrimaryBlackColor,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    enabledBorder: const OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: kPrimaryBlackColor,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    focusedBorder: const OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: kPrimaryBlackColor,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    focusedErrorBorder:
-                                        const OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: kPrimaryBlackColor,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    helperText: "*atleast 4 letters required",
-                                    hintText: "username",
-                                    hintStyle: TextStyle(
-                                        fontFamily: kFontFamily,
-                                        fontSize: 10.sp,
-                                        color: kPrimaryBlackColor,
-                                        fontWeight: FontWeight.w400),
+                        child: Center(
+                          child: SizedBox(
+                              height: 9.5.h,
+                              width: 50.w,
+                              child: TextField(
+                                controller: _usernameController,
+                                focusNode: _focusNode,
+                                style: TextStyle(fontWeight: FontWeight.w400),
+                                onChanged: (val) {
+                                  BlocProvider.of<LoginCubit>(context)
+                                      .checkUsername(val);
+                                },
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    FontAwesomeIcons.at,
+                                    color: kPrimaryBlackColor.withOpacity(0.8),
                                   ),
-                                )),
-                          ],
+                                  suffixIcon: (state.usernameStatus ==
+                                              UsernameStatus
+                                                  .usernameAvailable &&
+                                          _usernameController.text.isNotEmpty)
+                                      ? const Icon(Icons.check_circle,
+                                          color: Colors.green)
+                                      : (state.usernameStatus ==
+                                                  UsernameStatus
+                                                      .usernameExists ||
+                                              _usernameController.text.isEmpty)
+                                          ? const Icon(Icons.close_rounded,
+                                              color: Colors.red)
+                                          : null,
+                                  border: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: kPrimaryBlackColor,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: kPrimaryBlackColor,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: kPrimaryBlackColor,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  focusedErrorBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: kPrimaryBlackColor,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  filled: true,
+                                  helperText: "*atleast 4 letters required",
+                                  hintText: "username",
+                                  hintStyle: TextStyle(
+                                      fontFamily: kFontFamily,
+                                      fontSize: 12.sp,
+                                      color: kPrimaryBlackColor,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              )),
                         )),
                   ],
                 ),
                 StandardElevatedButton(
+                  isArrowButton: true,
                   labelText: "Continue",
                   onTap: () {
                     SessionHelper.username = _usernameController.text;
