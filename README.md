@@ -131,7 +131,7 @@ Project Link: [https://github.com/yatendra2001/Tevo](https://github.com/yatendra
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/yatendra2001/Pikc-Scanner.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/yatendra2001/Tevo.svg?style=for-the-badge
 [contributors-url]: https://github.com/yatendra2001/Tevo/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/yatendra2001/Tevo.svg?style=for-the-badge
 [forks-url]: https://github.com/yatendra2001/Tevo/network/members
