@@ -17,7 +17,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/yatendra2001/Tevo">
-    <img src="assets/images/TEVO (512 × 512px).png"  alt="Logo" width="200" height="80" >
+    <img src="assets/images/TEVO (512 × 512px).png"  alt="Logo" width="200" height="110" >
   </a>
   <p align="center">
     An app that makes your everyday progress fun.
