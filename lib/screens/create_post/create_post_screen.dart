@@ -1,14 +1,27 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
+import 'package:fluttericon/entypo_icons.dart';
+import 'package:fluttericon/linecons_icons.dart';
+import 'package:fluttericon/typicons_icons.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/screens/profile/profile_screen.dart';
 import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/default_showcase_widget.dart';
+import 'package:tevo/widgets/modal_bottom_sheet.dart';
 import 'package:tevo/widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../models/models.dart';
 import 'bloc/create_post_bloc.dart';
 
@@ -28,6 +41,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
   final _taskTextEditingController = TextEditingController();
   final _descriptionTextEditingController = TextEditingController();
   final _focusNode = FocusNode();
+  bool isEditing = false;
 
   @override
   void initState() {
@@ -36,60 +50,100 @@ class _CreatePostScreenState extends State<CreatePostScreen>
     bottomModalSheetController!.duration = const Duration(milliseconds: 300);
   }
 
+  BuildContext? myContext;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<CreatePostBloc, CreatePostState>(
-        builder: (context, state) {
-          return DefaultTabController(
-            length: 2,
-            child: NestedScrollView(
-              controller: _controller,
-              clipBehavior: Clip.none,
-              headerSliverBuilder: (_, __) {
-                return [_buildAppBar()];
-              },
-              body: TabBarView(
-                children: [
-                  _buildRemaining(state),
-                  _buildCompleted(state),
-                ],
+    return BlocBuilder<CreatePostBloc, CreatePostState>(
+      builder: (context, state) {
+        return ShowCaseWidget(
+          builder: Builder(builder: (context) {
+            myContext = context;
+            return Scaffold(
+              body: DefaultTabController(
+                length: 2,
+                child: NestedScrollView(
+                  controller: _controller,
+                  clipBehavior: Clip.none,
+                  headerSliverBuilder: (_, __) {
+                    return [_buildAppBar()];
+                  },
+                  body: TabBarView(
+                    children: [
+                      _buildRemaining(state),
+                      _buildCompleted(state),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 70.0),
-        child: FloatingActionButton(
-            backgroundColor: Colors.black,
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text(
-                        'Delete Post',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      actions: [
-                        OutlinedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Cancel')),
-                        OutlinedButton(
-                            onPressed: () {
-                              _buildDeletePost();
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Yes'))
-                      ],
-                    );
-                  });
-            },
-            child: Icon(Icons.delete_outline_sharp)),
-      ),
+              floatingActionButton: state.post != null
+                  ? Padding(
+                      padding: EdgeInsets.only(bottom: 10.h),
+                      child: FloatingActionButton(
+                          backgroundColor: kPrimaryBlackColor,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      side: BorderSide(
+                                          color: kPrimaryBlackColor,
+                                          width: 2.0),
+                                    ),
+                                    title: Text(
+                                      'Delete today\'s post?',
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: kPrimaryBlackColor,
+                                          fontFamily: kFontFamily),
+                                    ),
+                                    content: Text(
+                                      'This will permanently delete all today\'s targets and can\'t be undone?',
+                                      style: TextStyle(
+                                          fontSize: 11.sp,
+                                          color: kPrimaryBlackColor
+                                              .withOpacity(0.6),
+                                          fontFamily: kFontFamily,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    actions: [
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                            color: kPrimaryBlackColor,
+                                            fontFamily: kFontFamily,
+                                          ),
+                                        ),
+                                      ),
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          _buildDeletePost();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'Yes',
+                                          style: TextStyle(
+                                            color: kPrimaryBlackColor,
+                                            fontFamily: kFontFamily,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: Icon(Icons.delete_outline_sharp)),
+                    )
+                  : null,
+            );
+          }),
+        );
+      },
     );
   }
 
@@ -99,180 +153,247 @@ class _CreatePostScreenState extends State<CreatePostScreen>
 
   _buildRemaining(CreatePostState state) {
     final todoTask = state.todoTask;
-    return AnimatedPadding(
-      duration: const Duration(seconds: 2),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          state.dateTime != null
-              ? _buildRemainingTime(state)
-              : const Text('No Posts Yet'),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Tasks",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: kPrimaryTealColor),
-                onPressed: () {
-                  _taskBottomSheet(onSubmit: (task) {
-                    context
-                        .read<CreatePostBloc>()
-                        .add(AddTaskEvent(task: task));
-                  });
-                  _scrollDown();
-                },
-                child: const Text('Add Task'),
-              )
-            ],
-          ),
-          const SizedBox(height: 16),
-          state.todoTask.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+    return state.status == CreatePostStateStatus.loading
+        ? const Center(
+            child: CircularProgressIndicator(color: kPrimaryBlackColor),
+          )
+        : AnimatedPadding(
+            duration: const Duration(seconds: 2),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                state.dateTime != null
+                    ? _buildRemainingTime(state)
+                    : Center(
+                        child: Text(
+                          'No Posts Yet',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontFamily: kFontFamily,
+                          ),
+                        ),
+                      ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(height: 10.h),
-                    Center(
-                      child: Image.asset(
-                        kEmptyTaskImagePath,
-                        scale: 3,
+                    Text(
+                      "Tasks",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: kFontFamily,
                       ),
                     ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      state.dateTime == null
-                          ? 'Drop your 1st task 🎯'
-                          : 'Winning 🎉',
-                      style: TextStyle(fontSize: 15.sp),
-                    ),
-                  ],
-                )
-              : Expanded(
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (_, index) {
-                      return Dismissible(
-                        key: Key(todoTask[index].dateTime.toString()),
-                        onDismissed: (_) {
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: kPrimaryBlackColor,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: kPrimaryBlackColor),
+                              borderRadius: BorderRadius.circular(5))),
+                      onPressed: () {
+                        setState(() {
+                          isEditing = false;
+                        });
+                        _taskTextEditingController.clear();
+                        _descriptionTextEditingController.clear();
+                        _taskBottomSheet(onSubmit: (task) {
                           context
                               .read<CreatePostBloc>()
-                              .add(CompleteTaskEvent(task: todoTask[index]));
-                        },
-                        child: TaskTile(
-                          isComplete: false,
-                          view: TaskTileView.createScreenView,
-                          isEditing: () {
-                            _taskBottomSheet(
-                              onSubmit: (task) {
-                                context
-                                    .read<CreatePostBloc>()
-                                    .add(UpdateTask(task: task, index: index));
+                              .add(AddTaskEvent(task: task));
+                          print(
+                              "right now state length is : ${state.todoTask.length}");
+                        });
+                        _scrollDown();
+                      },
+                      child: Text(
+                        'Add Task',
+                        style: TextStyle(
+                          color: kPrimaryWhiteColor,
+                          fontSize: 10.sp,
+                          fontFamily: kFontFamily,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                state.todoTask.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 10.h),
+                          Center(
+                            child: Image.asset(
+                              kEmptyTaskImagePath,
+                              scale: 3,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            state.dateTime == null
+                                ? 'Drop your 1st task 🎯'
+                                : 'Yayyy... All tasks completed 🎉',
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: kPrimaryBlackColor,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: kFontFamily,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (_, index) {
+                            return Dismissible(
+                              key: Key(todoTask[index].dateTime.toString()),
+                              onDismissed: (_) {
+                                context.read<CreatePostBloc>().add(
+                                    CompleteTaskEvent(task: todoTask[index]));
                               },
-                              task: todoTask[index],
+                              child: TaskTile(
+                                isComplete: false,
+                                onRepeat: (repeat) {
+                                  context.read<CreatePostBloc>().add(RepeatTask(
+                                      task: todoTask[index], index: index));
+                                },
+                                view: TaskTileView.createScreenView,
+                                isEditing: () {
+                                  setState(() {
+                                    isEditing = true;
+                                  });
+                                  _taskBottomSheet(
+                                    onSubmit: (task) {
+                                      context.read<CreatePostBloc>().add(
+                                          UpdateTask(task: task, index: index));
+                                    },
+                                    task: todoTask[index],
+                                  );
+                                },
+                                task: todoTask[index],
+                                isDeleted: () =>
+                                    context.read<CreatePostBloc>().add(
+                                          DeleteTaskEvent(
+                                            task: state.todoTask[index],
+                                          ),
+                                        ),
+                              ),
                             );
                           },
-                          task: todoTask[index],
-                          isDeleted: () => context.read<CreatePostBloc>().add(
-                                DeleteTaskEvent(
-                                  task: state.todoTask[index],
-                                ),
-                              ),
+                          itemCount: todoTask.length,
                         ),
-                      );
-                    },
-                    itemCount: todoTask.length,
-                  ),
-                ),
-        ],
-      ),
-    );
+                      ),
+              ],
+            ),
+          );
   }
 
   _buildCompleted(CreatePostState state) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          state.post != null
-              ? _buildRemainingTime(state)
-              : const Text('No Tasks Yet'),
-          const Text(
-            "Completed",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 15),
-          state.completedTask.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 10.h),
-                    Center(
-                      child: Image.asset(
-                        kEmptyCompleteImagePath,
-                        scale: 3,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      'Complete your 1st task 🚀',
-                      style: TextStyle(fontSize: 15.sp),
-                    ),
-                  ],
-                )
-              : ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (_, index) => TaskTile(
-                    view: TaskTileView.createScreenView,
-                    isEditing: () {},
-                    task: state.completedTask[index],
-                    isComplete: true,
-                    isDeleted: () => context
-                        .read<CreatePostBloc>()
-                        .add(DeleteTaskEvent(task: state.completedTask[index])),
-                  ),
-                  itemCount: state.completedTask.length,
+    return state.status == CreatePostStateStatus.loading
+        ? Center(
+            child: CircularProgressIndicator(color: kPrimaryBlackColor),
+          )
+        : Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 16,
                 ),
-          const SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
-    );
+                state.post != null
+                    ? _buildRemainingTime(state)
+                    : Center(
+                        child: Text(
+                        'No Task Completed',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontFamily: kFontFamily,
+                        ),
+                      )),
+                const SizedBox(height: 15),
+                state.completedTask.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 17.3.h),
+                          Center(
+                            child: Image.asset(
+                              kEmptyCompleteImagePath,
+                              scale: 3,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            'Complete your 1st task 🚀',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontFamily: kFontFamily,
+                            ),
+                          ),
+                        ],
+                      )
+                    : ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (_, index) => TaskTile(
+                          onRepeat: (repeat) {
+                            context.read<CreatePostBloc>().add(RepeatTask(
+                                task: state.completedTask[index],
+                                index: index));
+                          },
+                          view: TaskTileView.createScreenView,
+                          isEditing: () {},
+                          task: state.completedTask[index],
+                          isComplete: true,
+                          isDeleted: () => context.read<CreatePostBloc>().add(
+                              DeleteTaskEvent(
+                                  task: state.completedTask[index])),
+                        ),
+                        itemCount: state.completedTask.length,
+                      ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          );
   }
 
   _buildAppBar() {
     return SliverAppBar(
+      backgroundColor: kPrimaryWhiteColor,
       floating: true,
       snap: true,
       automaticallyImplyLeading: false,
       centerTitle: false,
       pinned: true,
       elevation: 1,
-      toolbarHeight: 80,
-      title: const Text(
+      toolbarHeight: 8.h,
+      title: Text(
         "Today",
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 38,
+          fontFamily: kFontFamily,
+          fontSize: 22.sp,
         ),
       ),
-      bottom: const TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
+      bottom: TabBar(indicatorColor: kPrimaryBlackColor, tabs: [
         Tab(
           child: Text(
             "Remaining",
             style: TextStyle(
-              color: kPrimaryRedColor,
-              fontSize: 18,
+              color: kPrimaryBlackColor,
+              fontSize: 13.sp,
+              fontFamily: kFontFamily,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
@@ -280,29 +401,189 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           child: Text(
             "Completed",
             style: TextStyle(
-              color: kPrimaryRedColor,
-              fontSize: 18,
+              color: kPrimaryBlackColor,
+              fontSize: 13.sp,
+              fontFamily: kFontFamily,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
       ]),
       actions: [
+        TextButton(
+          onPressed: (() {
+            customBottomSheet(
+              context,
+              Padding(
+                padding: const EdgeInsets.only(
+                    right: 16.0, left: 16.0, bottom: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(
+                      indent: 38.w,
+                      endIndent: 38.w,
+                      thickness: 2,
+                      color: kPrimaryBlackColor,
+                    ),
+                    const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Guide To Create Post",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 15.5.sp,
+                            color: kPrimaryBlackColor,
+                            fontFamily: kFontFamily,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    Text(
+                      "• Tap on add task button to create tasks",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Once you have created your first task, Tevo will start your 24 hour cycle",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          fontWeight: FontWeight.bold,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Meanwhile you can add as many tasks as you want to complete in this time frame",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Swipe task left or right to mark it as complete",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Once you swipe your task, it will be shifted to completed section and gets reflected on your post view",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• You can edit, delete or even make it a recurring task by tapping appropriate icon buttons present on task tile",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• If needed, You can delete the entire post by tapping on the floating delete button",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "• Higher the number of completed tasks, Higher the completion rate 🚀",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: kFontFamily),
+                    ),
+                    const SizedBox(height: 32),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Transform.scale(
+                          scale: 0.9,
+                          child: StandardElevatedButton(
+                            labelText: "Request Feature",
+                            onTap: () async {
+                              const mailUrl = 'mailto:request@tevo.social';
+                              try {
+                                await launchUrl(Uri.parse(mailUrl));
+                              } catch (e) {
+                                await Clipboard.setData(const ClipboardData(
+                                    text: 'request@tevo.social'));
+                              }
+                            },
+                          ),
+                        ),
+                        Transform.scale(
+                          scale: 0.9,
+                          child: StandardElevatedButton(
+                            labelText: "Report Bug",
+                            onTap: () async {
+                              const mailUrl = 'mailto:report@tevo.social';
+                              try {
+                                await launchUrl(Uri.parse(mailUrl));
+                              } catch (e) {
+                                await Clipboard.setData(const ClipboardData(
+                                    text: 'report@tevo.social'));
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
+          style: TextButton.styleFrom(primary: kPrimaryBlackColor),
+          child: Container(
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: kPrimaryBlackColor)),
+            child: const Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Typicons.info,
+                  color: kPrimaryBlackColor,
+                )),
+          ),
+        ),
+        const SizedBox(width: 8),
         GestureDetector(
           onTap: (() {
             Navigator.pushNamed(context, ProfileScreen.routeName,
                 arguments: ProfileScreenArgs(userId: SessionHelper.uid!));
           }),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Image.asset(
-                kBaseProfileImagePath,
-                scale: 0.8,
-              ),
+            padding: const EdgeInsets.all(8.0),
+            child: UserProfileImage(
+              radius: 16,
+              iconRadius: 42,
+              profileImageUrl: SessionHelper.profileImageUrl ?? '',
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -342,20 +623,32 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           children: [
             Padding(
               padding: EdgeInsets.all(2.w),
-              child: const Center(
+              child: Center(
                   child: Text(
-                "Add Task",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                isEditing ? "Edit Task" : "Add Task",
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: kFontFamily,
+                ),
               )),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: TextField(
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontFamily: kFontFamily,
+                ),
                 autofocus: true,
                 controller: _taskTextEditingController,
-                decoration: const InputDecoration(
-                  hintText: 'Read Chapter of "Zero to One"',
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 20),
+                decoration: InputDecoration(
+                  hintText: 'e.g. Read Chapter of "Zero to One"',
+                  hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12.sp,
+                      fontFamily: kFontFamily,
+                      fontWeight: FontWeight.w500),
                   border: InputBorder.none,
                   focusColor: Colors.grey,
                 ),
@@ -368,15 +661,23 @@ class _CreatePostScreenState extends State<CreatePostScreen>
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: TextField(
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 10.5.sp,
+                  fontFamily: kFontFamily,
+                  color: kPrimaryBlackColor.withOpacity(0.8),
+                ),
                 controller: _descriptionTextEditingController,
                 keyboardType: TextInputType.multiline,
                 focusNode: _focusNode,
                 maxLines: null,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Description\n\n\n',
                   hintStyle: TextStyle(
                     color: Colors.grey,
-                    fontSize: 20,
+                    fontSize: 10.5.sp,
+                    fontFamily: kFontFamily,
+                    fontWeight: FontWeight.w500,
                   ),
                   border: InputBorder.none,
                 ),
@@ -398,19 +699,23 @@ class _CreatePostScreenState extends State<CreatePostScreen>
               alignment: Alignment.centerRight,
               child: IconButton(
                 onPressed: () {
-                  onSubmit(
-                    Task(
-                      title: _taskTextEditingController.text,
-                      priority: 0,
-                      dateTime: DateTime.now(),
-                      description: _descriptionTextEditingController.text,
-                    ),
-                  );
-                  _taskTextEditingController.clear();
-                  _descriptionTextEditingController.clear();
+                  if (_taskTextEditingController.text.isEmpty) {
+                    flutterToast(msg: "Title cannont be empty.");
+                  } else {
+                    onSubmit(
+                      Task(
+                        title: _taskTextEditingController.text,
+                        priority: 0,
+                        dateTime: DateTime.now(),
+                        description: _descriptionTextEditingController.text,
+                      ),
+                    );
+                    _taskTextEditingController.clear();
+                    _descriptionTextEditingController.clear();
+                  }
                 },
                 icon: CircleAvatar(
-                  backgroundColor: kPrimaryTealColor,
+                  backgroundColor: kPrimaryBlackColor,
                   child: Center(
                     child: Icon(
                       FontAwesomeIcons.arrowUp,
@@ -441,18 +746,21 @@ class _CreatePostScreenState extends State<CreatePostScreen>
           }
           return TimerCountdown(
               format: CountDownTimerFormat.hoursMinutesSeconds,
-              timeTextStyle: const TextStyle(
-                color: Colors.teal,
+              timeTextStyle: TextStyle(
+                color: kPrimaryBlackColor,
+                fontFamily: kFontFamily,
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
               ),
-              colonsTextStyle: const TextStyle(
-                color: Colors.teal,
+              colonsTextStyle: TextStyle(
+                color: kPrimaryBlackColor,
+                fontFamily: kFontFamily,
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
               ),
-              descriptionTextStyle: const TextStyle(
-                color: Colors.red,
+              descriptionTextStyle: TextStyle(
+                color: kPrimaryBlackColor,
+                fontFamily: kFontFamily,
                 fontSize: 10,
               ),
               spacerWidth: 20,
@@ -473,11 +781,12 @@ class _CreatePostScreenState extends State<CreatePostScreen>
     return showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
+        return AlertDialog(
           title: Text(
             'Your Time is Up',
             style: TextStyle(
               color: Colors.black,
+              fontFamily: kFontFamily,
             ),
           ),
         );

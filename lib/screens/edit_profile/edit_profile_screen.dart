@@ -1,10 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/helpers/helpers.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
+import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/custom_appbar.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 
@@ -46,9 +50,7 @@ class EditProfileScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Edit Profile'),
-        ),
+        appBar: customAppbar('Edit Profile'),
         body: BlocConsumer<EditProfileCubit, EditProfileState>(
           listener: (context, state) {
             if (state.status == EditProfileStatus.success) {
@@ -66,14 +68,26 @@ class EditProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   if (state.status == EditProfileStatus.submitting)
-                    const LinearProgressIndicator(),
+                    const LinearProgressIndicator(
+                      color: kPrimaryBlackColor,
+                    ),
                   const SizedBox(height: 32.0),
                   GestureDetector(
                     onTap: () => _selectProfileImage(context),
-                    child: UserProfileImage(
-                      radius: 80.0,
-                      profileImageUrl: user.profileImageUrl,
-                      profileImage: state.profileImage,
+                    child: Card(
+                      elevation: 3,
+                      shape: const CircleBorder(
+                          side:
+                              BorderSide(color: kPrimaryBlackColor, width: 3)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: UserProfileImage(
+                          iconRadius: 80,
+                          radius: 80.0,
+                          profileImageUrl: user.profileImageUrl,
+                          profileImage: state.profileImage,
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -84,19 +98,111 @@ class EditProfileScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TextFormField(
+                            style: TextStyle(
+                              color: kPrimaryBlackColor,
+                              fontFamily: kFontFamily,
+                              fontSize: 9.5.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
                             initialValue: user.username,
-                            decoration: InputDecoration(hintText: 'Username'),
+                            decoration: InputDecoration(
+                              labelText: 'Username',
+                              labelStyle: TextStyle(
+                                color: kPrimaryBlackColor,
+                                fontSize: 9.5.sp,
+                                fontFamily: kFontFamily,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
                             onChanged: (value) => context
                                 .read<EditProfileCubit>()
                                 .usernameChanged(value),
-                            validator: (value) => value!.trim().isEmpty
-                                ? 'Username cannot be empty.'
-                                : null,
+                            validator: (value) {
+                              if (value!.trim().isEmpty) {
+                                return "Username cannot be empty";
+                              } else if (value.trim().length < 4) {
+                                return "Username cannot be less than four letter";
+                              }
+
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 32,
+                          ),
+                          TextFormField(
+                            style: TextStyle(
+                              color: kPrimaryBlackColor,
+                              fontFamily: kFontFamily,
+                              fontSize: 9.5.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            initialValue: user.displayName,
+                            decoration: InputDecoration(
+                              labelText: 'Name',
+                              labelStyle: TextStyle(
+                                color: kPrimaryBlackColor,
+                                fontFamily: kFontFamily,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onChanged: (value) => context
+                                .read<EditProfileCubit>()
+                                .nameChanged(value),
+                            validator: (value) {
+                              if (value!.trim().isEmpty) {
+                                return "name cannot be empty";
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 16.0),
                           TextFormField(
+                            style: TextStyle(
+                              color: kPrimaryBlackColor,
+                              fontFamily: kFontFamily,
+                              fontSize: 9.5.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
                             initialValue: user.bio,
-                            decoration: InputDecoration(hintText: 'Bio'),
+                            maxLines: 3,
+                            minLines: 3,
+                            decoration: InputDecoration(
+                              labelText: 'Bio',
+                              labelStyle: TextStyle(
+                                color: kPrimaryBlackColor,
+                                fontSize: 9.5.sp,
+                                fontFamily: kFontFamily,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryBlackColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
                             onChanged: (value) => context
                                 .read<EditProfileCubit>()
                                 .bioChanged(value),
@@ -107,14 +213,25 @@ class EditProfileScreen extends StatelessWidget {
                           const SizedBox(height: 28.0),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(8),
                               primary: Theme.of(context).primaryColor,
-                              textStyle: const TextStyle(color: Colors.white),
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontFamily: kFontFamily,
+                              ),
                             ),
                             onPressed: () => _submitForm(
                               context,
                               state.status == EditProfileStatus.submitting,
                             ),
-                            child: const Text('Update'),
+                            child: Text(
+                              'Update',
+                              style: TextStyle(
+                                color: kPrimaryWhiteColor,
+                                fontFamily: kFontFamily,
+                                fontSize: 12.sp,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -140,8 +257,12 @@ class EditProfileScreen extends StatelessWidget {
     }
   }
 
-  void _submitForm(BuildContext context, bool isSubmitting) {
-    if (_formKey.currentState!.validate() && !isSubmitting) {
+  void _submitForm(BuildContext context, bool isSubmitting) async {
+    final userNameAvaialable =
+        await context.read<EditProfileCubit>().checkUsernameExists();
+    if (userNameAvaialable == false) {
+      flutterToast(msg: "Username exists");
+    } else if (_formKey.currentState!.validate() && !isSubmitting) {
       context.read<EditProfileCubit>().submit();
     }
   }

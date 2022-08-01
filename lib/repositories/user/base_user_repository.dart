@@ -5,7 +5,7 @@ abstract class BaseUserRepository {
   Future<void> updateUser({required User user});
   Future<void> setUser({required User user});
   Future<List<User>> searchUsers({required String query});
-  Future<List<User>> getUsersByFollowers();
+  Future<List<User>> getUsersByFollowers(String userId);
 
   void followUser({
     required String userId,

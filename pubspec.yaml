@@ -65,12 +65,23 @@ dependencies:
   fluttertoast: ^8.0.9
   sizer: ^2.0.15
   connectivity: ^3.0.6
-  stream_chat_flutter: ^3.0.0
+  stream_chat_flutter: ^3.5.1
   dart_jsonwebtoken: ^2.4.1
   percent_indicator: ^4.2.2
   flutter_timer_countdown: ^1.0.3
   animated_text_kit: ^4.2.2
   page_transition: ^2.0.5
+  otp_text_field: ^1.1.3
+  flutter_neumorphic: ^3.2.0
+  google_nav_bar: ^5.0.6
+  fluttericon: ^2.0.0
+  share_plus: ^4.0.10
+  webcrypto: ^0.5.2
+  rolling_switch: ^0.0.2
+  url_launcher: ^6.1.5
+  showcaseview: ^1.1.7
+  shared_preferences: ^2.0.15
+  lottie: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -110,19 +121,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: WorkSans
+    - family: Avenir
       fonts:
-        - asset: assets/fonts/WorkSans-Regular.ttf
-        - asset: assets/fonts/WorkSans-ExtraLight.ttf
-          weight: 100
-        - asset: assets/fonts/WorkSans-Light.ttf
-          weight: 200
-        - asset: assets/fonts/WorkSans-Thin.ttf
-          weight: 300
-        - asset: assets/fonts/WorkSans-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/WorkSans-ExtraBold.ttf
-          weight: 900
+        - asset: assets/fonts/AvenirLTStd-Roman.otf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

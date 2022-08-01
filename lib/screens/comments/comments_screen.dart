@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/comments/bloc/comments_bloc.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class CommentsScreenArgs {
   final Post post;
@@ -67,9 +70,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   Navigator.of(context).pop();
                 },
               ),
-              title: const Text(
+              title: Text(
                 'Comments',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: kPrimaryBlackColor,
+                  fontSize: 15.sp,
+                  fontFamily: kFontFamily,
+                ),
               ),
               bottom: PreferredSize(
                 child: Padding(
@@ -83,9 +90,19 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           Expanded(
                             child: TextField(
                               controller: _commentController,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: kFontFamily,
+                              ),
                               textCapitalization: TextCapitalization.sentences,
-                              decoration: const InputDecoration.collapsed(
-                                  hintText: 'Write a comment...'),
+                              decoration: InputDecoration.collapsed(
+                                hintText: 'Write a comment...',
+                                hintStyle: TextStyle(
+                                    fontFamily: kFontFamily,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                           IconButton(
@@ -103,7 +120,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
                         ],
                       ),
                       if (state.status == CommentsStatus.submitting)
-                        const LinearProgressIndicator(),
+                        const LinearProgressIndicator(
+                            color: kPrimaryBlackColor),
                     ],
                   ),
                 ),
@@ -111,34 +129,48 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
             ),
             body: state.status == CommentsStatus.loading
-                ? const CircularProgressIndicator()
-                : ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 60.0),
+                ? const CircularProgressIndicator(
+                    color: kPrimaryBlackColor,
+                  )
+                : ListView.separated(
+                    separatorBuilder: (__, _) => const Divider(),
+                    // padding: const EdgeInsets.only(bottom: 30.0),
                     itemCount: state.comments.length,
                     itemBuilder: (BuildContext context, int index) {
                       final comment = state.comments[index];
                       return ListTile(
                         leading: UserProfileImage(
-                          radius: 22.0,
+                          iconRadius: 49,
+                          radius: 14.0,
                           profileImageUrl: comment!.author.profileImageUrl,
                         ),
                         title: Text.rich(
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: comment.author.username,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600),
+                                text: comment.author.displayName.split(" ")[0],
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: kFontFamily,
+                                ),
                               ),
-                              const TextSpan(text: ' '),
-                              TextSpan(text: comment.content),
+                              TextSpan(
+                                text: "  " + comment.content,
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: kFontFamily,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         subtitle: Text(
-                          DateFormat.yMd().add_jm().format(comment.date),
+                          timeago.format(comment.date),
                           style: TextStyle(
                             color: Colors.grey[600],
+                            fontFamily: kFontFamily,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

@@ -27,7 +27,7 @@ class StorageRepository extends BaseStorageRepository {
     required String url,
     required File image,
   }) async {
-    var imageId = Uuid().v4();
+    var imageId = const Uuid().v4();
 
     // Update user profile image.
     if (url.isNotEmpty) {

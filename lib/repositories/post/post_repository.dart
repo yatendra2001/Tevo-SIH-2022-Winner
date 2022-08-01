@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
@@ -85,9 +87,32 @@ class PostRepository extends BasePostRepository {
     return _firebaseFirestore
         .collection(Paths.posts)
         .where('author', isEqualTo: authorRef)
-        .orderBy('enddate', descending: true)
+        .orderBy('enddate', descending: false)
         .snapshots()
         .map((snap) => snap.docs.map((doc) => Post.fromDocument(doc)).toList());
+  }
+
+  @override
+  Future<double> getCompletionRate({required String userId}) async {
+    final authorRef = _firebaseFirestore.collection(Paths.users).doc(userId);
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.posts)
+        .where('author', isEqualTo: authorRef)
+        .get();
+
+    double totalCompletedTasks = 0;
+    double totalTasks = 0;
+    final postsList =
+        userSnap.docs.map((doc) => Post.fromDocument(doc)).toList();
+
+    postsList.forEach((element) async {
+      await element.then((value) {
+        totalCompletedTasks += value?.completedTask.length ?? 0;
+        totalTasks =
+            totalTasks + (value?.toDoTask.length ?? 0) + totalCompletedTasks;
+      });
+    });
+    return totalTasks != 0 ? ((totalCompletedTasks * 100) / totalTasks) : 0;
   }
 
   Future<Post?> getUserLastPost({required String userId}) async {
@@ -125,8 +150,8 @@ class PostRepository extends BasePostRepository {
           .collection(Paths.feeds)
           .doc(userId)
           .collection(Paths.userFeed)
-          .orderBy('enddate')
-          .limit(3)
+          .orderBy('enddate', descending: true)
+          .limit(8)
           .get();
     } else {
       final lastPostDoc = await _firebaseFirestore
@@ -146,7 +171,7 @@ class PostRepository extends BasePostRepository {
           .collection(Paths.userFeed)
           .where('enddate')
           .startAfterDocument(lastPostDoc)
-          .limit(3)
+          .limit(8)
           .get();
     }
 

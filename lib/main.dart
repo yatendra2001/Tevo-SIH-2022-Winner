@@ -10,10 +10,16 @@ import 'package:tevo/config/custom_router.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/keys/key.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/screens/comments/bloc/comments_bloc.dart';
 import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
+import 'package:tevo/screens/edit_profile/cubit/edit_profile_cubit.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
+import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
+import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
+import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/app_themes.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'screens/create_post/bloc/create_post_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
@@ -34,7 +40,7 @@ class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
   final client = StreamChatClient(
-    streamChatApiKey,
+    streamChatApiKeyProd,
     logLevel: Level.INFO,
   );
 
@@ -82,48 +88,39 @@ class MyApp extends StatelessWidget {
               postRepository: context.read<PostRepository>(),
             ),
           ),
+          BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc(
+              authBloc: context.read<AuthBloc>(),
+              userRepository: context.read<UserRepository>(),
+              postRepository: context.read<PostRepository>(),
+              likedPostsCubit: context.read<LikedPostsCubit>(),
+            )..add(ProfileLoadUser(userId: SessionHelper.uid!)),
+          ),
+          BlocProvider<CommentsBloc>(
+            create: (context) => CommentsBloc(
+              authBloc: context.read<AuthBloc>(),
+              postRepository: context.read<PostRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => InitializeStreamChatCubit(),
+          ),
+          BlocProvider<BottomNavBarCubit>(
+            create: (context) => BottomNavBarCubit(),
+          ),
         ],
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<AuthBloc>(
-              create: (context) =>
-                  AuthBloc(authRepository: context.read<AuthRepository>()),
+        child: Sizer(
+          builder: (context, orientation, deviceType) => MaterialApp(
+            builder: (context, child) => StreamChat(
+              client: client,
+              child: child,
             ),
-            BlocProvider<LoginCubit>(
-              create: (context) => LoginCubit(
-                  authRepository: context.read<AuthRepository>(),
-                  userRepository: context.read<UserRepository>()),
-            ),
-            BlocProvider<LikedPostsCubit>(
-              create: (context) => LikedPostsCubit(
-                postRepository: context.read<PostRepository>(),
-                authBloc: context.read<AuthBloc>(),
-              ),
-            ),
-            BlocProvider<CreatePostBloc>(
-              create: (context) => CreatePostBloc(
-                authBloc: context.read<AuthBloc>(),
-                userRepository: context.read<UserRepository>(),
-                postRepository: context.read<PostRepository>(),
-              ),
-            ),
-            BlocProvider(
-              create: (context) => InitializeStreamChatCubit(),
-            ),
-          ],
-          child: Sizer(
-            builder: (context, orientation, deviceType) => MaterialApp(
-              builder: (context, child) => StreamChat(
-                client: client,
-                child: child,
-              ),
-              navigatorKey: navigatorKey,
-              title: 'Flutter Tevo',
-              debugShowCheckedModeBanner: false,
-              theme: AppThemes.lightTheme,
-              onGenerateRoute: CustomRouter.onGenerateRoute,
-              initialRoute: SplashScreen.routeName,
-            ),
+            navigatorKey: navigatorKey,
+            title: 'Tevo',
+            debugShowCheckedModeBanner: false,
+            theme: AppThemes.lightTheme,
+            onGenerateRoute: CustomRouter.onGenerateRoute,
+            initialRoute: SplashScreen.routeName,
           ),
         ),
       ),

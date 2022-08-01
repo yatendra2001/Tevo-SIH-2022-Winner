@@ -5,6 +5,7 @@ abstract class BasePostRepository {
   Future<void> createComment({required Post post, required Comment comment});
   void createLike({required Post post, required String userId});
   Stream<List<Future<Post?>>> getUserPosts({required String userId});
+  Future<double> getCompletionRate({required String userId});
   Stream<List<Future<Comment?>>> getPostComments({required String postId});
   Future<List<Post?>> getUserFeed({
     required String userId,

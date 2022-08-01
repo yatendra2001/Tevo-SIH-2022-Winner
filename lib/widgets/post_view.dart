@@ -1,182 +1,108 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttericon/elusive_icons.dart';
+import 'package:fluttericon/linearicons_free_icons.dart';
+import 'package:fluttericon/linecons_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
+import 'package:tevo/extensions/extensions.dart';
 import 'package:tevo/models/models.dart';
+import 'package:tevo/repositories/post/post_repository.dart';
+import 'package:tevo/repositories/user/user_repository.dart';
+import 'package:tevo/screens/comments/bloc/comments_bloc.dart';
+import 'package:tevo/screens/likes_screen.dart';
+import 'package:tevo/screens/report/report_screen.dart';
 import 'package:tevo/screens/screens.dart';
+import 'package:tevo/utils/session_helper.dart';
+import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
+
+import '../screens/stream_chat/models/chat_type.dart';
 
 class PostView extends StatefulWidget {
   final Post post;
   final Function()? onPressed;
-  // final bool isLiked;
-  // final VoidCallback onLike;
-  // final bool recentlyLiked;
+  final bool isLiked;
+  final VoidCallback onLike;
+  final bool recentlyLiked;
 
   const PostView({
     Key? key,
     required this.post,
     this.onPressed,
-    // required this.isLiked,
-    // required this.onLike,
-    // this.recentlyLiked = false,
+    required this.isLiked,
+    required this.onLike,
+    this.recentlyLiked = false,
   }) : super(key: key);
 
   @override
   State<PostView> createState() => _PostViewState();
 }
 
-// class _PostViewState extends State<PostView> {
-//   List<Task>? tasks;
-
-//   @override
-//   void initState() {
-//     tasks = List.from(widget.post.completedTask);
-//     tasks!.addAll(List.from(widget.post.toDoTask));
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: Card(
-//         elevation: 5,
-//         shape: RoundedRectangleBorder(
-//           side: const BorderSide(color: Colors.white70, width: 1),
-//           borderRadius: BorderRadius.circular(10),
-//         ),
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: Column(
-//             children: [
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Row(
-//                     children: [
-//                       widget.post.author.profileImageUrl == ''
-//                           ? const Icon(
-//                               Icons.person,
-//                               size: 50,
-//                             )
-//                           : CachedNetworkImage(
-//                               imageUrl: widget.post.author.profileImageUrl,
-//                             ),
-//                       Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(widget.post.author.username,
-//                               style: const TextStyle(
-//                                   fontSize: 18, fontWeight: FontWeight.bold)),
-//                           Text(DateFormat().format(widget.post.enddate))
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                   DropdownButton<String>(
-//                     underline: const SizedBox.shrink(),
-//                     icon: const Icon(Icons.more_vert_outlined),
-//                     items: <String>["Unfollow", "Report"].map((String value) {
-//                       return DropdownMenuItem<String>(
-//                         value: value,
-//                         child: Text(value),
-//                       );
-//                     }).toList(),
-//                     onChanged: (_) {},
-//                   )
-//                 ],
-//               ),
-//               const SizedBox(
-//                 height: 10,
-//               ),
-//               ListView.builder(
-//                 shrinkWrap: true,
-//                 physics: NeverScrollableScrollPhysics(),
-//                 itemBuilder: (context, index) {
-//                   if (index < widget.post.completedTask.length) {
-//                     return TaskTile(
-//                       index: index + 1,
-//                       task: tasks![index],
-//                       isComplete: true,
-//                     );
-//                   } else {
-//                     return TaskTile(
-//                       index: index + 1,
-//                       task: tasks![index],
-//                       isComplete: false,
-//                     );
-//                   }
-//                 },
-//                 itemCount: tasks!.length,
-//               ),
-//               SizedBox(
-//                 height: 20,
-//               ),
-//               _buildCommentTile(context, widget.post),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   _buildCommentTile(BuildContext context, Post post) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         SizedBox(
-//           width: 300,
-//           child: TextField(
-//             onTap: () => Navigator.of(context).pushNamed(
-//                 CommentsScreen.routeName,
-//                 arguments: CommentsScreenArgs(post: post)),
-//             readOnly: true,
-//             decoration: InputDecoration(
-//               disabledBorder: OutlineInputBorder(
-//                 borderSide: const BorderSide(color: Colors.grey),
-//                 borderRadius: BorderRadius.circular(25.0),
-//               ),
-//               enabledBorder: OutlineInputBorder(
-//                 borderSide: const BorderSide(color: Colors.grey),
-//                 borderRadius: BorderRadius.circular(25.0),
-//               ),
-//               filled: true,
-//               hintText: "Add Comment",
-//               hintStyle: TextStyle(fontSize: 12),
-//               fillColor: Colors.white,
-//               focusedBorder: OutlineInputBorder(
-//                 borderSide: const BorderSide(color: Colors.grey),
-//                 borderRadius: BorderRadius.circular(25.0),
-//               ),
-//               isDense: true, // Added this
-//               contentPadding: EdgeInsets.all(12),
-//             ),
-//           ),
-//         ),
-//         Icon(Icons.send)
-//       ],
-//     );
-//   }
-// }
-
 class _PostViewState extends State<PostView> {
   List<Task>? tasks;
+  final _commentTextController = TextEditingController();
+  late int _completionRate;
+  late int _userCompletionRate;
+  bool isButtonActive = false;
 
+  _getCompletionRateColor(int completionRate) {
+    return completionRate >= 90
+        ? kPrimaryVioletColor
+        : (completionRate >= 78
+            ? kPrimaryTealColor
+            : (completionRate < 20 ? kPrimaryRedColor : kSecondaryYellowColor));
+  }
+
+  User? likeUser;
   @override
   void initState() {
     tasks = List.from(widget.post.completedTask);
     tasks!.addAll(List.from(widget.post.toDoTask));
+    _completionRate =
+        (widget.post.toDoTask.length + widget.post.completedTask.length) != 0
+            ? (((widget.post.completedTask.length) * 100) /
+                    (widget.post.toDoTask.length +
+                        widget.post.completedTask.length))
+                .roundToDouble()
+                .toInt()
+            : 0;
+    _userCompletionRate =
+        (widget.post.author.completed + widget.post.author.todo) != 0
+            ? (((widget.post.author.completed) * 100) /
+                    (widget.post.author.completed + widget.post.author.todo))
+                .roundToDouble()
+                .toInt()
+            : 0;
+
+    _commentTextController.addListener(() {
+      setState(() {
+        isButtonActive = _commentTextController.text.isNotEmpty;
+      });
+    });
+    funLike();
     super.initState();
+  }
+
+  funLike() async {
+    likeUser =
+        await context.read<UserRepository>().postOneLikeUser(widget.post.id!);
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: const Color(0xffFFFFFF),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 5,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      color: kPrimaryWhiteColor,
+      elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -184,112 +110,232 @@ class _PostViewState extends State<PostView> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed(ProfileScreen.routeName,
-                    arguments:
-                        ProfileScreenArgs(userId: widget.post.author.id));
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: UserProfileImage(
-                              radius: 20,
-                              profileImageUrl:
-                                  widget.post.author.profileImageUrl,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.post.author.username,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const Text(
-                                "",
-                                style: TextStyle(fontWeight: FontWeight.w300),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: Text('Are you sure to unfollow ?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        // widget.onPressed!();
-                                        // Navigator.of(context).popAndPushNamed(
-                                        //     ReportScreen.routeName);
-                                      },
-                                      child: const Text('Report'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        widget.onPressed!();
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Unfollow'),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        child: const Text(
-                          'Following',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: const Color(0xff009688),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                        ),
-                      )
-                    ],
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      if (index < widget.post.completedTask.length) {
-                        return TaskTile(
-                          task: tasks![index],
-                          view: TaskTileView.feedScreen,
-                          isComplete: true,
-                          isDeleted: () {},
-                          isEditing: () {},
-                        );
-                      } else {
-                        return TaskTile(
-                          task: tasks![index],
-                          view: TaskTileView.feedScreen,
-                          isComplete: false,
-                          isDeleted: () {},
-                          isEditing: () {},
-                        );
-                      }
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (widget.post.author.id != SessionHelper.uid)
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(ProfileScreen.routeName,
+                          arguments:
+                              ProfileScreenArgs(userId: widget.post.author.id));
                     },
-                    itemCount: tasks!.length,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 1,
+                                        color: _getCompletionRateColor(
+                                            _userCompletionRate))),
+                                child: UserProfileImage(
+                                  iconRadius: 42,
+                                  radius: 14,
+                                  profileImageUrl:
+                                      widget.post.author.profileImageUrl,
+                                ),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.post.author.displayName,
+                                  style:
+                                      // GoogleFonts.roboto(
+                                      //   fontWeight: FontWeight.w400,
+                                      //   fontSize: 12.sp,
+                                      // ),
+                                      TextStyle(
+                                          fontFamily: kFontFamily,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(
+                                  height: 1.5,
+                                ),
+                                _buildTime(widget.post.enddate.toDate())
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  // color: kPrimaryTealColor,
+                                  border: Border.all(
+                                      color: _getCompletionRateColor(
+                                          _completionRate))),
+                              child: Padding(
+                                padding: EdgeInsets.all(9.sp),
+                                child: Text(
+                                  // (((widget.post.completedTask.length) * 100) /
+                                  //             (widget.post.toDoTask.length +
+                                  //                 widget.post.completedTask.length))
+                                  _completionRate.toString() + "%",
+                                  style: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontFamily: kFontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: _getCompletionRateColor(
+                                          _completionRate)),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          side: const BorderSide(
+                                              color: kPrimaryBlackColor),
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      content: Text.rich(TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                              text:
+                                                  'We request you to report this post along with the screenshots at '),
+                                          TextSpan(
+                                            text: "help@tevo.social.",
+                                            style: const TextStyle(
+                                                color: Colors.blue,
+                                                decoration:
+                                                    TextDecoration.underline),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () async {
+                                                const mailUrl =
+                                                    'mailto:help@tevo.social';
+                                                try {
+                                                  await launchUrl(
+                                                      Uri.parse(mailUrl));
+                                                } catch (e) {
+                                                  await Clipboard.setData(
+                                                      const ClipboardData(
+                                                          text:
+                                                              'help@tevo.social'));
+                                                }
+                                              },
+                                          ),
+                                        ],
+                                        style: TextStyle(
+                                          fontFamily: kFontFamily,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      )),
+                                      title: Text(
+                                        'Inappropriate Content',
+                                        style: TextStyle(
+                                          fontFamily: kFontFamily,
+                                          fontSize: 12.sp,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      actions: [
+                                        // OutlinedButton(
+                                        //   onPressed: () async {},
+                                        //   child: Text(
+                                        //     'Block',
+                                        //     style: TextStyle(
+                                        //       fontFamily: kFontFamily,
+                                        //       fontSize: 10.sp,
+                                        //       color: kPrimaryBlackColor
+                                        //           .withOpacity(0.6),
+                                        //     ),
+                                        //   ),
+                                        //   style: ButtonStyle(
+                                        //     overlayColor:
+                                        //         MaterialStateProperty.all(Colors
+                                        //             .black
+                                        //             .withOpacity(0.1)),
+                                        //   ),
+                                        // ),
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            widget.onPressed!();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'Unfollow',
+                                            style: TextStyle(
+                                              fontFamily: kFontFamily,
+                                              fontSize: 10.sp,
+                                              color: kPrimaryBlackColor
+                                                  .withOpacity(0.6),
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                            overlayColor:
+                                                MaterialStateProperty.all(Colors
+                                                    .black
+                                                    .withOpacity(0.1)),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  useSafeArea: true,
+                                );
+                              },
+                              icon: const Icon(
+                                FontAwesomeIcons.flag,
+                                color: kPrimaryBlackColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  _buildFavoriteCommentTitle(widget.post),
-                ],
-              ),
+                const SizedBox(height: 8),
+                ListView.builder(
+                  padding: const EdgeInsets.all(0),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    if (index < widget.post.completedTask.length) {
+                      return TaskTile(
+                        onRepeat: (_) {},
+                        task: tasks![index],
+                        view: TaskTileView.feedScreen,
+                        isComplete: true,
+                        isDeleted: () {},
+                        isEditing: () {},
+                      );
+                    } else {
+                      return TaskTile(
+                        onRepeat: (_) {},
+                        task: tasks![index],
+                        view: TaskTileView.feedScreen,
+                        isComplete: false,
+                        isDeleted: () {},
+                        isEditing: () {},
+                      );
+                    }
+                  },
+                  itemCount: tasks!.length,
+                ),
+                const SizedBox(height: 2),
+                _buildFavoriteCommentTitle(widget),
+                const Divider(),
+                const SizedBox(height: 2),
+                _buildCommentTile(context, widget.post)
+              ],
             ),
           ],
         ),
@@ -297,99 +343,248 @@ class _PostViewState extends State<PostView> {
     );
   }
 
-  _buildFavoriteCommentTitle(Post post) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.favorite_border_outlined,
-                  size: 30,
-                ),
+  _buildTime(DateTime endOn) {
+    String dateTime;
+    if (endOn.difference(DateTime.now()).inHours > 1) {
+      dateTime = endOn.difference(DateTime.now()).inHours.toString() + " hours";
+    } else {
+      dateTime =
+          endOn.difference(DateTime.now()).inMinutes.toString() + " minutes";
+    }
+    return Text(
+      endOn.isAfter(DateTime.now())
+          ? ("${dateTime} remaining")
+          : ("Closed ${timeago.format(endOn)}"),
+      style: TextStyle(
+          fontFamily: kFontFamily,
+          fontSize: 8.sp,
+          fontWeight: FontWeight.w300,
+          color: kPrimaryBlackColor.withOpacity(0.7)),
+    );
+  }
+
+  _buildFavoriteCommentTitle(widget) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8),
+              child: InkWell(
+                onTap: () {
+                  widget.onLike();
+                  funLike();
+                },
+                child: widget.isLiked
+                    ? const Icon(Elusive.heart, color: Colors.pink)
+                    : const Icon(Linecons.heart),
               ),
-              IconButton(
-                onPressed: () {
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+              child: InkWell(
+                onTap: () {
                   Navigator.of(context).pushNamed(
                     CommentsScreen.routeName,
-                    arguments: CommentsScreenArgs(post: post),
+                    arguments: CommentsScreenArgs(post: widget.post),
                   );
                 },
-                icon: FaIcon(FontAwesomeIcons.comment),
+                child: const FaIcon(Linecons.comment),
               ),
-              IconButton(
-                  onPressed: () {}, icon: Icon(FontAwesomeIcons.paperPlane))
+            ),
+            //TODO plane
+            if (widget.post.author.id != SessionHelper.uid)
+              Padding(
+                padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+                child: InkWell(
+                    onTap: () async {
+                      final user = widget.post.author;
+                      Navigator.of(context).pushNamed(
+                        ChannelScreen.routeName,
+                        arguments: ChannelScreenArgs(
+                          user: user,
+                          profileImage: user.profileImageUrl,
+                          chatType: ChatType.oneOnOne,
+                        ),
+                      );
+                    },
+                    child: const Icon(Linecons.paper_plane)),
+              )
+          ],
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.of(context).pushNamed(LikesScreen.routeName,
+                arguments: LikesScreenArgs(postId: widget.post.id));
+          },
+          child: Container(
+            margin:
+                const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 16),
+            padding: EdgeInsets.only(bottom: 1),
+            child: _buildLike(widget.recentlyLiked
+                ? widget.post.likes + 1
+                : widget.post.likes),
+          ),
+        )
+      ],
+    );
+  }
+
+  _buildLike(int likes) {
+    if (likeUser == null && likes > 0) {
+      return Text(
+        '$likes likes',
+        style: TextStyle(
+          fontSize: 9.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: kFontFamily,
+          color: kPrimaryBlackColor.withOpacity(0.7),
+        ),
+      );
+    }
+    switch (likes) {
+      case 0:
+        return Text(
+          'No likes',
+          style: TextStyle(
+            fontSize: 9.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: kFontFamily,
+            color: kPrimaryBlackColor.withOpacity(0.7),
+          ),
+        );
+      case 1:
+        return Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: 'Liked by ',
+                style: TextStyle(
+                  fontSize: 9.sp,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: kFontFamily,
+                  color: kPrimaryBlackColor.withOpacity(0.7),
+                ),
+              ),
+              TextSpan(
+                text: SessionHelper.uid == likeUser!.id
+                    ? "You"
+                    : likeUser!.displayName,
+                style: TextStyle(
+                  fontSize: 9.sp,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: kFontFamily,
+                ),
+              ),
             ],
           ),
-          RichText(
-              text: TextSpan(
-                  text: "Liked by",
-                  style: TextStyle(color: Colors.black),
-                  children: [
-                TextSpan(
-                    text: " Tanmay",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: " and"),
-                TextSpan(
-                    text: " 19", style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: " others"),
-              ])),
-          SizedBox(
-            height: 2,
-          ),
-          Text(
-            '10 comments',
-            style: TextStyle(fontWeight: FontWeight.w300),
-          )
-        ],
-      ),
-    );
+        );
+
+      default:
+        return Text.rich(
+          TextSpan(children: [
+            TextSpan(
+              text: 'Liked by ',
+              style: TextStyle(
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w400,
+                fontFamily: kFontFamily,
+                color: kPrimaryBlackColor.withOpacity(0.7),
+              ),
+            ),
+            TextSpan(
+              text: SessionHelper.uid == likeUser!.id
+                  ? "You"
+                  : likeUser!.displayName,
+              style: TextStyle(
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w600,
+                fontFamily: kFontFamily,
+              ),
+            ),
+            TextSpan(
+              text: ' and ',
+              style: TextStyle(
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w400,
+                fontFamily: kFontFamily,
+                color: kPrimaryBlackColor.withOpacity(0.7),
+              ),
+            ),
+            TextSpan(
+              text: (likes - 1) != 1 ? '${likes - 1} others' : '1 other',
+              style: TextStyle(
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w600,
+                fontFamily: kFontFamily,
+              ),
+            ),
+          ]),
+        );
+    }
   }
 
   _buildCommentTile(BuildContext context, Post post) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          UserProfileImage(
+              radius: 10,
+              profileImageUrl: SessionHelper.profileImageUrl ?? '',
+              iconRadius: 30),
           SizedBox(
-            width: 300,
+            width: 60.w,
             child: TextField(
-              onTap: () => Navigator.of(context).pushNamed(
-                CommentsScreen.routeName,
-                arguments: CommentsScreenArgs(post: post),
-              ),
-              readOnly: true,
+              controller: _commentTextController,
+              style: TextStyle(
+                  fontFamily: kFontFamily,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w400),
               decoration: InputDecoration(
-                disabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
+                enabledBorder: InputBorder.none,
                 filled: true,
-                hintText: "Add Comment",
-                hintStyle: TextStyle(fontSize: 12),
+                hintText: "Add a comment...",
+                hintStyle: TextStyle(
+                    fontFamily: kFontFamily,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500),
                 fillColor: Colors.white,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
+                focusedBorder: InputBorder.none,
                 isDense: true, // Added this
-                contentPadding: EdgeInsets.all(12),
               ),
             ),
           ),
-          Icon(Icons.send)
+          const Spacer(),
+          IconButton(
+            icon: Center(
+              child: Icon(
+                Icons.send_rounded,
+                color: !isButtonActive ? Colors.grey : kPrimaryBlackColor,
+              ),
+            ),
+            onPressed: () async {
+              if (_commentTextController.text.trim().isNotEmpty) {
+                PostRepository().createComment(
+                    post: post,
+                    comment: Comment(
+                        postId: post.id!,
+                        author: await context
+                            .read<UserRepository>()
+                            .getUserWithId(userId: SessionHelper.uid!),
+                        content: _commentTextController.text,
+                        date: DateTime.now()));
+                _commentTextController.clear();
+                FocusScope.of(context).unfocus();
+                flutterToast(msg: "Commented");
+              }
+            },
+          )
         ],
       ),
     );

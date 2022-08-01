@@ -11,6 +11,8 @@ class Paths {
   static const String feeds = 'feeds';
   static const String notifications = 'notifications';
   static const String requests = 'requests';
+  static const String repeatTask = 'repeatTask';
+  static const String blockUser = 'blockUser';
 
   // Subcollections
   static const String postLikes = 'postLikes';
@@ -20,4 +22,7 @@ class Paths {
   static const String userFeed = 'userFeed';
   static const String userNotifications = 'userNotifications';
   static const String userRequests = 'userRequests';
+  static const String userRepeatTask = 'userRepeatTask';
+  static const String userblockingIds = 'userblocingIds';
+  static const String userblockedIds = 'userblockedIds';
 }

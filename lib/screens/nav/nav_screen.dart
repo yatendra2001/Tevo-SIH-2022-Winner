@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:sizer/sizer.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/enums/enums.dart';
@@ -9,6 +12,8 @@ import 'package:tevo/screens/feed/feed_screen.dart';
 import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:tevo/screens/notifications/notifications_screen.dart';
+import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/flutter_toast.dart';
 
 import '../create_post/bloc/create_post_bloc.dart';
 import '../feed/bloc/feed_bloc.dart';
@@ -19,52 +24,49 @@ class NavScreen extends StatelessWidget {
   NavScreen({Key? key}) : super(key: key);
 
   static Route route() {
-    return PageRouteBuilder(
+    return PageTransition(
       settings: const RouteSettings(name: routeName),
-      transitionDuration: const Duration(seconds: 0),
-      pageBuilder: (_, __, ___) => BlocProvider<BottomNavBarCubit>(
-        create: (_) => BottomNavBarCubit(),
-        child: NavScreen(),
-      ),
+      type: PageTransitionType.fade,
+      child: NavScreen(),
     );
   }
 
   final Map<BottomNavItem, dynamic> items = {
     BottomNavItem.feed: Container(
-      height: 38,
-      width: 38,
+      height: 42,
+      width: 42,
       decoration: BoxDecoration(
-          color: const Color(0xffD8F3F1),
-          borderRadius: BorderRadius.circular(8)),
+          border: Border.all(color: kPrimaryBlackColor),
+          borderRadius: BorderRadius.circular(10)),
       child: const Icon(
         Icons.home_outlined,
         size: 23,
-        color: Color(0xff009688),
+        color: kPrimaryBlackColor,
       ),
     ),
     BottomNavItem.create: Container(
-      height: 48,
-      width: 48,
+      height: 42,
+      width: 42,
       decoration: BoxDecoration(
-          color: const Color(0xff009688),
+          border: Border.all(color: kPrimaryBlackColor),
           borderRadius: BorderRadius.circular(10)),
       child: const Icon(
         Icons.add,
-        color: Colors.white,
-        size: 30,
+        color: kPrimaryBlackColor,
+        size: 23,
       ),
     ),
     BottomNavItem.notifications: Container(
-      height: 38,
-      width: 38,
+      height: 42,
+      width: 42,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          color: const Color(0xffD8F3F1),
-          borderRadius: BorderRadius.circular(8)),
+          border: Border.all(color: kPrimaryBlackColor),
+          borderRadius: BorderRadius.circular(10)),
       child: const Icon(
         Icons.notifications_none_outlined,
         size: 23,
-        color: Color(0xff009688),
+        color: kPrimaryBlackColor,
       ),
     )
   };
@@ -96,6 +98,17 @@ class NavScreen extends StatelessWidget {
       child: const NotificationsScreen(),
     ),
   };
+  DateTime? currentBackPressTime;
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      flutterToast(msg: 'press again to exit app');
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,15 +116,12 @@ class NavScreen extends StatelessWidget {
       onWillPop: () async => false,
       child: BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: const Color(0xffE5E5E5),
-              resizeToAvoidBottomInset: false,
-              extendBody: true,
-              body:
-                  screens[context.read<BottomNavBarCubit>().state.selectedItem],
-              bottomNavigationBar: _customisedBottomNavBar(context, state),
-            ),
+          return Scaffold(
+            backgroundColor: const Color(0xffE5E5E5),
+            resizeToAvoidBottomInset: false,
+            extendBody: true,
+            body: screens[context.read<BottomNavBarCubit>().state.selectedItem],
+            bottomNavigationBar: _customisedGoogleBottomNavBar(context, state),
           );
         },
       ),
@@ -125,46 +135,79 @@ class NavScreen extends StatelessWidget {
     context.read<BottomNavBarCubit>().updateSelectedItem(selectedItem);
   }
 
-  _customisedBottomNavBar(context, state) {
+  _customisedGoogleBottomNavBar(context, BottomNavBarState state) {
     return Container(
-      height: 76,
+      height: 9.4.h,
       decoration: const BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.black38,
             spreadRadius: 0,
-            blurRadius: 10,
+            blurRadius: 8,
           ),
         ],
         color: Color(0xffFFFFFF),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-          bottomLeft: Radius.zero,
-          bottomRight: Radius.zero,
-        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: items
-            .map((item, icon) => MapEntry(
-                item,
-                Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    highlightColor: Colors.grey,
-                    onTap: () {
-                      _selectBottomNavItem(
-                        context,
-                        item,
-                      );
-                    },
-                    child: icon,
-                  ),
-                )))
-            .values
-            .toList(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 6.3.w, vertical: 1.h),
+        child: GNav(
+          haptic: true, // haptic feedback
+          tabBorderRadius: 10,
+          tabActiveBorder: Border.all(
+              color: kPrimaryBlackColor, width: 1), // tab button border
+          tabBorder:
+              Border.all(color: Colors.grey, width: 1), // tab button border
+          curve: Curves.easeOutExpo, // tab animation curves
+          duration: Duration(milliseconds: 300), // tab animation duration
+          gap: 16, // the tab button gap between icon and text
+          color: Colors.grey[800], // unselected icon color
+          activeColor: kPrimaryWhiteColor, // selected icon and text color
+          iconSize: 24, // tab button icon size
+          textSize: 32.sp,
+          tabBackgroundColor:
+              kPrimaryBlackColor, // selected tab background color
+          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
+          selectedIndex: state.selectedItem == BottomNavItem.feed
+              ? 0
+              : state.selectedItem == BottomNavItem.create
+                  ? 1
+                  : 2,
+          tabs: [
+            GButton(
+              icon: Icons.home_outlined,
+              text: 'Home',
+              gap: 4,
+              textStyle:
+                  TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
+            ),
+            GButton(
+              icon: Icons.add,
+              gap: 4,
+              text: 'Create',
+              textStyle:
+                  TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
+            ),
+            GButton(
+              icon: Icons.notifications_none_outlined,
+              gap: 4,
+              text: 'Notification',
+              textStyle:
+                  TextStyle(fontFamily: kFontFamily, color: kPrimaryWhiteColor),
+            ),
+          ],
+          onTabChange: (index) {
+            if (index == 0) {
+              BlocProvider.of<BottomNavBarCubit>(context)
+                  .updateSelectedItem(BottomNavItem.feed);
+            } else if (index == 1) {
+              BlocProvider.of<BottomNavBarCubit>(context)
+                  .updateSelectedItem(BottomNavItem.create);
+            } else if (index == 2) {
+              BlocProvider.of<BottomNavBarCubit>(context)
+                  .updateSelectedItem(BottomNavItem.notifications);
+            }
+          },
+        ),
       ),
     );
   }

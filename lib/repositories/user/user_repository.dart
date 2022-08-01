@@ -1,11 +1,11 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
 import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/widgets/widgets.dart';
 
 class UserRepository extends BaseUserRepository {
@@ -39,20 +39,77 @@ class UserRepository extends BaseUserRepository {
 
   @override
   Future<List<User>> searchUsers({required String query}) async {
-    final userSnap = await _firebaseFirestore
+    List<User> list1, list2;
+
+    final blockSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockingIds)
+        .get();
+
+    List<String> blockedIds = blockSnap.docs.map((doc) => doc.id).toList();
+
+    final userNameSnap = await _firebaseFirestore
+        .collection(Paths.users)
+        .where('displayName', isGreaterThanOrEqualTo: query)
+        .get();
+    list1 = userNameSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+
+    final nameSnap = await _firebaseFirestore
         .collection(Paths.users)
         .where('username', isGreaterThanOrEqualTo: query)
         .get();
-    return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+
+    list2 = nameSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+    list1.removeWhere((user) => list2.contains(user));
+    list1.addAll(list2);
+    list1.removeWhere((user) => blockedIds.contains(user.id));
+    return list1;
   }
 
   @override
-  Future<List<User>> getUsersByFollowers() async {
+  Future<List<User>> getUsersByFollowers(String userId) async {
+    final blockSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockingIds)
+        .get();
+
+    final blockedSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockedIds)
+        .get();
+
+    List<String> blockedIds = blockSnap.docs.map((doc) => doc.id).toList();
+    blockedIds.addAll(blockedSnap.docs.map((doc) => doc.id).toList());
+    final snap = await _firebaseFirestore
+        .collection(Paths.following)
+        .doc(userId)
+        .collection(Paths.userFollowing)
+        .get();
+
+    final list = snap.docs.map((val) => val.id).toList();
+
     final userSnap = await _firebaseFirestore
         .collection(Paths.users)
         .orderBy(Paths.followers, descending: true)
+        .where("isPrivate", isEqualTo: false)
         .get();
-    return userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+    // log(SessionHelper.uid!);
+
+    final followersList =
+        userSnap.docs.map((doc) => User.fromDocument(doc)).toList();
+    List<User> topFollowersList = [];
+    for (var element in followersList) {
+      if (list.contains(element.id) == false &&
+          element.id != SessionHelper.uid) {
+        topFollowersList.add(element);
+      }
+    }
+
+    topFollowersList.removeWhere((user) => blockedIds.contains(user.id));
+    return topFollowersList;
   }
 
   @override
@@ -124,13 +181,15 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
-  void followUser({
+  Future<void> followUser({
     required String userId,
     required String followUserId,
-    required String requestId,
-  }) {
+    required String? requestId,
+  }) async {
+    log("han yeh bhi");
+
     // Add followUser to user's userFollowing.
-    _firebaseFirestore
+    await _firebaseFirestore
         .collection(Paths.following)
         .doc(userId)
         .collection(Paths.userFollowing)
@@ -138,7 +197,7 @@ class UserRepository extends BaseUserRepository {
         .set({});
 
     // Add user to followUser's userFollowers.
-    _firebaseFirestore
+    await _firebaseFirestore
         .collection(Paths.followers)
         .doc(followUserId)
         .collection(Paths.userFollowers)
@@ -151,25 +210,27 @@ class UserRepository extends BaseUserRepository {
       date: DateTime.now(),
     );
 
-    final notificationRequestAccepted = Notif(
-      type: NotifType.requestAccepted,
-      fromUser: User.empty.copyWith(id: followUserId),
-      date: DateTime.now(),
-    );
+    if (requestId != null) {
+      final notificationRequestAccepted = Notif(
+        type: NotifType.requestAccepted,
+        fromUser: User.empty.copyWith(id: followUserId),
+        date: DateTime.now(),
+      );
 
-    _firebaseFirestore
-        .collection(Paths.notifications)
-        .doc(userId)
-        .collection(Paths.userNotifications)
-        .add(notificationRequestAccepted.toDocument());
+      _firebaseFirestore
+          .collection(Paths.notifications)
+          .doc(userId)
+          .collection(Paths.userNotifications)
+          .add(notificationRequestAccepted.toDocument());
 
-    _firebaseFirestore
-        .collection(Paths.notifications)
-        .doc(followUserId)
-        .collection(Paths.userNotifications)
-        .add(notification.toDocument());
+      _firebaseFirestore
+          .collection(Paths.notifications)
+          .doc(followUserId)
+          .collection(Paths.userNotifications)
+          .add(notification.toDocument());
 
-    deleteRequest(requestId: requestId, followUserId: followUserId);
+      deleteRequest(requestId: requestId, followUserId: followUserId);
+    }
   }
 
   @override
@@ -246,14 +307,167 @@ class UserRepository extends BaseUserRepository {
 
   Future<bool> checkUsernameAvailability(String username) async {
     try {
-      var result = await _firebaseFirestore
-          .collection(Paths.username)
-          .doc(username)
-          .get();
+      var result =
+          await _firebaseFirestore.collection(Paths.users).doc(username).get();
       return result.exists;
     } catch (e) {
       log(e.toString());
     }
     return true;
+  }
+
+  Future<List<User>> getFollowers(String userId) async {
+    final blockSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockingIds)
+        .get();
+
+    List<String> blockedIds = blockSnap.docs.map((doc) => doc.id).toList();
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.followers)
+        .doc(userId)
+        .collection(Paths.userFollowers)
+        .get();
+    List<User> followers = [];
+    for (var element in userSnap.docs) {
+      if (blockedIds.contains(element.id)) continue;
+      final user = await getUserWithId(userId: element.id);
+      followers.add(user);
+    }
+    return followers;
+  }
+
+  Future<List<User>> getFollowing(String userId) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.following)
+        .doc(userId)
+        .collection(Paths.userFollowing)
+        .get();
+    List<User> following = [];
+
+    final blockSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(SessionHelper.uid)
+        .collection(Paths.userblockingIds)
+        .get();
+
+    List<String> blockedIds = blockSnap.docs.map((doc) => doc.id).toList();
+
+    for (var element in userSnap.docs) {
+      if (blockedIds.contains(element.id)) continue;
+      final user = await getUserWithId(userId: element.id);
+      following.add(user);
+    }
+    return following;
+  }
+
+  void setToDo(int value, String userId) async {
+    SessionHelper.todo = SessionHelper.todo ?? 0 + value;
+    await _firebaseFirestore
+        .collection(Paths.users)
+        .doc(userId)
+        .update({"todo": FieldValue.increment(value)});
+  }
+
+  void setComplete(int value, String userId) async {
+    SessionHelper.completed = SessionHelper.completed ?? 0 + value;
+    await _firebaseFirestore
+        .collection(Paths.users)
+        .doc(userId)
+        .update({"completed": FieldValue.increment(value)});
+  }
+
+  Future<List<User>> postLikeUsers(String postId) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.likes)
+        .doc(postId)
+        .collection(Paths.postLikes)
+        .get();
+    List<User> likeUsers = [];
+    for (var element in userSnap.docs) {
+      final user = await getUserWithId(userId: element.id);
+      likeUsers.add(user);
+    }
+    return likeUsers;
+  }
+
+  Future<User?> postOneLikeUser(String postId) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.likes)
+        .doc(postId)
+        .collection(Paths.postLikes)
+        .get();
+    User? likeUser;
+    for (var element in userSnap.docs) {
+      final user = await getUserWithId(userId: element.id);
+      likeUser = user;
+      break;
+    }
+    return likeUser;
+  }
+
+  void repeatTaskUpdate(String userId, List<Task> tasks) {
+    _firebaseFirestore
+        .collection(Paths.repeatTask)
+        .doc(userId)
+        .set({"repeat": tasks.map((task) => task.toMap()).toList()});
+  }
+
+  Future<List<Task>> getRepeatTask(String userId) async {
+    final userSnap =
+        await _firebaseFirestore.collection(Paths.repeatTask).doc(userId).get();
+    final ele = userSnap.data();
+
+    if (ele == null) {
+      return [];
+    }
+    List<Task> tasks = [];
+    for (var element in ele["repeat"]) {
+      tasks.add(Task.fromMap(element));
+    }
+    return tasks;
+  }
+
+  Future<void> blockUser(
+      String currUserId, String blockId, bool isIdBlocked) async {
+    if (isIdBlocked) {
+      _firebaseFirestore
+          .collection(Paths.blockUser)
+          .doc(currUserId)
+          .collection(Paths.userblockedIds)
+          .doc(blockId)
+          .set({});
+      _firebaseFirestore
+          .collection(Paths.blockUser)
+          .doc(blockId)
+          .collection(Paths.userblockingIds)
+          .doc(currUserId)
+          .set({});
+    } else {
+      _firebaseFirestore
+          .collection(Paths.blockUser)
+          .doc(currUserId)
+          .collection(Paths.userblockedIds)
+          .doc(blockId)
+          .delete();
+      _firebaseFirestore
+          .collection(Paths.blockUser)
+          .doc(blockId)
+          .collection(Paths.userblockingIds)
+          .doc(currUserId)
+          .delete();
+    }
+  }
+
+  Future<bool> getblockUserId(String currUserId, String idBlocked) async {
+    final userSnap = await _firebaseFirestore
+        .collection(Paths.blockUser)
+        .doc(currUserId)
+        .collection(Paths.userblockedIds)
+        .doc(idBlocked)
+        .get();
+
+    return userSnap.exists;
   }
 }
