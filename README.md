@@ -119,7 +119,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- Team -->
 ## Contact
 
-Yatendra Kumar - [@yatendra2001](https://www.linkedin.com/in/yatendra2001/) - yatendra@tevo.social
+Yatendra Kumar - [@yatendra2001](https://www.linkedin.com/in/yatendra2001/) - yatendra@tevo.social \n
 Tanmay Yadav - [@tanmay-yadav-478a2a222](https://www.linkedin.com/in/tanmay-yadav-478a2a222/) - tanmay@tevo.social
 
 Project Link: [https://github.com/yatendra2001/Tevo](https://github.com/yatendra2001/Tevo)
