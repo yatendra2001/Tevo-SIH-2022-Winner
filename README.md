@@ -31,7 +31,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://youtu.be/LrnHIeX0i8I)
+[![Product Name Screen Shot][product-screenshot]](_)
 
 Tevo is a social networking mobile application that will allow users to share their everyday progress on health, career or any personal interests.
 
