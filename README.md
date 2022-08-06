@@ -143,5 +143,5 @@ Project Link: [https://github.com/yatendra2001/Tevo](https://github.com/yatendra
 [license-url]: https://github.com/yatendra2001/Tevo/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/yatendra-kumar-r2001/
-[product-screenshot]: assets/images/Tevo Background.png
+[product-screenshot]: assets/images/Tevo_Background.png
 
