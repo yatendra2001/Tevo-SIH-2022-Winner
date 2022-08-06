@@ -8,6 +8,8 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:otp_text_field/otp_text_field.dart';
+import 'package:otp_text_field/style.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -36,7 +38,8 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   bool isButtonNotActive = true;
-  final TextEditingController _otpController = TextEditingController();
+  // final TextEditingController _otpController = TextEditingController();
+  final OtpFieldController _otpController = OtpFieldController();
   final FocusNode _focusNode = FocusNode();
   _initSmsRetriever() async {
     await SmsAutoFill().listenForCode();
@@ -46,18 +49,18 @@ class _OtpScreenState extends State<OtpScreen> {
   void initState() {
     _focusNode.requestFocus();
     _initSmsRetriever();
-    _otpController.addListener(() {
-      final isButtonNotActive = _otpController.text.length != 6;
-      setState(() {
-        this.isButtonNotActive = isButtonNotActive;
-      });
-    });
+    // _otpController.addListener(() {
+    //   final isButtonNotActive = _otpController.text.length != 6;
+    //   setState(() {
+    //     this.isButtonNotActive = isButtonNotActive;
+    //   });
+    // });
     super.initState();
   }
 
   @override
   void dispose() {
-    _otpController.dispose();
+    // _otpController.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -68,7 +71,7 @@ class _OtpScreenState extends State<OtpScreen> {
       listener: (context, state) {
         if (state.status == LoginStatus.error) {
           flutterToast(msg: state.failure.message);
-          _otpController.text = '';
+          _otpController.clear();
         }
       },
       builder: (context, state) {
@@ -76,14 +79,14 @@ class _OtpScreenState extends State<OtpScreen> {
           child: SingleChildScrollView(
             child: Center(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       children: [
-                        SizedBox(height: 4.h),
+                        SizedBox(height: 4.h), SizedBox(height: 2.h),
                         Text(
                           "okay, check your texts 💬 - we have sent you a security code!",
                           style: TextStyle(
@@ -93,35 +96,66 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 2.h),
-                        SizedBox(height: 8.h),
+
+                        SizedBox(height: 12.h),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 4.w),
-                          child: PinFieldAutoFill(
+                          child: OTPTextField(
+                            length: 6,
                             controller: _otpController,
-                            focusNode: _focusNode,
-                            decoration: UnderlineDecoration(
-                              textStyle: TextStyle(
-                                  fontFamily: kFontFamily,
-                                  fontSize: 10.sp,
-                                  color: kPrimaryBlackColor),
-                              colorBuilder: FixedColorBuilder(
-                                  kPrimaryBlackColor.withOpacity(0.6)),
-                              lineStrokeCap: StrokeCap.round,
-                            ),
-                            currentCode: _otpController.text,
-                            onCodeSubmitted: (code) {},
-                            onCodeChanged: (code) {
-                              if (code!.length == 6) {
-                                _otpController.text = code;
-                                BlocProvider.of<LoginCubit>(context)
-                                    .verifyOtp(otp: _otpController.text);
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
+                            width: double.infinity,
+                            fieldWidth: 10.w,
+                            spaceBetween: 8,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(fontSize: 13.sp),
+                            textFieldAlignment: MainAxisAlignment.spaceAround,
+                            fieldStyle: FieldStyle.box,
+                            otpFieldStyle: OtpFieldStyle(
+                                borderColor: kPrimaryBlackColor,
+                                enabledBorderColor: kPrimaryBlackColor,
+                                focusBorderColor: Colors.grey[50]!,
+                                disabledBorderColor: kPrimaryBlackColor),
+                            onCompleted: (pin) {
+                              BlocProvider.of<LoginCubit>(context)
+                                  .verifyOtp(otp: pin);
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              print("Completed: " + pin);
+                            },
+                            onChanged: (String value) {
+                              if (value.isEmpty) {
+                                FocusScope.of(context).requestFocus();
                               }
                             },
                           ),
                         ),
+
+                        // Padding(
+                        //   padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        //   child: PinFieldAutoFill(
+                        //     controller: _otpController,
+                        //     focusNode: _focusNode,
+                        //     decoration: UnderlineDecoration(
+                        //       textStyle: TextStyle(
+                        //           fontFamily: kFontFamily,
+                        //           fontSize: 10.sp,
+                        //           color: kPrimaryBlackColor),
+                        //       colorBuilder: FixedColorBuilder(
+                        //           kPrimaryBlackColor.withOpacity(0.6)),
+                        //       lineStrokeCap: StrokeCap.round,
+                        //     ),
+                        //     currentCode: _otpController.text,
+                        //     onCodeSubmitted: (code) {},
+                        //     onCodeChanged: (code) {
+                        //       if (code!.length == 6) {
+                        //         _otpController.text = code;
+                        //         BlocProvider.of<LoginCubit>(context)
+                        //             .verifyOtp(otp: _otpController.text);
+                        //         FocusScope.of(context)
+                        //             .requestFocus(FocusNode());
+                        //       }
+                        //     },
+                        //   ),
+                        // ),
                         SizedBox(height: 2.h),
                         _didntReceiveCodeMethod(),
                         SizedBox(height: 2.h),
@@ -136,16 +170,17 @@ class _OtpScreenState extends State<OtpScreen> {
                                 : const CircularProgressIndicator(
                                     color: kPrimaryBlackColor),
                           )
-                        : StandardElevatedButton(
-                            isArrowButton: true,
-                            labelText: "Continue",
-                            onTap: () {
-                              BlocProvider.of<LoginCubit>(context)
-                                  .verifyOtp(otp: _otpController.text);
-                              FocusScope.of(context).requestFocus(FocusNode());
-                            },
-                            isButtonNull: isButtonNotActive,
-                          ),
+                        : SizedBox.shrink(),
+                    // StandardElevatedButton(
+                    //     isArrowButton: true,
+                    //     labelText: "Continue",
+                    //     onTap: () {
+                    //       BlocProvider.of<LoginCubit>(context)
+                    //           .verifyOtp(otp: _otpController.text);
+                    //       FocusScope.of(context).requestFocus(FocusNode());
+                    //     },
+                    //     isButtonNull: isButtonNotActive,
+                    //   ),
                     Padding(
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom)),
