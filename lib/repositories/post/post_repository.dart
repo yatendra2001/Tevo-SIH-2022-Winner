@@ -87,7 +87,7 @@ class PostRepository extends BasePostRepository {
     return _firebaseFirestore
         .collection(Paths.posts)
         .where('author', isEqualTo: authorRef)
-        .orderBy('enddate', descending: false)
+        .orderBy('enddate', descending: true)
         .snapshots()
         .map((snap) => snap.docs.map((doc) => Post.fromDocument(doc)).toList());
   }

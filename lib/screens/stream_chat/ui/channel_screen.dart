@@ -157,7 +157,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: UserProfileImage(
-                        radius: 11.sp,
+                        radius: 13.sp,
                         profileImageUrl: widget.profileImage!,
                         iconRadius: 30.sp),
                   ),

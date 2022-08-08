@@ -136,9 +136,9 @@ class _InboxListItemState extends State<InboxListItem> {
               width: 8,
             ),
             UserProfileImage(
+              iconRadius: 28.sp,
               radius: 14,
               profileImageUrl: image,
-              iconRadius: 46,
             ),
             SizedBox(
               width: 8,
