@@ -317,6 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       Transform.scale(
                         scale: 0.6,
                         child: RollingSwitch.icon(
+                          initialState: state.user.isPrivate,
                           onChanged: (bool val) {
                             context
                                 .read<ProfileBloc>()
@@ -555,11 +556,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         .reverse();
                                                   }
                                                 },
-                                                child: UserProfileImage(
-                                                  iconRadius: 100.sp,
-                                                  radius: 38.sp,
-                                                  profileImageUrl: state
-                                                      .user.profileImageUrl,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.grey[50]!,
+                                                  ),
+                                                  child: UserProfileImage(
+                                                    iconRadius: 100.sp,
+                                                    radius: 38.sp,
+                                                    profileImageUrl: state
+                                                        .user.profileImageUrl,
+                                                  ),
                                                 ),
                                               ),
                                             )

@@ -95,13 +95,13 @@ class _FeedScreenState extends State<FeedScreen> {
             builder: (context) => ErrorDialog(content: state.failure.message),
           );
         } else if (state.status == FeedStatus.paginating) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Theme.of(context).primaryColor,
-              duration: const Duration(seconds: 1),
-              content: const Text('Fetching More Posts...'),
-            ),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     backgroundColor: Theme.of(context).primaryColor,
+          //     duration: const Duration(seconds: 1),
+          //     content: const Text('Fetching More Posts...'),
+          //   ),
+          // );
         }
       },
       builder: (context, state) {

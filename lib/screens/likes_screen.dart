@@ -64,7 +64,9 @@ class _LikesScreenState extends State<LikesScreen> {
       body: isLoading
           ? const Align(
               alignment: Alignment.center,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: kPrimaryBlackColor,
+              ),
             )
           : likedBy.isEmpty
               ? Center(
