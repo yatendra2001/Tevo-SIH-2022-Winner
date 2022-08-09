@@ -89,7 +89,7 @@ class _FollowUsersScreenState extends State<FollowUsersScreen> {
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: state.topFollowersAccount.length,
-                            padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 5.h),
+                            padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 10.h),
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 8.0,

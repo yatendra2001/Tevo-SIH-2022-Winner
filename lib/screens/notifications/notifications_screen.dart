@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -44,6 +46,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         builder: (context, state) {
           requestlist = state.requests;
           notificationList = state.notifications;
+          log("checking user states :" + state.status.toString());
+          log("checking user requests :" + state.requests.toString());
+          log("checking user notifications :" + state.notifications.toString());
           switch (state.status) {
             case NotificationsStatus.error:
               return CenteredText(text: state.failure.message);

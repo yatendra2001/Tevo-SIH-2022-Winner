@@ -29,8 +29,8 @@ class StandardElevatedButton extends StatelessWidget {
         ),
         onPressed: isButtonNull ? null : onTap,
         child: Padding(
-          padding:
-              EdgeInsets.only(left: 2.w, right: 1.5.w, top: 1.h, bottom: 1.4.h),
+          padding: EdgeInsets.only(
+              left: 2.w, right: 1.5.w, top: 1.4.h, bottom: 1.4.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

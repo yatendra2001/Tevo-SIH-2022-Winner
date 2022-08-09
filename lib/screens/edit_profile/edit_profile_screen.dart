@@ -68,8 +68,9 @@ class EditProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   if (state.status == EditProfileStatus.submitting)
-                    const LinearProgressIndicator(
+                    LinearProgressIndicator(
                       color: kPrimaryBlackColor,
+                      backgroundColor: kPrimaryBlackColor.withOpacity(0.3),
                     ),
                   const SizedBox(height: 32.0),
                   GestureDetector(
@@ -258,6 +259,7 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   void _submitForm(BuildContext context, bool isSubmitting) async {
+    FocusScope.of(context).requestFocus(FocusNode());
     final userNameAvaialable =
         await context.read<EditProfileCubit>().checkUsernameExists();
     if (userNameAvaialable == false) {

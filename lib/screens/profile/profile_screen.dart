@@ -288,79 +288,148 @@ class _ProfileScreenState extends State<ProfileScreen>
                 .read<ProfileBloc>()
                 .add(ProfileLoadUser(userId: state.user.id));
           },
-          child: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                automaticallyImplyLeading: true,
-                elevation: 0,
-                backgroundColor: Colors.grey[50],
-                leading: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.arrow_back_ios_new_outlined)),
-                title: Row(
-                  children: [
-                    Text(
-                      "Profile",
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontFamily: kFontFamily,
+          child: NestedScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                SliverAppBar(
+                  automaticallyImplyLeading: true,
+                  elevation: 0,
+                  backgroundColor: Colors.grey[50],
+                  leading: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.arrow_back_ios_new_outlined)),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Profile",
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontFamily: kFontFamily,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                actions: [
-                  if (state.isCurrentUser)
-                    Transform.scale(
-                      scale: 0.6,
-                      child: RollingSwitch.icon(
-                        onChanged: (bool val) {
-                          context
-                              .read<ProfileBloc>()
-                              .add(ProfileToUpdateUser(isPrivate: val));
-                          String message = '';
-                          setState(() {
-                            message =
-                                state.user.isPrivate ? "Public" : "Private";
-                          });
-                          flutterToast(msg: "Profile Updated: $message");
-                        },
-                        rollingInfoRight: RollingIconInfo(
-                          icon: Icons.lock,
-                          backgroundColor: kPrimaryBlackColor,
-                          text: Text(
-                            'Private',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontFamily: kFontFamily,
+                    ],
+                  ),
+                  actions: [
+                    if (state.isCurrentUser)
+                      Transform.scale(
+                        scale: 0.6,
+                        child: RollingSwitch.icon(
+                          initialState: state.user.isPrivate,
+                          onChanged: (bool val) {
+                            context
+                                .read<ProfileBloc>()
+                                .add(ProfileToUpdateUser(isPrivate: val));
+                            String message = '';
+                            setState(() {
+                              message =
+                                  state.user.isPrivate ? "Public" : "Private";
+                            });
+                            flutterToast(msg: "Profile Updated: $message");
+                          },
+                          rollingInfoRight: RollingIconInfo(
+                            icon: Icons.lock,
+                            backgroundColor: kPrimaryBlackColor,
+                            text: Text(
+                              'Private',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontFamily: kFontFamily,
+                              ),
+                            ),
+                          ),
+                          rollingInfoLeft: RollingIconInfo(
+                            icon: Icons.public,
+                            backgroundColor: Colors.grey,
+                            text: Text(
+                              'Public',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontFamily: kFontFamily,
+                              ),
                             ),
                           ),
                         ),
-                        rollingInfoLeft: RollingIconInfo(
-                          icon: Icons.public,
-                          backgroundColor: Colors.grey,
-                          text: Text(
-                            'Public',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontFamily: kFontFamily,
-                            ),
-                          ),
-                        ),
                       ),
-                    ),
-                  state.isCurrentUser
-                      ? Padding(
-                          padding: const EdgeInsets.only(right: 4.0),
-                          child: IconButton(
-                            icon: SizedBox(
-                              height: 3.2.h,
-                              width: 3.2.h,
-                              child: CachedNetworkImage(
-                                  imageUrl:
-                                      "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
+                    state.isCurrentUser
+                        ? Padding(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: IconButton(
+                              icon: SizedBox(
+                                height: 3.2.h,
+                                width: 3.2.h,
+                                child: CachedNetworkImage(
+                                    imageUrl:
+                                        "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor: Colors.grey[50],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side: const BorderSide(
+                                          color: kPrimaryBlackColor,
+                                          width: 2.0),
+                                    ),
+                                    title: Center(
+                                      child: Text(
+                                        "Are you sure you want to logout?",
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: kPrimaryBlackColor,
+                                          fontFamily: kFontFamily,
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      OutlinedButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text(
+                                            "No",
+                                            style: TextStyle(
+                                              color: kPrimaryBlackColor,
+                                              fontSize: 10.sp,
+                                              fontFamily: kFontFamily,
+                                            ),
+                                          )),
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          context.read<AuthBloc>().add(
+                                              AuthLogoutRequested(
+                                                  context: context));
+                                          context
+                                              .read<LoginCubit>()
+                                              .logoutRequested();
+                                          context
+                                              .read<LikedPostsCubit>()
+                                              .clearAllLikedPosts();
+                                          SessionHelperEmpty();
+                                          MyApp.navigatorKey.currentState!
+                                              .pushReplacementNamed(
+                                                  LoginPageView.routeName);
+                                        },
+                                        child: Text(
+                                          "Yes",
+                                          style: TextStyle(
+                                              color: kPrimaryBlackColor,
+                                              fontFamily: kFontFamily,
+                                              fontSize: 10.sp),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
+                          )
+                        : IconButton(
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -374,7 +443,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                   title: Center(
                                     child: Text(
-                                      "Are you sure you want to logout?",
+                                      "Are you sure you want to block this user?",
                                       style: TextStyle(
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.w400,
@@ -385,483 +454,424 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                   actions: [
                                     OutlinedButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text(
-                                          "No",
-                                          style: TextStyle(
-                                            color: kPrimaryBlackColor,
-                                            fontSize: 10.sp,
-                                            fontFamily: kFontFamily,
-                                          ),
-                                        )),
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text(
+                                        "No",
+                                        style: TextStyle(
+                                          color: kPrimaryBlackColor,
+                                          fontSize: 10.sp,
+                                          fontFamily: kFontFamily,
+                                        ),
+                                      ),
+                                    ),
                                     OutlinedButton(
                                       onPressed: () {
-                                        context.read<AuthBloc>().add(
-                                            AuthLogoutRequested(
-                                                context: context));
-                                        context
-                                            .read<LoginCubit>()
-                                            .logoutRequested();
-                                        context
-                                            .read<LikedPostsCubit>()
-                                            .clearAllLikedPosts();
-                                        SessionHelperEmpty();
-                                        MyApp.navigatorKey.currentState!
-                                            .pushReplacementNamed(
-                                                LoginPageView.routeName);
+                                        isIdBlocked = !isIdBlocked;
+                                        context.read<ProfileBloc>().blockUser(
+                                            isIdBlocked, widget.userId);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
                                       },
                                       child: Text(
                                         "Yes",
                                         style: TextStyle(
-                                            color: kPrimaryBlackColor,
-                                            fontFamily: kFontFamily,
-                                            fontSize: 10.sp),
+                                          color: kPrimaryBlackColor,
+                                          fontFamily: kFontFamily,
+                                          fontSize: 10.sp,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               );
                             },
-                          ),
-                        )
-                      : IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (context) => AlertDialog(
-                                backgroundColor: Colors.grey[50],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  side: const BorderSide(
-                                      color: kPrimaryBlackColor, width: 2.0),
+                            icon: isIdBlocked
+                                ? const Icon(Icons.lock)
+                                : const Icon(Icons.block),
+                          )
+                  ],
+                ),
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _Statistics(
+                              count: state.posts.length.toString(),
+                              label: "POSTS"),
+                          Center(
+                            child: Card(
+                              elevation:
+                                  _animationStatus == AnimationStatus.dismissed
+                                      ? 3
+                                      : 3,
+                              shape: const CircleBorder(),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _getCompletionRateColor(
+                                      (state.user.todo) != 0
+                                          ? (((state.user.completed) * 100) /
+                                              (state.user.todo))
+                                          : 0),
                                 ),
-                                title: Center(
-                                  child: Text(
-                                    "Are you sure you want to block this user?",
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: kPrimaryBlackColor,
-                                      fontFamily: kFontFamily,
-                                    ),
-                                  ),
-                                ),
-                                actions: [
-                                  OutlinedButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text(
-                                      "No",
-                                      style: TextStyle(
-                                        color: kPrimaryBlackColor,
-                                        fontSize: 10.sp,
-                                        fontFamily: kFontFamily,
-                                      ),
-                                    ),
-                                  ),
-                                  OutlinedButton(
-                                    onPressed: () {
-                                      isIdBlocked = !isIdBlocked;
-                                      context.read<ProfileBloc>().blockUser(
-                                          isIdBlocked, widget.userId);
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      "Yes",
-                                      style: TextStyle(
-                                        color: kPrimaryBlackColor,
-                                        fontFamily: kFontFamily,
-                                        fontSize: 10.sp,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          icon: isIdBlocked
-                              ? const Icon(Icons.lock)
-                              : const Icon(Icons.block),
-                        )
-                ],
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _Statistics(
-                            count: state.posts.length.toString(),
-                            label: "POSTS"),
-                        Center(
-                          child: Card(
-                            elevation:
-                                _animationStatus == AnimationStatus.dismissed
-                                    ? 3
-                                    : 3,
-                            shape: const CircleBorder(),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _getCompletionRateColor(
-                                    (state.user.todo) != 0
-                                        ? (((state.user.completed) * 100) /
-                                            (state.user.todo))
-                                        : 0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Transform(
-                                  alignment: FractionalOffset.center,
-                                  transform: Matrix4.identity()
-                                    ..setEntry(2, 3, 0.002)
-                                    ..rotateY(math.pi * _animation.value),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (_animationStatus ==
-                                          AnimationStatus.dismissed) {
-                                        _animationController.forward();
-                                      } else {
-                                        _animationController.reverse();
-                                      }
-                                    },
-                                    child: _animation.value <= 0.5
-                                        ? SizedBox(
-                                            height: 100.sp,
-                                            width: 100.sp,
-                                            child: DefaultShowcase(
-                                              myKey: _one,
-                                              title: "Profile Image",
-                                              description:
-                                                  "Tap on this to find completion rate",
-                                              disposeOnTap: true,
-                                              onTap: () {
-                                                if (_animationStatus ==
-                                                    AnimationStatus.dismissed) {
-                                                  _animationController
-                                                      .forward();
-                                                } else {
-                                                  _animationController
-                                                      .reverse();
-                                                }
-                                              },
-                                              child: UserProfileImage(
-                                                iconRadius: 100.sp,
-                                                radius: 38.sp,
-                                                profileImageUrl:
-                                                    state.user.profileImageUrl,
-                                              ),
-                                            ),
-                                          )
-                                        : Transform(
-                                            alignment: Alignment.center,
-                                            transform:
-                                                Matrix4.rotationY(math.pi),
-                                            child: SizedBox(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Transform(
+                                    alignment: FractionalOffset.center,
+                                    transform: Matrix4.identity()
+                                      ..setEntry(2, 3, 0.002)
+                                      ..rotateY(math.pi * _animation.value),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (_animationStatus ==
+                                            AnimationStatus.dismissed) {
+                                          _animationController.forward();
+                                        } else {
+                                          _animationController.reverse();
+                                        }
+                                      },
+                                      child: _animation.value <= 0.5
+                                          ? SizedBox(
                                               height: 100.sp,
                                               width: 100.sp,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  const Spacer(
-                                                    flex: 1,
+                                              child: DefaultShowcase(
+                                                myKey: _one,
+                                                title: "Profile Image",
+                                                description:
+                                                    "Tap on this to find completion rate",
+                                                disposeOnTap: true,
+                                                onTap: () {
+                                                  if (_animationStatus ==
+                                                      AnimationStatus
+                                                          .dismissed) {
+                                                    _animationController
+                                                        .forward();
+                                                  } else {
+                                                    _animationController
+                                                        .reverse();
+                                                  }
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.grey[50]!,
                                                   ),
-                                                  Expanded(
-                                                    flex: 3,
-                                                    child: Text(
-                                                      (state.user.todo) != 0
-                                                          ? (((state.user.completed) *
-                                                                          100) /
-                                                                      (state
-                                                                          .user
-                                                                          .todo))
-                                                                  .abs()
-                                                                  .toStringAsFixed(
-                                                                      1)
-                                                                  .toString() +
-                                                              "%"
-                                                          : "0 %",
+                                                  child: UserProfileImage(
+                                                    iconRadius: 100.sp,
+                                                    radius: 38.sp,
+                                                    profileImageUrl: state
+                                                        .user.profileImageUrl,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Transform(
+                                              alignment: Alignment.center,
+                                              transform:
+                                                  Matrix4.rotationY(math.pi),
+                                              child: SizedBox(
+                                                height: 100.sp,
+                                                width: 100.sp,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    const Spacer(
+                                                      flex: 1,
+                                                    ),
+                                                    Expanded(
+                                                      flex: 3,
+                                                      child: Text(
+                                                        (state.user.todo) != 0
+                                                            ? (((state.user.completed) *
+                                                                            100) /
+                                                                        (state
+                                                                            .user
+                                                                            .todo))
+                                                                    .abs()
+                                                                    .toStringAsFixed(
+                                                                        1)
+                                                                    .toString() +
+                                                                "%"
+                                                            : "0 %",
+                                                        style: TextStyle(
+                                                            fontSize: 26.sp,
+                                                            fontFamily:
+                                                                kFontFamily,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color:
+                                                                kPrimaryWhiteColor),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    Text(
+                                                      "COMPLETION\nRATE",
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       style: TextStyle(
-                                                          fontSize: 26.sp,
+                                                          fontSize: 11.sp,
                                                           fontFamily:
                                                               kFontFamily,
                                                           fontWeight:
-                                                              FontWeight.w600,
+                                                              FontWeight.w400,
                                                           color:
                                                               kPrimaryWhiteColor),
                                                     ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    "COMPLETION\nRATE",
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 11.sp,
-                                                        fontFamily: kFontFamily,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            kPrimaryWhiteColor),
-                                                  ),
-                                                  const Spacer(
-                                                    flex: 1,
-                                                  ),
-                                                ],
+                                                    const Spacer(
+                                                      flex: 1,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _Statistics(
-                                count: state.user.followers.toString(),
-                                label: "FOLLOWERS"),
-                            if (state.isCurrentUser) SizedBox(height: 2.h),
-                            if (state.isCurrentUser)
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
                               _Statistics(
-                                  count: state.user.following.toString(),
-                                  label: "FOLLOWING"),
-                          ],
+                                  count: state.user.followers.toString(),
+                                  label: "FOLLOWERS"),
+                              if (state.isCurrentUser) SizedBox(height: 2.h),
+                              if (state.isCurrentUser)
+                                _Statistics(
+                                    count: state.user.following.toString(),
+                                    label: "FOLLOWING"),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16),
+                        child: ProfileInfo(
+                          username: state.user.username,
+                          bio: state.user.bio,
+                          displayName: state.user.displayName,
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 16),
-                      child: ProfileInfo(
-                        username: state.user.username,
-                        bio: state.user.bio,
-                        displayName: state.user.displayName,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                      const SizedBox(
+                        height: 24,
+                      ),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: ProfileButton(
-                        isRequesting: state.isRequesting,
-                        isCurrentUser: state.isCurrentUser,
-                        isFollowing: state.isFollowing,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: ProfileButton(
+                          isRequesting: state.isRequesting,
+                          isCurrentUser: state.isCurrentUser,
+                          isFollowing: state.isFollowing,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    // const SizedBox(
-                    //   height: 16,
-                    // ),
-                    // ProfileStats(
-                    //   isRequesting: state.isRequesting,
-                    //   isCurrentUser: state.isCurrentUser,
-                    //   isFollowing: state.isFollowing,
-                    //   posts: state.posts.length,
-                    //   followers: state.user.followers,
-                    //   following: state.user.following,
-                    //   userId: widget.userId,
-                    // ),
-                    Container(
-                      height: 1.h,
-                      color: kPrimaryWhiteColor,
-                      child: Container(
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      // const SizedBox(
+                      //   height: 16,
+                      // ),
+                      // ProfileStats(
+                      //   isRequesting: state.isRequesting,
+                      //   isCurrentUser: state.isCurrentUser,
+                      //   isFollowing: state.isFollowing,
+                      //   posts: state.posts.length,
+                      //   followers: state.user.followers,
+                      //   following: state.user.following,
+                      //   userId: widget.userId,
+                      // ),
+                      Container(
                         height: 1.h,
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(50),
-                              bottomRight: Radius.circular(50),
-                            ),
-                            color: Colors.grey[50]),
-                      ),
-                    ),
-                    Container(
-                      height: 2.h,
-                      color: kPrimaryWhiteColor,
-                    ),
-                    Container(
-                      height: 1.h,
-                      color: kPrimaryWhiteColor,
-                      child: Container(
+                        color: kPrimaryWhiteColor,
+                        child: Container(
                           height: 1.h,
                           decoration: BoxDecoration(
                               borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(50),
-                                topRight: Radius.circular(50),
+                                bottomLeft: Radius.circular(50),
+                                bottomRight: Radius.circular(50),
                               ),
-                              color: Colors.grey[50])),
-                    ),
-                  ],
+                              color: Colors.grey[50]),
+                        ),
+                      ),
+                      Container(
+                        height: 2.h,
+                        color: kPrimaryWhiteColor,
+                      ),
+                      Container(
+                        height: 1.h,
+                        color: kPrimaryWhiteColor,
+                        child: Container(
+                            height: 1.h,
+                            decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(50),
+                                  topRight: Radius.circular(50),
+                                ),
+                                color: Colors.grey[50])),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SliverAppBar(
-                backgroundColor: Colors.grey[50],
-                floating: true,
-                snap: true,
-                automaticallyImplyLeading: false,
-                centerTitle: false,
-                pinned: true,
-                elevation: 1,
-                toolbarHeight: 0,
-                bottom: TabBar(
-                    indicatorColor: kPrimaryBlackColor,
-                    controller: _controller,
-                    isScrollable: false,
-                    unselectedLabelStyle: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 11.sp,
-                      fontFamily: kFontFamily,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    unselectedLabelColor: Colors.grey,
-                    labelColor: kPrimaryBlackColor,
-                    labelStyle: TextStyle(
-                      color: kPrimaryBlackColor,
-                      fontSize: 11.sp,
-                      fontFamily: kFontFamily,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    tabs: const [
-                      Tab(
-                        text: "Posts",
+                SliverAppBar(
+                  backgroundColor: Colors.grey[50],
+                  floating: true,
+                  snap: true,
+                  automaticallyImplyLeading: false,
+                  centerTitle: false,
+                  pinned: true,
+                  elevation: 1,
+                  toolbarHeight: 0,
+                  bottom: TabBar(
+                      indicatorColor: kPrimaryBlackColor,
+                      controller: _controller,
+                      isScrollable: false,
+                      unselectedLabelStyle: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 11.sp,
+                        fontFamily: kFontFamily,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Tab(
-                        text: "Followers",
+                      unselectedLabelColor: Colors.grey,
+                      labelColor: kPrimaryBlackColor,
+                      labelStyle: TextStyle(
+                        color: kPrimaryBlackColor,
+                        fontSize: 11.sp,
+                        fontFamily: kFontFamily,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Tab(
-                        text: "Following",
-                      ),
-                    ]),
-              ),
-              SliverFillRemaining(
-                child: TabBarView(
-                  controller: _controller,
-                  children: [
-                    (state.isCurrentUser && state.posts.isEmpty)
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 64.0),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Create your first post 🚀",
-                                    style: TextStyle(
-                                        color:
-                                            kPrimaryBlackColor.withOpacity(0.7),
-                                        fontFamily: kFontFamily,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15.sp),
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        primary: kPrimaryWhiteColor,
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                            side: const BorderSide(
-                                                color: kPrimaryBlackColor),
-                                            borderRadius:
-                                                BorderRadius.circular(5))),
-                                    onPressed: () {
-                                      context
-                                          .read<BottomNavBarCubit>()
-                                          .updateSelectedItem(
-                                              BottomNavItem.create);
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'Create Task',
-                                      style: TextStyle(
-                                          color: kPrimaryBlackColor,
-                                          fontFamily: kFontFamily,
-                                          fontSize: 9.5.sp),
-                                    ),
-                                  )
-                                ],
+                      tabs: const [
+                        Tab(
+                          text: "Posts",
+                        ),
+                        Tab(
+                          text: "Followers",
+                        ),
+                        Tab(
+                          text: "Following",
+                        ),
+                      ]),
+                ),
+              ];
+            },
+            body: TabBarView(
+              controller: _controller,
+              children: [
+                (state.isCurrentUser && state.posts.isEmpty)
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 64.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                "Create your first post 🚀",
+                                style: TextStyle(
+                                    color: kPrimaryBlackColor.withOpacity(0.7),
+                                    fontFamily: kFontFamily,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15.sp),
                               ),
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 0.0),
-                            child: ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                final post = state.posts[index];
-                                final date = post!.enddate.toDate();
-                                final likedPostsState =
-                                    context.watch<LikedPostsCubit>().state;
-                                final isLiked = likedPostsState.likedPostIds
-                                    .contains(post.id);
-                                log(post.toString());
-                                log("This is length of posts: " +
-                                    state.posts.length.toString());
-                                return Column(
-                                  children: [
-                                    Text(
-                                      DateFormat("EEEE, MMMM d, y")
-                                          .format(date),
-                                      style: TextStyle(
-                                          color: kPrimaryBlackColor,
-                                          fontFamily: kFontFamily,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 11.5.sp),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    PostView(
-                                      post: post,
-                                      isLiked: isLiked,
-                                      onLike: () {
-                                        if (isLiked) {
-                                          context
-                                              .read<LikedPostsCubit>()
-                                              .unlikePost(post: post);
-                                        } else {
-                                          context
-                                              .read<LikedPostsCubit>()
-                                              .likePost(post: post);
-                                        }
-                                      },
-                                      onPressed: null,
-                                    ),
-                                    const SizedBox(height: 32),
-                                  ],
-                                );
-                              },
-                              itemCount: state.posts.length,
-                            ),
+                              const SizedBox(height: 8.0),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: kPrimaryWhiteColor,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                            color: kPrimaryBlackColor),
+                                        borderRadius:
+                                            BorderRadius.circular(5))),
+                                onPressed: () {
+                                  context
+                                      .read<BottomNavBarCubit>()
+                                      .updateSelectedItem(BottomNavItem.create);
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Create Task',
+                                  style: TextStyle(
+                                      color: kPrimaryBlackColor,
+                                      fontFamily: kFontFamily,
+                                      fontSize: 9.5.sp),
+                                ),
+                              )
+                            ],
                           ),
-                    ListFollowersFollowing(
-                        textController: _textControllerFollowers,
-                        isLoading: isLoadingFollowers,
-                        isSearching: isSearchingFollowers,
-                        searchResult: searchResultFollowers,
-                        followers: followers),
-                    ListFollowersFollowing(
-                        textController: _textControllerFollowing,
-                        isLoading: isLoadingFollowing,
-                        isSearching: isSearchingFollowing,
-                        searchResult: searchResultFollowing,
-                        followers: following)
-                  ],
-                ),
-              ),
-            ],
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 0.0),
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final post = state.posts[index];
+                            final date = post!.enddate.toDate();
+                            final likedPostsState =
+                                context.watch<LikedPostsCubit>().state;
+                            final isLiked =
+                                likedPostsState.likedPostIds.contains(post.id);
+                            log(post.toString());
+                            log("This is length of posts: " +
+                                state.posts.length.toString());
+                            return Column(
+                              children: [
+                                Text(
+                                  DateFormat("EEEE, MMMM d, y").format(date),
+                                  style: TextStyle(
+                                      color: kPrimaryBlackColor,
+                                      fontFamily: kFontFamily,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 11.5.sp),
+                                ),
+                                const SizedBox(height: 8),
+                                PostView(
+                                  post: post,
+                                  isLiked: isLiked,
+                                  onLike: () {
+                                    if (isLiked) {
+                                      context
+                                          .read<LikedPostsCubit>()
+                                          .unlikePost(post: post);
+                                    } else {
+                                      context
+                                          .read<LikedPostsCubit>()
+                                          .likePost(post: post);
+                                    }
+                                  },
+                                  onPressed: null,
+                                ),
+                                const SizedBox(height: 32),
+                              ],
+                            );
+                          },
+                          itemCount: state.posts.length,
+                        ),
+                      ),
+                ListFollowersFollowing(
+                    textController: _textControllerFollowers,
+                    isLoading: isLoadingFollowers,
+                    isSearching: isSearchingFollowers,
+                    searchResult: searchResultFollowers,
+                    followers: followers),
+                ListFollowersFollowing(
+                    textController: _textControllerFollowing,
+                    isLoading: isLoadingFollowing,
+                    isSearching: isSearchingFollowing,
+                    searchResult: searchResultFollowing,
+                    followers: following)
+              ],
+            ),
           ),
         );
     }
