@@ -180,9 +180,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 default:
                   return Center(
                     child: SizedBox(
-                        height: 100.h,
-                        child: Lottie.network(
-                            "https://assets4.lottiefiles.com/packages/lf20_xbf1be8x.json")),
+                      height: 100.h,
+                      child: Lottie.asset(
+                          "assets/animations/search-animation.json"),
+                    ),
                   );
               }
             },

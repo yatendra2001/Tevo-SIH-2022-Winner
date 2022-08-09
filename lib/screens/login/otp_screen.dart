@@ -38,8 +38,7 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   bool isButtonNotActive = true;
-  // final TextEditingController _otpController = TextEditingController();
-  final OtpFieldController _otpController = OtpFieldController();
+  final TextEditingController _otpController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   _initSmsRetriever() async {
     await SmsAutoFill().listenForCode();
@@ -86,7 +85,8 @@ class _OtpScreenState extends State<OtpScreen> {
                   children: [
                     Column(
                       children: [
-                        SizedBox(height: 4.h), SizedBox(height: 2.h),
+                        SizedBox(height: 4.h),
+                        SizedBox(height: 2.h),
                         Text(
                           "okay, check your texts 💬 - we have sent you a security code!",
                           style: TextStyle(
@@ -96,66 +96,34 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-
                         SizedBox(height: 12.h),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 4.w),
-                          child: OTPTextField(
-                            length: 6,
+                          child: PinFieldAutoFill(
                             controller: _otpController,
-                            width: double.infinity,
-                            fieldWidth: 10.w,
-                            spaceBetween: 8,
-                            keyboardType: TextInputType.number,
-                            style: TextStyle(fontSize: 13.sp),
-                            textFieldAlignment: MainAxisAlignment.spaceAround,
-                            fieldStyle: FieldStyle.box,
-                            otpFieldStyle: OtpFieldStyle(
-                                borderColor: kPrimaryBlackColor,
-                                enabledBorderColor: kPrimaryBlackColor,
-                                focusBorderColor: Colors.grey[50]!,
-                                disabledBorderColor: kPrimaryBlackColor),
-                            onCompleted: (pin) {
-                              BlocProvider.of<LoginCubit>(context)
-                                  .verifyOtp(otp: pin);
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              print("Completed: " + pin);
-                            },
-                            onChanged: (String value) {
-                              if (value.isEmpty) {
-                                FocusScope.of(context).requestFocus();
+                            focusNode: _focusNode,
+                            decoration: UnderlineDecoration(
+                              textStyle: TextStyle(
+                                  fontFamily: kFontFamily,
+                                  fontSize: 10.sp,
+                                  color: kPrimaryBlackColor),
+                              colorBuilder: FixedColorBuilder(
+                                  kPrimaryBlackColor.withOpacity(0.6)),
+                              lineStrokeCap: StrokeCap.round,
+                            ),
+                            currentCode: _otpController.text,
+                            onCodeSubmitted: (code) {},
+                            onCodeChanged: (code) {
+                              if (code!.length == 6) {
+                                _otpController.text = code;
+                                BlocProvider.of<LoginCubit>(context)
+                                    .verifyOtp(otp: _otpController.text);
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
                               }
                             },
                           ),
                         ),
-
-                        // Padding(
-                        //   padding: EdgeInsets.symmetric(horizontal: 4.w),
-                        //   child: PinFieldAutoFill(
-                        //     controller: _otpController,
-                        //     focusNode: _focusNode,
-                        //     decoration: UnderlineDecoration(
-                        //       textStyle: TextStyle(
-                        //           fontFamily: kFontFamily,
-                        //           fontSize: 10.sp,
-                        //           color: kPrimaryBlackColor),
-                        //       colorBuilder: FixedColorBuilder(
-                        //           kPrimaryBlackColor.withOpacity(0.6)),
-                        //       lineStrokeCap: StrokeCap.round,
-                        //     ),
-                        //     currentCode: _otpController.text,
-                        //     onCodeSubmitted: (code) {},
-                        //     onCodeChanged: (code) {
-                        //       if (code!.length == 6) {
-                        //         _otpController.text = code;
-                        //         BlocProvider.of<LoginCubit>(context)
-                        //             .verifyOtp(otp: _otpController.text);
-                        //         FocusScope.of(context)
-                        //             .requestFocus(FocusNode());
-                        //       }
-                        //     },
-                        //   ),
-                        // ),
                         SizedBox(height: 2.h),
                         _didntReceiveCodeMethod(),
                         SizedBox(height: 2.h),
