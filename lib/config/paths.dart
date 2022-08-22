@@ -13,6 +13,8 @@ class Paths {
   static const String requests = 'requests';
   static const String repeatTask = 'repeatTask';
   static const String blockUser = 'blockUser';
+  static const String events = "events";
+  static const String usersEvents = "usersEvents";
 
   // Subcollections
   static const String postLikes = 'postLikes';
@@ -25,4 +27,5 @@ class Paths {
   static const String userRepeatTask = 'userRepeatTask';
   static const String userblockingIds = 'userblocingIds';
   static const String userblockedIds = 'userblockedIds';
+  static const String userEvent = "userEvent";
 }

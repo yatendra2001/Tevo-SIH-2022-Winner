@@ -12,6 +12,7 @@ import 'package:sizer/sizer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/enums/bottom_nav_item.dart';
+import 'package:tevo/screens/events/events_screen.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
 import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
@@ -126,12 +127,16 @@ class _FeedScreenState extends State<FeedScreen> {
                         pinned: true,
                         elevation: 2,
                         toolbarHeight: 9.h,
-                        title: Text("TEVO",
-                            style: TextStyle(
-                              fontSize: 24.sp,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: kFontFamily,
-                            )),
+                        title: Row(
+                          children: [
+                            Text("TEVO",
+                                style: TextStyle(
+                                  fontSize: 24.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: kFontFamily,
+                                )),
+                          ],
+                        ),
                         bottom: PreferredSize(
                             child: Padding(
                               padding: const EdgeInsets.only(
@@ -175,6 +180,20 @@ class _FeedScreenState extends State<FeedScreen> {
                             ),
                             preferredSize: Size(double.infinity, 9.h)),
                         actions: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.event,
+                                color: kPrimaryBlackColor,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, EventsScreen.routeName);
+                              },
+                            ),
+                          ),
                           Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: GestureDetector(

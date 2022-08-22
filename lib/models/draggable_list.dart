@@ -1,16 +1,13 @@
-import 'task_model.dart';
+// import 'task_model.dart';
 
-class DraggableList {
-  final String header;
-  final List<DraggableListItem> items;
+// class DraggableList {
+//   const DraggableList({
+//     required this.header,
+//     required this.items,
+//   });
+// }
 
-  const DraggableList({
-    required this.header,
-    required this.items,
-  });
-}
-
-class DraggableListItem {
-  final Task task;
-  const DraggableListItem({required this.task});
-}
+// class DraggableListItem {
+//   final Task task;
+//   const DraggableListItem({required this.task});
+// }

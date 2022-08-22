@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tevo/screens/events/create_screen.dart';
+import 'package:tevo/screens/events/event_room_screen.dart';
+import 'package:tevo/screens/events/events_screen.dart';
 import 'package:tevo/screens/likes_screen.dart';
 import 'package:tevo/screens/login/onboarding/add_profile_photo_screen.dart';
 import 'package:tevo/screens/login/onboarding/dob_screen.dart';
@@ -66,8 +69,16 @@ class CustomRouter {
           args: settings.arguments as LikesScreenArgs,
         );
 
+      case EventsScreen.routeName:
+        return EventsScreen.route();
+
       case FollowUsersScreen.routeName:
         return FollowUsersScreen.route();
+
+      case CreateEventScreen.routeName:
+        return CreateEventScreen.route();
+      case EventRoomScreen.routeName:
+        return EventRoomScreen.route();
       default:
         return _errorRoute();
     }

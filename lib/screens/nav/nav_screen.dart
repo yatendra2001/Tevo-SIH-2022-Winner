@@ -8,6 +8,7 @@ import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/enums/enums.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/create_post/create_post_screen.dart';
+import 'package:tevo/screens/events/events_screen.dart';
 import 'package:tevo/screens/feed/feed_screen.dart';
 import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/notifications/bloc/notifications_bloc.dart';
@@ -97,6 +98,7 @@ class NavScreen extends StatelessWidget {
       ),
       child: const NotificationsScreen(),
     ),
+    BottomNavItem.events: EventsScreen(),
   };
   DateTime? currentBackPressTime;
   Future<bool> onWillPop() {

@@ -82,6 +82,8 @@ dependencies:
   showcaseview: ^1.1.7
   shared_preferences: ^2.0.15
   lottie: ^1.4.0
+  image_stack: ^2.1.1
+  flutter_speed_dial: ^6.0.0
 
 dev_dependencies:
   flutter_test:

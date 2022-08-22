@@ -9,6 +9,7 @@ import 'package:tevo/blocs/simple_bloc_observer.dart';
 import 'package:tevo/config/custom_router.dart';
 import 'package:tevo/cubits/cubits.dart';
 import 'package:tevo/keys/key.dart';
+import 'package:tevo/repositories/event/event_repository.dart';
 import 'package:tevo/repositories/repositories.dart';
 import 'package:tevo/screens/comments/bloc/comments_bloc.dart';
 import 'package:tevo/screens/create_post/bloc/create_post_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/app_themes.dart';
 import 'package:tevo/utils/session_helper.dart';
+import 'key.dart';
 import 'screens/create_post/bloc/create_post_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
@@ -62,6 +64,9 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider<NotificationRepository>(
           create: (_) => NotificationRepository(),
+        ),
+        RepositoryProvider<EventRepository>(
+          create: (_) => EventRepository(),
         ),
       ],
       child: MultiBlocProvider(
