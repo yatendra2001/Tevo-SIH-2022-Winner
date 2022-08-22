@@ -15,6 +15,7 @@ import 'package:tevo/models/models.dart';
 import 'package:tevo/repositories/post/post_repository.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/screens/comments/bloc/comments_bloc.dart';
+import 'package:tevo/screens/feed_back_screen.dart';
 import 'package:tevo/screens/likes_screen.dart';
 import 'package:tevo/screens/report/report_screen.dart';
 import 'package:tevo/screens/screens.dart';
@@ -413,7 +414,20 @@ class _PostViewState extends State<PostView> {
                       );
                     },
                     child: const Icon(Linecons.paper_plane)),
-              )
+              ),
+            Spacer(),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(FeedBackScreen.routeName);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Icon(
+                  Icons.feedback_outlined,
+                  size: 30,
+                ),
+              ),
+            )
           ],
         ),
         InkWell(

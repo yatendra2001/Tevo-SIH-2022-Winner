@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 
 class Event extends Equatable {
   final String? id;
+  final String eventName;
   final String description;
   final DateTime startDate;
   final String creatorId;
@@ -15,6 +16,7 @@ class Event extends Equatable {
 
   Event({
     this.id,
+    required this.eventName,
     required this.description,
     required this.startDate,
     required this.creatorId,
@@ -26,6 +28,7 @@ class Event extends Equatable {
 
   Event copyWith({
     String? id,
+    String? eventName,
     String? description,
     DateTime? startDate,
     String? creatorId,
@@ -36,6 +39,7 @@ class Event extends Equatable {
   }) {
     return Event(
       id: id ?? this.id,
+      eventName: eventName ?? this.eventName,
       description: description ?? this.description,
       startDate: startDate ?? this.startDate,
       creatorId: creatorId ?? this.creatorId,
@@ -49,6 +53,7 @@ class Event extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'eventName': eventName,
       'description': description,
       'startDate': startDate.millisecondsSinceEpoch,
       'creatorId': creatorId,
@@ -62,6 +67,7 @@ class Event extends Equatable {
   factory Event.fromMap(Map<String, dynamic> map) {
     return Event(
       id: map['id'],
+      eventName: map['eventName'] ?? '',
       description: map['description'] ?? '',
       startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate']),
       creatorId: map['creatorId'] ?? '',
@@ -72,10 +78,20 @@ class Event extends Equatable {
     );
   }
 
+  String toJson() => json.encode(toMap());
+
+  factory Event.fromJson(String source) => Event.fromMap(json.decode(source));
+
   @override
-  List<Object> get props {
+  String toString() {
+    return 'Event(id: $id, eventName: $eventName, description: $description, startDate: $startDate, creatorId: $creatorId, endDate: $endDate, roomCode: $roomCode, joiningAmount: $joiningAmount, memberIds: $memberIds)';
+  }
+
+  @override
+  List<Object?> get props {
     return [
-      id!,
+      id,
+      eventName,
       description,
       startDate,
       creatorId,

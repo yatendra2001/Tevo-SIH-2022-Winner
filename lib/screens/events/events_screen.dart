@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:fluttericon/typicons_icons.dart';
 import 'package:image_stack/image_stack.dart';
 import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:tevo/models/event_model.dart' as eve;
+
+import 'package:tevo/repositories/event/event_repository.dart';
 import 'package:tevo/screens/events/create_screen.dart';
 import 'package:tevo/screens/events/event_room_screen.dart';
-import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
-import 'package:tevo/screens/profile/profile_screen.dart';
-import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
-import 'package:tevo/widgets/custom_appbar.dart';
-import 'package:tevo/widgets/modal_bottom_sheet.dart';
-import 'package:tevo/widgets/user_profile_image.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import 'bloc/event_bloc.dart';
 
 class EventsScreen extends StatefulWidget {
   static const routeName = 'events';
 
-
   EventsScreen({Key? key}) : super(key: key);
+
   static Route route() {
     return PageTransition(
       settings: const RouteSettings(name: routeName),
       type: PageTransitionType.rightToLeft,
-      child: EventsScreen(),
+      child: BlocProvider<EventBloc>(
+        create: (context) =>
+            EventBloc(eventRepository: context.read<EventRepository>()),
+        child: EventsScreen(),
+      ),
     );
   }
 
@@ -39,74 +38,92 @@ class EventsScreen extends StatefulWidget {
 class _EventsScreenState extends State<EventsScreen> {
   final ScrollController _controller = ScrollController();
 
-    
+  @override
+  void initState() {
+    context.read<EventBloc>().add(GetUserEvent());
+    setState(() {});
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: SpeedDial(
-        icon: Icons.add,
-        overlayColor: Colors.black,
-        iconTheme: IconThemeData(color: kPrimaryWhiteColor),
-        foregroundColor: Colors.black,
-        backgroundColor: kPrimaryBlackColor,
-        children: [
-          SpeedDialChild(
-            label: 'Create',
-            labelStyle: TextStyle(fontSize: 11.sp),
+    return BlocBuilder<EventBloc, EventState>(
+      builder: (context, state) {
+        return Scaffold(
+          floatingActionButton: SpeedDial(
+            icon: Icons.add,
+            overlayColor: Colors.black,
+            iconTheme: IconThemeData(color: kPrimaryWhiteColor),
+            foregroundColor: Colors.black,
             backgroundColor: kPrimaryBlackColor,
-            onTap: () {
-              Navigator.of(context).pushNamed(CreateEventScreen.routeName);
-            },
-          ),
-          SpeedDialChild(
-            label: 'Join',
-            backgroundColor: Colors.amberAccent,
-            labelStyle: TextStyle(fontSize: 11.sp),
-            onTap: () {
-              showDialog(
-                context: context,
-                useSafeArea: true,
-                builder: (context) => AlertDialog(
-                  title: Text(
-                    "Join Event",
-                    style:
-                        TextStyle(fontSize: 14.sp, color: kPrimaryBlackColor),
-                    textAlign: TextAlign.center,
-                  ),
-                  content: OTPTextField(
-                    length: 6,
-                  ),
-                  actions: [
-                    OutlinedButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Join',
-                          style: TextStyle(color: kPrimaryBlackColor),
-                        ))
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: DefaultTabController(
-        length: 2,
-        child: NestedScrollView(
-          controller: _controller,
-          clipBehavior: Clip.none,
-          headerSliverBuilder: (_, __) {
-            return [_buildAppBar()];
-          },
-          body: TabBarView(
             children: [
-              _buildDashBoard(),
-              _buildCompleted(),
+              SpeedDialChild(
+                label: 'Create',
+                labelStyle: TextStyle(fontSize: 11.sp),
+                backgroundColor: kPrimaryBlackColor,
+                onTap: () {
+                  Navigator.of(context).pushNamed(CreateEventScreen.routeName);
+                },
+              ),
+              SpeedDialChild(
+                label: 'Join',
+                backgroundColor: Colors.amberAccent,
+                labelStyle: TextStyle(fontSize: 11.sp),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    useSafeArea: true,
+                    builder: (context) => AlertDialog(
+                      title: Text(
+                        "Join Event",
+                        style: TextStyle(
+                            fontSize: 14.sp, color: kPrimaryBlackColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      content: OTPTextField(
+                        length: 6,
+                      ),
+                      actions: [
+                        OutlinedButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Join',
+                              style: TextStyle(color: kPrimaryBlackColor),
+                            ))
+                      ],
+                    ),
+                  );
+                },
+              ),
             ],
           ),
-        ),
-      ),
+          body: state.status == EventStatus.loading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    setState(() {});
+                  },
+                  child: DefaultTabController(
+                    length: 2,
+                    child: NestedScrollView(
+                      controller: _controller,
+                      clipBehavior: Clip.none,
+                      headerSliverBuilder: (_, __) {
+                        return [_buildAppBar()];
+                      },
+                      body: TabBarView(
+                        children: [
+                          _buildDashBoard(state),
+                          _buildCompleted(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+        );
+      },
     );
   }
 
@@ -172,7 +189,8 @@ class _EventsScreenState extends State<EventsScreen> {
     "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg",
     "https://cxl.com/wp-content/uploads/2016/03/nate_munger.png"
   ];
-  _buildDashBoard() {
+
+  _buildDashBoard(EventState state) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -185,15 +203,20 @@ class _EventsScreenState extends State<EventsScreen> {
             ),
             textAlign: TextAlign.justify,
           ),
-          ListView.builder(
-            padding: const EdgeInsets.only(top: 16),
-            shrinkWrap: true,
-            itemBuilder: ((context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: EventCardWidget(images: images),
-                )),
-            itemCount: 3,
-          ),
+          state.events == null || state.events!.isEmpty
+              ? Container()
+              : ListView.builder(
+                  padding: const EdgeInsets.only(top: 16),
+                  shrinkWrap: true,
+                  itemBuilder: ((context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: EventCardWidget(
+                          images: images,
+                          event: state.events![index],
+                        ),
+                      )),
+                  itemCount: state.events!.length,
+                ),
         ],
       ),
     );
@@ -205,12 +228,14 @@ class _EventsScreenState extends State<EventsScreen> {
 }
 
 class EventCardWidget extends StatelessWidget {
+  final List<String> images;
+  final eve.Event event;
+
   const EventCardWidget({
     Key? key,
     required this.images,
+    required this.event,
   }) : super(key: key);
-
-  final List<String> images;
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +258,7 @@ class EventCardWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "120 Days of Coding! 👨‍💻",
+                    event.eventName,
                     style: TextStyle(
                         color: kPrimaryBlackColor,
                         fontSize: 14.sp,

@@ -3,11 +3,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/models/event_model.dart';
 import 'package:tevo/repositories/event/event_repository.dart';
+import 'package:tevo/screens/events/bloc/event_bloc.dart';
 import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -281,6 +283,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       await EventRepository()
           .createEvent(
             event: Event(
+              eventName: eventName.text,
               memberIds: [SessionHelper.uid!],
               id: null,
               description: description.text,
