@@ -230,6 +230,153 @@ class _ProfileScreenState extends State<ProfileScreen>
       },
       builder: (context, state) {
         return Scaffold(
+          endDrawer: state.isCurrentUser ? Drawer(
+        width: 70.w,
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: kPrimaryBlackColor,
+              ),
+              child: Center(child: Text('Drawer Header')),
+            ),
+            ListTile(
+              title: const Text("Profile Status"),
+              textColor: kPrimaryBlackColor,
+              trailing: Transform.scale(
+                        scale: 0.6,
+                        child: RollingSwitch.icon(
+                          initialState: state.user.isPrivate,
+                          onChanged: (bool val) {
+                            context
+                                .read<ProfileBloc>()
+                                .add(ProfileToUpdateUser(isPrivate: val));
+                            String message = '';
+                            setState(() {
+                              message =
+                                  state.user.isPrivate ? "Public" : "Private";
+                            });
+                            flutterToast(msg: "Profile Updated: $message");
+                          },
+                          rollingInfoRight: RollingIconInfo(
+                            icon: Icons.lock,
+                            backgroundColor: kPrimaryBlackColor,
+                            text: Text(
+                              'Private',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontFamily: kFontFamily,
+                                color: kPrimaryWhiteColor
+                              ),
+                            ),
+                          ),
+                          rollingInfoLeft: RollingIconInfo(
+                            icon: Icons.public,
+                            backgroundColor: Colors.grey,
+                            text: Text(
+                              'Public',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontFamily: kFontFamily,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              textColor: kPrimaryBlackColor,
+              trailing: IconButton(
+                icon: SizedBox(
+                  height: 3.2.h,
+                  width: 3.2.h,
+                  child: CachedNetworkImage(
+                      imageUrl:
+                          "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: Colors.grey[50],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: const BorderSide(
+                            color: kPrimaryBlackColor,
+                            width: 2.0),
+                      ),
+                      title: Center(
+                        child: Text(
+                          "Are you sure you want to logout?",
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                            color: kPrimaryBlackColor,
+                            fontFamily: kFontFamily,
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        OutlinedButton(
+                            onPressed: () =>
+                                Navigator.pop(context),
+                            child: Text(
+                              "No",
+                              style: TextStyle(
+                                color: kPrimaryBlackColor,
+                                fontSize: 10.sp,
+                                fontFamily: kFontFamily,
+                              ),
+                            )),
+                        OutlinedButton(
+                          onPressed: () {
+                            context.read<AuthBloc>().add(
+                                AuthLogoutRequested(
+                                    context: context));
+                            context
+                                .read<LoginCubit>()
+                                .logoutRequested();
+                            context
+                                .read<LikedPostsCubit>()
+                                .clearAllLikedPosts();
+                            SessionHelperEmpty();
+                            MyApp.navigatorKey.currentState!
+                                .pushReplacementNamed(
+                                    LoginPageView.routeName);
+                          },
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(
+                                color: kPrimaryBlackColor,
+                                fontFamily: kFontFamily,
+                                fontSize: 10.sp),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ):null,
           body: ShowCaseWidget(
             builder: Builder(builder: (context) {
               myContext = context;
@@ -312,184 +459,145 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                     ],
                   ),
-                  actions: [
-                    if (state.isCurrentUser)
-                      Transform.scale(
-                        scale: 0.6,
-                        child: RollingSwitch.icon(
-                          initialState: state.user.isPrivate,
-                          onChanged: (bool val) {
-                            context
-                                .read<ProfileBloc>()
-                                .add(ProfileToUpdateUser(isPrivate: val));
-                            String message = '';
-                            setState(() {
-                              message =
-                                  state.user.isPrivate ? "Public" : "Private";
-                            });
-                            flutterToast(msg: "Profile Updated: $message");
-                          },
-                          rollingInfoRight: RollingIconInfo(
-                            icon: Icons.lock,
-                            backgroundColor: kPrimaryBlackColor,
-                            text: Text(
-                              'Private',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontFamily: kFontFamily,
-                              ),
-                            ),
-                          ),
-                          rollingInfoLeft: RollingIconInfo(
-                            icon: Icons.public,
-                            backgroundColor: Colors.grey,
-                            text: Text(
-                              'Public',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontFamily: kFontFamily,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    state.isCurrentUser
-                        ? Padding(
-                            padding: const EdgeInsets.only(right: 4.0),
-                            child: IconButton(
-                              icon: SizedBox(
-                                height: 3.2.h,
-                                width: 3.2.h,
-                                child: CachedNetworkImage(
-                                    imageUrl:
-                                        "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
-                              ),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (context) => AlertDialog(
-                                    backgroundColor: Colors.grey[50],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      side: const BorderSide(
-                                          color: kPrimaryBlackColor,
-                                          width: 2.0),
-                                    ),
-                                    title: Center(
-                                      child: Text(
-                                        "Are you sure you want to logout?",
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: kPrimaryBlackColor,
-                                          fontFamily: kFontFamily,
-                                        ),
-                                      ),
-                                    ),
-                                    actions: [
-                                      OutlinedButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text(
-                                            "No",
-                                            style: TextStyle(
-                                              color: kPrimaryBlackColor,
-                                              fontSize: 10.sp,
-                                              fontFamily: kFontFamily,
-                                            ),
-                                          )),
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          context.read<AuthBloc>().add(
-                                              AuthLogoutRequested(
-                                                  context: context));
-                                          context
-                                              .read<LoginCubit>()
-                                              .logoutRequested();
-                                          context
-                                              .read<LikedPostsCubit>()
-                                              .clearAllLikedPosts();
-                                          SessionHelperEmpty();
-                                          MyApp.navigatorKey.currentState!
-                                              .pushReplacementNamed(
-                                                  LoginPageView.routeName);
-                                        },
-                                        child: Text(
-                                          "Yes",
-                                          style: TextStyle(
-                                              color: kPrimaryBlackColor,
-                                              fontFamily: kFontFamily,
-                                              fontSize: 10.sp),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        : IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (context) => AlertDialog(
-                                  backgroundColor: Colors.grey[50],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    side: const BorderSide(
-                                        color: kPrimaryBlackColor, width: 2.0),
-                                  ),
-                                  title: Center(
-                                    child: Text(
-                                      "Are you sure you want to block this user?",
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: kPrimaryBlackColor,
-                                        fontFamily: kFontFamily,
-                                      ),
-                                    ),
-                                  ),
-                                  actions: [
-                                    OutlinedButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text(
-                                        "No",
-                                        style: TextStyle(
-                                          color: kPrimaryBlackColor,
-                                          fontSize: 10.sp,
-                                          fontFamily: kFontFamily,
-                                        ),
-                                      ),
-                                    ),
-                                    OutlinedButton(
-                                      onPressed: () {
-                                        isIdBlocked = !isIdBlocked;
-                                        context.read<ProfileBloc>().blockUser(
-                                            isIdBlocked, widget.userId);
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        "Yes",
-                                        style: TextStyle(
-                                          color: kPrimaryBlackColor,
-                                          fontFamily: kFontFamily,
-                                          fontSize: 10.sp,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            icon: isIdBlocked
-                                ? const Icon(Icons.lock)
-                                : const Icon(Icons.block),
-                          )
-                  ],
+                  // actions: [
+                  //     
+                  //   state.isCurrentUser
+                  //       ? Padding(
+                  //           padding: const EdgeInsets.only(right: 4.0),
+                  //           child: IconButton(
+                  //             icon: SizedBox(
+                  //               height: 3.2.h,
+                  //               width: 3.2.h,
+                  //               child: CachedNetworkImage(
+                  //                   imageUrl:
+                  //                       "https://cdn-icons-png.flaticon.com/512/159/159707.png"),
+                  //             ),
+                  //             onPressed: () {
+                  //               showDialog(
+                  //                 context: context,
+                  //                 barrierDismissible: true,
+                  //                 builder: (context) => AlertDialog(
+                  //                   backgroundColor: Colors.grey[50],
+                  //                   shape: RoundedRectangleBorder(
+                  //                     borderRadius: BorderRadius.circular(20),
+                  //                     side: const BorderSide(
+                  //                         color: kPrimaryBlackColor,
+                  //                         width: 2.0),
+                  //                   ),
+                  //                   title: Center(
+                  //                     child: Text(
+                  //                       "Are you sure you want to logout?",
+                  //                       style: TextStyle(
+                  //                         fontSize: 12.sp,
+                  //                         fontWeight: FontWeight.w400,
+                  //                         color: kPrimaryBlackColor,
+                  //                         fontFamily: kFontFamily,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                   actions: [
+                  //                     OutlinedButton(
+                  //                         onPressed: () =>
+                  //                             Navigator.pop(context),
+                  //                         child: Text(
+                  //                           "No",
+                  //                           style: TextStyle(
+                  //                             color: kPrimaryBlackColor,
+                  //                             fontSize: 10.sp,
+                  //                             fontFamily: kFontFamily,
+                  //                           ),
+                  //                         )),
+                  //                     OutlinedButton(
+                  //                       onPressed: () {
+                  //                         context.read<AuthBloc>().add(
+                  //                             AuthLogoutRequested(
+                  //                                 context: context));
+                  //                         context
+                  //                             .read<LoginCubit>()
+                  //                             .logoutRequested();
+                  //                         context
+                  //                             .read<LikedPostsCubit>()
+                  //                             .clearAllLikedPosts();
+                  //                         SessionHelperEmpty();
+                  //                         MyApp.navigatorKey.currentState!
+                  //                             .pushReplacementNamed(
+                  //                                 LoginPageView.routeName);
+                  //                       },
+                  //                       child: Text(
+                  //                         "Yes",
+                  //                         style: TextStyle(
+                  //                             color: kPrimaryBlackColor,
+                  //                             fontFamily: kFontFamily,
+                  //                             fontSize: 10.sp),
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //               );
+                  //             },
+                  //           ),
+                  //         )
+                  //       : IconButton(
+                  //           onPressed: () {
+                  //             showDialog(
+                  //               context: context,
+                  //               barrierDismissible: true,
+                  //               builder: (context) => AlertDialog(
+                  //                 backgroundColor: Colors.grey[50],
+                  //                 shape: RoundedRectangleBorder(
+                  //                   borderRadius: BorderRadius.circular(20),
+                  //                   side: const BorderSide(
+                  //                       color: kPrimaryBlackColor, width: 2.0),
+                  //                 ),
+                  //                 title: Center(
+                  //                   child: Text(
+                  //                     "Are you sure you want to block this user?",
+                  //                     style: TextStyle(
+                  //                       fontSize: 12.sp,
+                  //                       fontWeight: FontWeight.w400,
+                  //                       color: kPrimaryBlackColor,
+                  //                       fontFamily: kFontFamily,
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //                 actions: [
+                  //                   OutlinedButton(
+                  //                     onPressed: () => Navigator.pop(context),
+                  //                     child: Text(
+                  //                       "No",
+                  //                       style: TextStyle(
+                  //                         color: kPrimaryBlackColor,
+                  //                         fontSize: 10.sp,
+                  //                         fontFamily: kFontFamily,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                   OutlinedButton(
+                  //                     onPressed: () {
+                  //                       isIdBlocked = !isIdBlocked;
+                  //                       context.read<ProfileBloc>().blockUser(
+                  //                           isIdBlocked, widget.userId);
+                  //                       Navigator.pop(context);
+                  //                       Navigator.pop(context);
+                  //                     },
+                  //                     child: Text(
+                  //                       "Yes",
+                  //                       style: TextStyle(
+                  //                         color: kPrimaryBlackColor,
+                  //                         fontFamily: kFontFamily,
+                  //                         fontSize: 10.sp,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             );
+                  //           },
+                  //           icon: isIdBlocked
+                  //               ? const Icon(Icons.lock)
+                  //               : const Icon(Icons.block),
+                  //         )
+                  // ],
                 ),
                 SliverToBoxAdapter(
                   child: Column(
