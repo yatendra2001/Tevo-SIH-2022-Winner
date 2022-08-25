@@ -137,22 +137,17 @@ class _EventRoomScreenState extends State<EventRoomScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "• Skullfuck someone's face",
+                              "• Do Codeforce Game Theory Question",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500, fontSize: 9.sp),
                             ),
                             SizedBox(height: 8),
                             Text(
-                              "• Skullfuck someone's face",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 9.sp),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "• Skullfuck someone's face",
+                              "• Attend College coding round",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500, fontSize: 9.sp),
                             ),

@@ -15,6 +15,7 @@ class Paths {
   static const String blockUser = 'blockUser';
   static const String events = "events";
   static const String usersEvents = "usersEvents";
+  static const String feedback = 'feedback';
 
   // Subcollections
   static const String postLikes = 'postLikes';
@@ -28,4 +29,5 @@ class Paths {
   static const String userblockingIds = 'userblocingIds';
   static const String userblockedIds = 'userblockedIds';
   static const String userEvent = "userEvent";
+  static const String userFeedback = "userFeedback";
 }

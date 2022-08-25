@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tevo/config/paths.dart';
 import 'package:tevo/enums/enums.dart';
@@ -125,6 +123,39 @@ class PostRepository extends BasePostRepository {
             isGreaterThan: currentTimeStamp.microsecondsSinceEpoch)
         .get();
     return post.docs.isNotEmpty ? Post.fromDocument(post.docs.single) : null;
+  }
+
+  Future<void> createPostFeedback(
+      {required String postId,
+      required String text,
+      required String userId}) async {
+    await _firebaseFirestore
+        .collection(Paths.feedback)
+        .doc(userId)
+        .collection(Paths.userFeedback)
+        .doc(postId)
+        .set({"feedback": text});
+  }
+
+  Future<String> getPostFeedback(
+      {required String postId, required String userId}) async {
+    final snap = await _firebaseFirestore
+        .collection(Paths.feedback)
+        .doc(userId)
+        .collection(Paths.userFeedback)
+        .doc(postId)
+        .get();
+    return snap.data()!["feedback"];
+  }
+
+  Future<List<Map<String, dynamic>>> getAllFeedback(
+      {required String userId}) async {
+    final snap = await _firebaseFirestore
+        .collection(Paths.feedback)
+        .doc(userId)
+        .collection(Paths.userFeedback)
+        .get();
+    return snap.docs.map((e) => e.data()).toList();
   }
 
   @override

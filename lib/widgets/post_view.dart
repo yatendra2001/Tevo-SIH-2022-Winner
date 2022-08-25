@@ -311,6 +311,7 @@ class _PostViewState extends State<PostView> {
                   itemBuilder: (context, index) {
                     if (index < widget.post.completedTask.length) {
                       return TaskTile(
+                        index: index,
                         onRepeat: (_) {},
                         task: tasks![index],
                         view: TaskTileView.feedScreen,
@@ -320,6 +321,7 @@ class _PostViewState extends State<PostView> {
                       );
                     } else {
                       return TaskTile(
+                        index: index,
                         onRepeat: (_) {},
                         task: tasks![index],
                         view: TaskTileView.feedScreen,
@@ -418,7 +420,13 @@ class _PostViewState extends State<PostView> {
             Spacer(),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(FeedBackScreen.routeName);
+                Navigator.of(context).pushNamed(
+                  FeedBackScreen.routeName,
+                  arguments: FeedBackArgs(
+                    postId: widget.post.id,
+                    currentUser: widget.post.author.id == SessionHelper.uid!,
+                  ),
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -14,6 +14,7 @@ enum TaskTileView { profileView, feedScreen, createScreenView }
 
 class TaskTile extends StatefulWidget {
   final Task task;
+  final int index;
   final bool isComplete;
   final Function(bool) onRepeat;
   final TaskTileView view;
@@ -23,6 +24,7 @@ class TaskTile extends StatefulWidget {
   const TaskTile({
     Key? key,
     required this.task,
+    required this.index,
     required this.isComplete,
     required this.view,
     required this.onRepeat,
