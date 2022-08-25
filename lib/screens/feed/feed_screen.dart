@@ -2,27 +2,19 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttericon/linearicons_free_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:showcaseview/showcaseview.dart';
 import 'package:sizer/sizer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/cubits/cubits.dart';
-import 'package:tevo/enums/bottom_nav_item.dart';
 import 'package:tevo/screens/events/events_screen.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
-import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
-import 'package:tevo/screens/profile/followers_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
-import 'package:tevo/widgets/default_showcase_widget.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:fluttericon/linecons_icons.dart';
 

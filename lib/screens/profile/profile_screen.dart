@@ -24,6 +24,7 @@ import 'package:tevo/screens/login/pageview.dart';
 import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
+import 'package:tevo/screens/profile_feedback_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -303,11 +304,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                       icon: const Icon(Icons.arrow_back_ios_new_outlined)),
                   title: Row(
                     children: [
-                      Text(
-                        "Profile",
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontFamily: kFontFamily,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(ProflileFeedbackScreen.routeName);
+                        },
+                        child: Text(
+                          "Profile",
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontFamily: kFontFamily,
+                          ),
                         ),
                       ),
                     ],

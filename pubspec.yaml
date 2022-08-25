@@ -84,6 +84,7 @@ dependencies:
   lottie: ^1.4.0
   image_stack: ^2.1.1
   flutter_speed_dial: ^6.0.0
+  timelines: ^0.1.0
 
 dev_dependencies:
   flutter_test:
