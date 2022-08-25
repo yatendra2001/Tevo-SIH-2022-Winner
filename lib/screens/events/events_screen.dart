@@ -11,13 +11,14 @@ import 'package:tevo/repositories/event/event_repository.dart';
 import 'package:tevo/screens/events/create_screen.dart';
 import 'package:tevo/screens/events/event_room_screen.dart';
 import 'package:tevo/utils/theme_constants.dart';
+import 'package:tevo/widgets/flutter_toast.dart';
 
 import 'bloc/event_bloc.dart';
 
 class EventsScreen extends StatefulWidget {
   static const routeName = 'events';
 
-  EventsScreen({Key? key}) : super(key: key);
+  const EventsScreen({Key? key}) : super(key: key);
 
   static Route route() {
     return PageTransition(
@@ -26,7 +27,7 @@ class EventsScreen extends StatefulWidget {
       child: BlocProvider<EventBloc>(
         create: (context) =>
             EventBloc(eventRepository: context.read<EventRepository>()),
-        child: EventsScreen(),
+        child: const EventsScreen(),
       ),
     );
   }
@@ -37,6 +38,7 @@ class EventsScreen extends StatefulWidget {
 
 class _EventsScreenState extends State<EventsScreen> {
   final ScrollController _controller = ScrollController();
+  String joinCode = "";
 
   @override
   void initState() {
@@ -73,7 +75,7 @@ class _EventsScreenState extends State<EventsScreen> {
                   showDialog(
                     context: context,
                     useSafeArea: true,
-                    builder: (context) => AlertDialog(
+                    builder: (ctx) => AlertDialog(
                       title: Text(
                         "Join Event",
                         style: TextStyle(
@@ -82,14 +84,28 @@ class _EventsScreenState extends State<EventsScreen> {
                       ),
                       content: OTPTextField(
                         length: 6,
+                        onChanged: (val) {
+                          joinCode = val;
+                        },
                       ),
                       actions: [
                         OutlinedButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Join',
-                              style: TextStyle(color: kPrimaryBlackColor),
-                            ))
+                          onPressed: () {
+                            if (joinCode.length < 6) {
+                              flutterToast(msg: "Please enter a 6 digit code");
+                            } else {
+                              Navigator.of(context).pop();
+                              context
+                                  .read<EventBloc>()
+                                  .add(JoinEvent(joinCode: joinCode));
+                              setState(() {});
+                            }
+                          },
+                          child: const Text(
+                            'Join',
+                            style: TextStyle(color: kPrimaryBlackColor),
+                          ),
+                        )
                       ],
                     ),
                   );
