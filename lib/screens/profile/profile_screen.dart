@@ -24,6 +24,7 @@ import 'package:tevo/screens/login/pageview.dart';
 import 'package:tevo/screens/nav/cubit/bottom_nav_bar_cubit.dart';
 import 'package:tevo/screens/profile/bloc/profile_bloc.dart';
 import 'package:tevo/screens/profile/widgets/widgets.dart';
+import 'package:tevo/screens/profile_feedback_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
@@ -236,11 +237,20 @@ class _ProfileScreenState extends State<ProfileScreen>
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+             DrawerHeader(
               decoration: BoxDecoration(
                 color: kPrimaryBlackColor,
               ),
-              child: Center(child: Text('Drawer Header')),
+              child: Center(child:Container(
+            decoration: BoxDecoration(border: Border.all(color: kPrimaryWhiteColor),borderRadius: BorderRadius.circular(8.0)),
+
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [Text("1,267",style: TextStyle(color: kPrimaryWhiteColor,fontSize: 25.sp,fontWeight: FontWeight.w500),),Transform.scale(scale: 0.4,child: Image.network("https://cdn-icons-png.flaticon.com/512/1369/1369897.png")),],
+              ),
+            ),
+          )),
             ),
             ListTile(
               title: const Text("Profile Status"),
@@ -450,11 +460,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                       icon: const Icon(Icons.arrow_back_ios_new_outlined)),
                   title: Row(
                     children: [
-                      Text(
-                        "Profile",
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontFamily: kFontFamily,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(ProflileFeedbackScreen.routeName);
+                        },
+                        child: Text(
+                          "Profile",
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontFamily: kFontFamily,
+                          ),
                         ),
                       ),
                     ],

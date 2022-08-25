@@ -173,10 +173,16 @@ class _EventsScreenState extends State<EventsScreen> {
       actions: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "COINS ICON",
-            style: TextStyle(color: kPrimaryBlackColor),
-          ),
+          child: Container(
+            decoration: BoxDecoration(border: Border.all(color: kPrimaryBlackColor),borderRadius: BorderRadius.circular(8.0)),
+
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Row(
+                children: [Text("1,267",style: TextStyle(color: kPrimaryBlackColor,fontSize: 14.sp,fontWeight: FontWeight.w500),),Transform.scale(scale: 0.8,child: Image.network("https://cdn-icons-png.flaticon.com/512/1369/1369897.png")),],
+              ),
+            ),
+          )
         )
       ],
     );
@@ -264,34 +270,16 @@ class EventCardWidget extends StatelessWidget {
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500),
                   ),
-                  Text(
-                    "97 days",
-                    style: TextStyle(
-                        color: kPrimaryBlackColor.withOpacity(0.8),
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400),
-                  )
+                  
                 ],
               ),
               const SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Participants",
-                    style: TextStyle(
-                        color: kPrimaryBlackColor.withOpacity(0.5),
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  Text(
-                    "Rank: 17",
-                    style: TextStyle(
-                        color: kPrimaryBlackColor.withOpacity(0.5),
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
+              Text(
+                "Participants",
+                style: TextStyle(
+                    color: kPrimaryBlackColor.withOpacity(0.5),
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w400),
               ),
               const SizedBox(height: 16.0),
               Row(
@@ -304,21 +292,12 @@ class EventCardWidget extends StatelessWidget {
                     imageCount: 3,
                     imageBorderWidth: 0,
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "2000",
-                        style: TextStyle(
-                            color: kPrimaryBlackColor,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      const SizedBox(width: 4),
-                      Image.network(
-                        "https://cdn-icons-png.flaticon.com/512/1369/1369897.png",
-                        scale: 20,
-                      )
-                    ],
+                 Text(
+                    "97 days",
+                    style: TextStyle(
+                        color: kPrimaryBlackColor.withOpacity(0.5),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400),
                   ),
                 ],
               ),

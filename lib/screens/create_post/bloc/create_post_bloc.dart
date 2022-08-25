@@ -50,6 +50,8 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       yield* _mapToSubmitPost(event);
     } else if (event is RepeatTask) {
       yield* _mapToRepeatTask(event);
+    } else if (event is ReorderEvent) {
+      yield* _mapToChangeOrder(event);
     }
   }
 
@@ -127,6 +129,17 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     log(event.task.toString());
     List<Task> toDoTask = List<Task>.from(state.todoTask);
     toDoTask[event.index] = event.task;
+    yield state.copyWith(todoTask: toDoTask);
+    add(const SubmitPost());
+  }
+
+  Stream<CreatePostState> _mapToChangeOrder(ReorderEvent event) async* {
+    Task task = state.todoTask[event.oldIndex];
+    int newIndex = event.newIndex;
+    if (event.newIndex > event.oldIndex) newIndex--;
+    List<Task> toDoTask = List<Task>.from(state.todoTask)
+      ..removeAt(event.oldIndex);
+    toDoTask.insert(newIndex, task);
     yield state.copyWith(todoTask: toDoTask);
     add(const SubmitPost());
   }

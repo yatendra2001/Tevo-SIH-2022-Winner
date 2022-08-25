@@ -85,3 +85,13 @@ class RepeatTask extends CreatePostEvent {
   @override
   List<Object> get props => [task, index];
 }
+
+class ReorderEvent extends CreatePostEvent {
+  final int oldIndex;
+  final int newIndex;
+
+  ReorderEvent({
+    required this.oldIndex,
+    required this.newIndex,
+  });
+}

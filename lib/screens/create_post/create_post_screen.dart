@@ -1,15 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/index.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
-import 'package:fluttericon/entypo_icons.dart';
-import 'package:fluttericon/linecons_icons.dart';
 import 'package:fluttericon/typicons_icons.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:sizer/sizer.dart';
@@ -18,7 +13,6 @@ import 'package:tevo/screens/profile/profile_screen.dart';
 import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
-import 'package:tevo/widgets/default_showcase_widget.dart';
 import 'package:tevo/widgets/modal_bottom_sheet.dart';
 import 'package:tevo/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -247,7 +241,12 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         ],
                       )
                     : Expanded(
-                        child: ListView.builder(
+                        child: ReorderableListView.builder(
+                          onReorder: (oldIndex, newIndex) {
+                            context.read<CreatePostBloc>().add(ReorderEvent(
+                                oldIndex: oldIndex, newIndex: newIndex));
+                            return null;
+                          },
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (_, index) {
                             return Dismissible(
@@ -258,6 +257,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                               },
                               child: TaskTile(
                                 isComplete: false,
+                                index: index,
                                 onRepeat: (repeat) {
                                   context.read<CreatePostBloc>().add(RepeatTask(
                                       task: todoTask[index], index: index));
@@ -343,6 +343,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (_, index) => TaskTile(
+                          index: index,
                           onRepeat: (repeat) {
                             context.read<CreatePostBloc>().add(RepeatTask(
                                 task: state.completedTask[index],
@@ -441,20 +442,10 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     ),
                     const SizedBox(height: 32),
                     Text(
-                      "• Tap on add task button to create tasks",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          fontSize: 9.5.sp,
-                          color: kPrimaryBlackColor,
-                          fontFamily: kFontFamily),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
                       "• Once you have created your first task, Tevo will start your 24 hour cycle",
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 9.5.sp,
-                          fontWeight: FontWeight.bold,
                           color: kPrimaryBlackColor,
                           fontFamily: kFontFamily),
                     ),
@@ -469,17 +460,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "• Swipe task left or right to mark it as complete",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          fontSize: 9.5.sp,
-                          color: kPrimaryBlackColor,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: kFontFamily),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      "• Once you swipe your task, it will be shifted to completed section and gets reflected on your post view",
+                      "• Swipe task left or right to mark it complete",
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 9.5.sp,
@@ -488,17 +469,7 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "• You can edit, delete or even make it a recurring task by tapping appropriate icon buttons present on task tile",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          fontSize: 9.5.sp,
-                          color: kPrimaryBlackColor,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: kFontFamily),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      "• If needed, You can delete the entire post by tapping on the floating delete button",
+                      "• You can  make a task repeating by tapping recurring icon button",
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 9.5.sp,
@@ -506,13 +477,42 @@ class _CreatePostScreenState extends State<CreatePostScreen>
                           fontFamily: kFontFamily),
                     ),
                     const SizedBox(height: 16),
+                    // Text(
+                    //   "• If needed, You can delete the entire post by tapping on the floating delete button",
+                    //   textAlign: TextAlign.justify,
+                    //   style: TextStyle(
+                    //       fontSize: 9.5.sp,
+                    //       color: kPrimaryBlackColor,
+                    //       fontFamily: kFontFamily),
+                    // ),
+                    // const SizedBox(height: 16),
+                    // Text(
+                    //   "• Higher the number of completed tasks, Higher the completion rate 🚀",
+                    //   textAlign: TextAlign.justify,
+                    //   style: TextStyle(
+                    //       fontSize: 9.5.sp,
+                    //       color: kPrimaryBlackColor,
+                    //       fontWeight: FontWeight.bold,
+                    //       fontFamily: kFontFamily),
+                    // ),
+                    // const SizedBox(height: 16),
                     Text(
-                      "• Higher the number of completed tasks, Higher the completion rate 🚀",
+                      "• Drag up the tiles to priotize your tasks",
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 9.5.sp,
                           color: kPrimaryBlackColor,
-                          fontWeight: FontWeight.bold,
+                          fontFamily: kFontFamily),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      "• Higher the completed tasks, Higher the completion rate 🚀",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: kPrimaryBlackColor,
                           fontFamily: kFontFamily),
                     ),
                     const SizedBox(height: 32),

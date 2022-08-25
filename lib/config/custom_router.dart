@@ -13,6 +13,7 @@ import 'package:tevo/screens/login/onboarding/username_screen.dart';
 import 'package:tevo/screens/login/pageview.dart';
 import 'package:tevo/screens/profile/followers_screen.dart';
 import 'package:tevo/screens/profile/following_screen.dart';
+import 'package:tevo/screens/profile_feedback_screen.dart';
 
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
@@ -81,7 +82,11 @@ class CustomRouter {
       case EventRoomScreen.routeName:
         return EventRoomScreen.route();
       case FeedBackScreen.routeName:
-        return FeedBackScreen.route();
+        return FeedBackScreen.route(
+          args: settings.arguments as FeedBackArgs,
+        );
+      case ProflileFeedbackScreen.routeName:
+        return ProflileFeedbackScreen.route();
       default:
         return _errorRoute();
     }
