@@ -6,11 +6,13 @@ class AuthState extends Equatable {
   final auth.User? user;
   final AuthStatus status;
   final bool? isUserExist;
+  final bool? isOnline;
 
   const AuthState({
     this.user,
     this.status = AuthStatus.unknown,
     this.isUserExist,
+    this.isOnline,
   });
 
   factory AuthState.unknown() => const AuthState();

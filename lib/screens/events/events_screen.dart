@@ -6,11 +6,15 @@ import 'package:otp_text_field/otp_field.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/models/event_model.dart' as eve;
+import 'package:tevo/models/wallet_model.dart';
 
 import 'package:tevo/repositories/event/event_repository.dart';
+import 'package:tevo/repositories/user/user_repository.dart';
+import 'package:tevo/repositories/wallet_repository/wallet_repo.dart';
 import 'package:tevo/screens/events/create_screen.dart';
 import 'package:tevo/screens/events/direct_to_payments.dart';
 import 'package:tevo/screens/events/event_room_screen.dart';
+import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/flutter_toast.dart';
 
@@ -40,16 +44,27 @@ class EventsScreen extends StatefulWidget {
 class _EventsScreenState extends State<EventsScreen> {
   final ScrollController _controller = ScrollController();
   String joinCode = "";
+  late int totalCoins;
+
+  _getWalletData() async {
+    await UserRepository()
+        .getUserWithId(userId: SessionHelper.uid!)
+        .then((value) {
+      setState(() {
+        totalCoins = value.walletBalance;
+      });
+    });
+  }
 
   @override
   void initState() {
     context.read<EventBloc>().add(GetUserEvent());
-    setState(() {});
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    _getWalletData();
     return BlocBuilder<EventBloc, EventState>(
       builder: (context, state) {
         return Scaffold(
@@ -199,7 +214,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 child: Row(
                   children: [
                     Text(
-                      "1,267",
+                      totalCoins.toString(),
                       style: TextStyle(
                           color: kPrimaryBlackColor,
                           fontSize: 14.sp,

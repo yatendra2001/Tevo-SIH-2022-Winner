@@ -99,6 +99,7 @@ class LoginCubit extends Cubit<LoginState> {
           completed: SessionHelper.completed ?? 0,
           todo: SessionHelper.todo ?? 0,
           bio: "",
+          walletBalance: 0,
         ),
       );
       emit(state.copyWith(profilePhotoStatus: ProfilePhotoStatus.uploaded));
