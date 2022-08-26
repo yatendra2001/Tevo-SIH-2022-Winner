@@ -39,14 +39,22 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     }
   }
 
-  Stream<EventState> _mapToJoinEvent(JoinEvent event) async* {
-    final eventExist = await _eventRepository.joinEvent(
-        roomCode: event.joinCode, userId: SessionHelper.uid!);
-    if (eventExist) {
-      flutterToast(msg: "Added");
-      add(GetUserEvent());
-    } else {
-      flutterToast(msg: "Invalid Join Code.");
+  Stream<EventState> _mapToJoinEvent(JoinEvent event) async* {}
+
+  Future<bool> directToPayment({required String joinCode}) async {
+    final communityEvent = await _eventRepository.joinEvent(
+        roomCode: joinCode, userId: SessionHelper.uid!);
+    print('+++++++${communityEvent.toString()}');
+    if (communityEvent != null) {
+      if (communityEvent.paid == true) {
+        return true;
+      } else {
+        flutterToast(msg: "Added");
+        add(const GetUserEvent());
+        return false;
+      }
     }
+    flutterToast(msg: "Unable to verify the code. Check the code again.");
+    return false;
   }
 }

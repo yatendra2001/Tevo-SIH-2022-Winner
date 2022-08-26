@@ -9,6 +9,7 @@ import 'package:tevo/models/event_model.dart' as eve;
 
 import 'package:tevo/repositories/event/event_repository.dart';
 import 'package:tevo/screens/events/create_screen.dart';
+import 'package:tevo/screens/events/direct_to_payments.dart';
 import 'package:tevo/screens/events/event_room_screen.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/flutter_toast.dart';
@@ -90,15 +91,15 @@ class _EventsScreenState extends State<EventsScreen> {
                       ),
                       actions: [
                         OutlinedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (joinCode.length < 6) {
                               flutterToast(msg: "Please enter a 6 digit code");
                             } else {
-                              Navigator.of(context).pop();
-                              context
+                              final check = await context
                                   .read<EventBloc>()
-                                  .add(JoinEvent(joinCode: joinCode));
-                              setState(() {});
+                                  .directToPayment(joinCode: joinCode)
+                                  .then((value) => Navigator.of(context)
+                                      .pushNamed(DirectToPayments.routeName));
                             }
                           },
                           child: const Text(
@@ -188,18 +189,30 @@ class _EventsScreenState extends State<EventsScreen> {
       ]),
       actions: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            decoration: BoxDecoration(border: Border.all(color: kPrimaryBlackColor),borderRadius: BorderRadius.circular(8.0)),
-
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
-                children: [Text("1,267",style: TextStyle(color: kPrimaryBlackColor,fontSize: 14.sp,fontWeight: FontWeight.w500),),Transform.scale(scale: 0.8,child: Image.network("https://cdn-icons-png.flaticon.com/512/1369/1369897.png")),],
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: kPrimaryBlackColor),
+                  borderRadius: BorderRadius.circular(8.0)),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "1,267",
+                      style: TextStyle(
+                          color: kPrimaryBlackColor,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Transform.scale(
+                        scale: 0.8,
+                        child: Image.network(
+                            "https://cdn-icons-png.flaticon.com/512/1369/1369897.png")),
+                  ],
+                ),
               ),
-            ),
-          )
-        )
+            ))
       ],
     );
   }
@@ -213,6 +226,23 @@ class _EventsScreenState extends State<EventsScreen> {
   ];
 
   _buildDashBoard(EventState state) {
+    List<eve.Event> onGoingEvent = [];
+    List<eve.Event> upComingEvent = [];
+
+    bool hideOngoingEvent = false;
+    bool hideUpComingEvent = false;
+
+    if (state.events != null) {
+      for (int i = 0; i < state.events!.length; i++) {
+        if (state.events![i].startDate.microsecondsSinceEpoch >
+            DateTime.now().microsecondsSinceEpoch) {
+          upComingEvent.add(state.events![i]);
+        } else {
+          onGoingEvent.add(state.events![i]);
+        }
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -227,18 +257,85 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
           state.events == null || state.events!.isEmpty
               ? Container()
-              : ListView.builder(
-                  padding: const EdgeInsets.only(top: 16),
-                  shrinkWrap: true,
-                  itemBuilder: ((context, index) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: EventCardWidget(
-                          images: images,
-                          event: state.events![index],
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 32,
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            'Ongoing Event',
+                            style: TextStyle(
+                                fontSize: 18.sp, fontWeight: FontWeight.w500),
+                          ),
                         ),
-                      )),
-                  itemCount: state.events!.length,
-                ),
+                        Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                hideOngoingEvent = !hideOngoingEvent;
+                              });
+                            },
+                            icon: Icon(Icons.arrow_drop_down))
+                      ],
+                    ),
+                    ListView.builder(
+                      padding: const EdgeInsets.only(top: 16),
+                      shrinkWrap: true,
+                      itemBuilder: ((context, index) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: EventCardWidget(
+                              images: images,
+                              event: onGoingEvent[index],
+                            ),
+                          )),
+                      itemCount: onGoingEvent.length,
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            'Upcoming Event',
+                            style: TextStyle(
+                                fontSize: 18.sp, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                hideUpComingEvent = !hideUpComingEvent;
+                              });
+                            },
+                            icon: Icon(Icons.arrow_drop_down))
+                      ],
+                    ),
+                    !hideUpComingEvent
+                        ? ListView.builder(
+                            padding: const EdgeInsets.only(top: 16),
+                            shrinkWrap: true,
+                            itemBuilder: ((context, index) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: EventCardWidget(
+                                    images: images,
+                                    event: upComingEvent[index],
+                                  ),
+                                )),
+                            itemCount: upComingEvent.length,
+                          )
+                        : SizedBox.shrink(),
+                  ],
+                )
         ],
       ),
     );
@@ -261,6 +358,8 @@ class EventCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final difference = event.endDate.day - event.startDate.day;
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(EventRoomScreen.routeName);
@@ -286,7 +385,6 @@ class EventCardWidget extends StatelessWidget {
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500),
                   ),
-                  
                 ],
               ),
               const SizedBox(height: 16.0),
@@ -308,8 +406,8 @@ class EventCardWidget extends StatelessWidget {
                     imageCount: 3,
                     imageBorderWidth: 0,
                   ),
-                 Text(
-                    "97 days",
+                  Text(
+                    difference.toString() + " day",
                     style: TextStyle(
                         color: kPrimaryBlackColor.withOpacity(0.5),
                         fontSize: 12.sp,

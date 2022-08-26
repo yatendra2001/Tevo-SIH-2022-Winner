@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tevo/screens/events/create_screen.dart';
+import 'package:tevo/screens/events/direct_to_payments.dart';
 import 'package:tevo/screens/events/event_room_screen.dart';
+import 'package:tevo/screens/events/event_room_task_screen.dart';
 import 'package:tevo/screens/events/events_screen.dart';
 import 'package:tevo/screens/feed_back_screen.dart';
 import 'package:tevo/screens/likes_screen.dart';
@@ -87,6 +89,10 @@ class CustomRouter {
         );
       case ProflileFeedbackScreen.routeName:
         return ProflileFeedbackScreen.route();
+      case DirectToPayments.routeName:
+        return DirectToPayments.route();
+      case EventRoomTaskScreen.routeName:
+        return EventRoomTaskScreen.route();
       default:
         return _errorRoute();
     }

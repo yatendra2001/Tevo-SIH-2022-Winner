@@ -44,7 +44,7 @@ class EventRepository extends BaseEventRepository {
     return events;
   }
 
-  Future<bool> joinEvent(
+  Future<Event?> joinEvent(
       {required String roomCode, required String userId}) async {
     final collection = _firebaseFirestore.collection(Paths.events);
     final snap = await collection.get();
@@ -59,9 +59,9 @@ class EventRepository extends BaseEventRepository {
             .collection(Paths.userEvent)
             .doc(element.id)
             .set({});
-        return true;
+        return Event.fromMap(element.data());
       }
     }
-    return false;
+    return null;
   }
 }

@@ -177,7 +177,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                 const EdgeInsets.symmetric(horizontal: 8.0),
                             child: IconButton(
                               icon: const Icon(
-                                Icons.event,
+                                Icons.groups,
+                                size: 40,
                                 color: kPrimaryBlackColor,
                               ),
                               onPressed: () {
@@ -185,6 +186,9 @@ class _FeedScreenState extends State<FeedScreen> {
                                     context, EventsScreen.routeName);
                               },
                             ),
+                          ),
+                          SizedBox(
+                            width: 16,
                           ),
                           Padding(
                               padding: const EdgeInsets.only(right: 8),
