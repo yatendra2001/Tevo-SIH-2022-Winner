@@ -82,7 +82,9 @@ class CustomRouter {
       case CreateEventScreen.routeName:
         return CreateEventScreen.route();
       case EventRoomScreen.routeName:
-        return EventRoomScreen.route();
+        return EventRoomScreen.route(
+          args: settings.arguments as EventRoomScreenArgs,
+        );
       case FeedBackScreen.routeName:
         return FeedBackScreen.route(
           args: settings.arguments as FeedBackArgs,
@@ -92,7 +94,9 @@ class CustomRouter {
       case DirectToPayments.routeName:
         return DirectToPayments.route();
       case EventRoomTaskScreen.routeName:
-        return EventRoomTaskScreen.route();
+        return EventRoomTaskScreen.route(
+          args: settings.arguments as EventRoomTaskScreenArgs,
+        );
       default:
         return _errorRoute();
     }

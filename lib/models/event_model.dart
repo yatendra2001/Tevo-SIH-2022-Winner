@@ -73,9 +73,9 @@ class Event extends Equatable {
     };
   }
 
-  factory Event.fromMap(Map<String, dynamic> map) {
+  factory Event.fromMap(Map<String, dynamic> map, String id) {
     return Event(
-      id: map['id'],
+      id: id,
       eventName: map['eventName'] ?? '',
       description: map['description'] ?? '',
       startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate']),
@@ -87,15 +87,6 @@ class Event extends Equatable {
       memberIds: List<String>.from(map['memberIds']),
       paid: map['paid'] ?? false,
     );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Event.fromJson(String source) => Event.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'Event(id: $id, eventName: $eventName, description: $description, startDate: $startDate, creatorId: $creatorId, endDate: $endDate, roomCode: $roomCode, joiningAmount: $joiningAmount, type: $type, memberIds: $memberIds, paid: $paid)';
   }
 
   @override

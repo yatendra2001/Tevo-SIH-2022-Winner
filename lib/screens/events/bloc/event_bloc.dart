@@ -44,7 +44,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   Future<bool> directToPayment({required String joinCode}) async {
     final communityEvent = await _eventRepository.joinEvent(
         roomCode: joinCode, userId: SessionHelper.uid!);
-    print('+++++++${communityEvent.toString()}');
     if (communityEvent != null) {
       if (communityEvent.paid == true) {
         return true;

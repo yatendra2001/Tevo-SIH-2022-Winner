@@ -362,7 +362,8 @@ class EventCardWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(EventRoomScreen.routeName);
+        Navigator.of(context).pushNamed(EventRoomScreen.routeName,
+            arguments: EventRoomScreenArgs(event: event));
       },
       child: Card(
         elevation: 1.5,

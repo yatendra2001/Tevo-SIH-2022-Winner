@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/elusive_icons.dart';
 import 'package:fluttericon/entypo_icons.dart';
@@ -7,21 +8,38 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_stack/image_stack.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tevo/screens/events/event_room_task_screen.dart';
-import 'package:tevo/utils/theme_constants.dart';
-import 'package:tevo/widgets/user_profile_image.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'package:tevo/screens/events/event_room_task_screen.dart';
+import 'package:tevo/utils/theme_constants.dart';
+
+import '../../models/event_model.dart' as eve;
+
+class EventRoomScreenArgs {
+  final eve.Event event;
+
+  const EventRoomScreenArgs({
+    required this.event,
+  });
+}
+
 class EventRoomScreen extends StatefulWidget {
-  EventRoomScreen({Key? key}) : super(key: key);
+  EventRoomScreen({
+    Key? key,
+    required this.event,
+  }) : super(key: key);
 
   static const routeName = 'eventRoomScreen';
+  final eve.Event event;
 
-  static Route route() {
+  static Route route({required EventRoomScreenArgs args}) {
     return PageTransition(
       settings: const RouteSettings(name: routeName),
       type: PageTransitionType.rightToLeft,
-      child: EventRoomScreen(),
+      child: EventRoomScreen(
+        event: args.event,
+      ),
     );
   }
 
@@ -31,6 +49,27 @@ class EventRoomScreen extends StatefulWidget {
 
 class _EventRoomScreenState extends State<EventRoomScreen> {
   final ScrollController _controller = ScrollController();
+  List<Map<String, dynamic>> ls = [];
+
+  @override
+  void initState() {
+    getDataOfEvent();
+    super.initState();
+  }
+
+  getDataOfEvent() async {
+    final snap = await FirebaseFirestore.instance
+        .collection("eventRoomFeed")
+        .doc(widget.event.id)
+        .collection("eventTasks")
+        .orderBy("dateTime", descending: true)
+        .get();
+    for (var element in snap.docs) {
+      ls.add(element.data());
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -53,7 +92,12 @@ class _EventRoomScreenState extends State<EventRoomScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).pushNamed(EventRoomTaskScreen.routeName);
+            Navigator.of(context).pushNamed(
+              EventRoomTaskScreen.routeName,
+              arguments: EventRoomTaskScreenArgs(
+                eventId: widget.event.id!,
+              ),
+            );
           },
           backgroundColor: kPrimaryBlackColor,
           child: Icon(
@@ -82,7 +126,7 @@ class _EventRoomScreenState extends State<EventRoomScreen> {
       ),
       toolbarHeight: 8.h,
       title: Text(
-        "30 Days Of Clean Diet 🥗",
+        widget.event.eventName,
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
@@ -136,93 +180,87 @@ class _EventRoomScreenState extends State<EventRoomScreen> {
   ];
 
   _buildDashboardView() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ListView.separated(
-          separatorBuilder: ((context, index) => Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(height: 8),
-                  if (index != 0) Divider(),
-                  Text(
-                    "${index + 1} Aug 2022",
-                    style:
-                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),
+    return ListView.builder(
+      padding: EdgeInsets.only(top: 16),
+      itemBuilder: (context, index) => Row(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  ls[index]["senderName"],
+                  style:
+                      TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  "${ls[index]['task']}",
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w400,
                   ),
-                  SizedBox(height: 8)
-                ],
-              )),
-          shrinkWrap: true,
-          padding: const EdgeInsets.only(top: 16),
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: 7,
-          itemBuilder: (context, index) {
-            return index != 0
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: kPrimaryBlackColor),
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
-                                  bottomLeft: Radius.circular(0),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "• Do Codeforce Game Theory Question",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 9.sp),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "• Attend College coding round",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 9.sp),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "Closed ${timeago.format(DateTime(2022, 8, 5))}",
-                              style: TextStyle(
-                                  fontFamily: kFontFamily,
-                                  fontSize: 8.sp,
-                                  fontWeight: FontWeight.w300,
-                                  color: kPrimaryBlackColor.withOpacity(0.7)),
-                            ),
-                          ],
-                        ),
-                        ImageStack(
-                          imageList: images,
-                          totalCount: images.length,
-                          imageRadius: 24.sp,
-                          imageCount: 2,
-                          imageBorderWidth: 0,
-                        ),
-                      ],
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Image.network(ls[index]["image"]),
+                SizedBox(
+                  height: 16,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await launchURL(context, ls[index]["link"]);
+                  },
+                  child: Text(
+                    ls[index]["link"],
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 10.sp,
+                      decoration: TextDecoration.underline,
                     ),
-                  )
-                : SizedBox.shrink();
-          }),
+                  ),
+                )
+              ],
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(color: kPrimaryBlackColor),
+              color: kPrimaryWhiteColor,
+            ),
+            padding: EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 16),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+          Row(
+            children: [
+              true
+                  ? const Icon(LineariconsFree.checkmark_cicle,
+                      size: 16, color: kPrimaryBlackColor)
+                  : const Icon(Entypo.hourglass, color: kPrimaryBlackColor),
+              SizedBox(
+                width: 8,
+              ),
+              Column(
+                children: [
+                  Icon(
+                    Icons.arrow_circle_up,
+                    size: 36,
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text('4 Votes')
+                ],
+              ),
+            ],
+          ),
+          Spacer()
+        ],
+      ),
+      itemCount: ls.length,
     );
   }
 

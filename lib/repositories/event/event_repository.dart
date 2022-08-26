@@ -12,7 +12,7 @@ class EventRepository extends BaseEventRepository {
   Future<Event> getEvent({required String eventId}) async {
     final event =
         await _firebaseFirestore.collection(Paths.events).doc(eventId).get();
-    return Event.fromMap(event.data()!);
+    return Event.fromMap(event.data()!, eventId);
   }
 
   Future<void> createEvent({required Event event}) async {
@@ -59,7 +59,7 @@ class EventRepository extends BaseEventRepository {
             .collection(Paths.userEvent)
             .doc(element.id)
             .set({});
-        return Event.fromMap(element.data());
+        return Event.fromMap(element.data(), element.id);
       }
     }
     return null;
