@@ -43,4 +43,25 @@ class EventRepository extends BaseEventRepository {
     });
     return events;
   }
+
+  Future<Event?> joinEvent(
+      {required String roomCode, required String userId}) async {
+    final collection = _firebaseFirestore.collection(Paths.events);
+    final snap = await collection.get();
+    for (var element in snap.docs) {
+      if (element.data()["roomCode"] == roomCode) {
+        collection.doc(element.id).update({
+          "memberIds": FieldValue.arrayUnion([userId])
+        });
+        await _firebaseFirestore
+            .collection(Paths.usersEvents)
+            .doc(userId)
+            .collection(Paths.userEvent)
+            .doc(element.id)
+            .set({});
+        return Event.fromMap(element.data());
+      }
+    }
+    return null;
+  }
 }

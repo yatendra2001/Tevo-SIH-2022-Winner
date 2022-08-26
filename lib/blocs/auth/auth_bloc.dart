@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/repositories/repositories.dart';
+import 'package:tevo/repositories/wallet_repository/wallet_repo.dart';
 import 'package:tevo/utils/session_helper.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -14,6 +15,7 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
   late StreamSubscription<auth.User?> _userSubscription;
+  bool isFirstTime = false;
 
   AuthBloc({
     required AuthRepository authRepository,
@@ -46,7 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (check) {
         final user =
             await UserRepository().getUserWithId(userId: event.user!.uid);
-        SessionHelper.uid = user.id;
+        SessionHelper.uid = event.user?.uid ?? '';
         SessionHelper.displayName = user.displayName;
         SessionHelper.phone = user.phone;
         SessionHelper.profileImageUrl = user.profileImageUrl;

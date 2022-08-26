@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tevo/models/event_model.dart';
 import 'package:tevo/models/failure_model.dart';
-
 import 'package:tevo/repositories/event/event_repository.dart';
 import 'package:tevo/utils/session_helper.dart';
-
+import 'package:tevo/widgets/widgets.dart';
 part 'event_event.dart';
 part 'event_state.dart';
 
@@ -28,6 +25,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   Stream<EventState> mapEventToState(event) async* {
     if (event is GetUserEvent) {
       yield* _mapToGetUserEvent(event);
+    } else if (event is JoinEvent) {
+      yield* _mapToJoinEvent(event);
     }
   }
 
@@ -38,5 +37,24 @@ class EventBloc extends Bloc<EventEvent, EventState> {
           await _eventRepository.getUserEvents(userId: SessionHelper.uid!);
       yield state.copyWith(events: events, status: EventStatus.loaded);
     }
+  }
+
+  Stream<EventState> _mapToJoinEvent(JoinEvent event) async* {}
+
+  Future<bool> directToPayment({required String joinCode}) async {
+    final communityEvent = await _eventRepository.joinEvent(
+        roomCode: joinCode, userId: SessionHelper.uid!);
+    print('+++++++${communityEvent.toString()}');
+    if (communityEvent != null) {
+      if (communityEvent.paid == true) {
+        return true;
+      } else {
+        flutterToast(msg: "Added");
+        add(const GetUserEvent());
+        return false;
+      }
+    }
+    flutterToast(msg: "Unable to verify the code. Check the code again.");
+    return false;
   }
 }

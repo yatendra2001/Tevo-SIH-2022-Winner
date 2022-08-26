@@ -22,3 +22,11 @@ class AddEvent extends EventEvent {
   @override
   List<Object> get props => [events];
 }
+
+class JoinEvent extends EventEvent {
+  final String joinCode;
+
+  const JoinEvent({
+    required this.joinCode,
+  });
+}

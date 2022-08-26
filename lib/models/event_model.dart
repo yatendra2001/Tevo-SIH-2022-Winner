@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class Event extends Equatable {
@@ -12,7 +11,9 @@ class Event extends Equatable {
   final DateTime endDate;
   final String roomCode;
   final int joiningAmount;
+  final String type; //peer to peer or Admin to user
   final List<String> memberIds;
+  final bool paid;
 
   Event({
     this.id,
@@ -23,7 +24,9 @@ class Event extends Equatable {
     required this.endDate,
     required this.roomCode,
     required this.joiningAmount,
+    required this.type,
     required this.memberIds,
+    required this.paid,
   });
 
   Event copyWith({
@@ -35,7 +38,9 @@ class Event extends Equatable {
     DateTime? endDate,
     String? roomCode,
     int? joiningAmount,
+    String? type,
     List<String>? memberIds,
+    bool? paid,
   }) {
     return Event(
       id: id ?? this.id,
@@ -46,7 +51,9 @@ class Event extends Equatable {
       endDate: endDate ?? this.endDate,
       roomCode: roomCode ?? this.roomCode,
       joiningAmount: joiningAmount ?? this.joiningAmount,
+      type: type ?? this.type,
       memberIds: memberIds ?? this.memberIds,
+      paid: paid ?? this.paid,
     );
   }
 
@@ -60,7 +67,9 @@ class Event extends Equatable {
       'endDate': endDate.millisecondsSinceEpoch,
       'roomCode': roomCode,
       'joiningAmount': joiningAmount,
+      'type': type,
       'memberIds': memberIds,
+      'paid': paid,
     };
   }
 
@@ -74,7 +83,9 @@ class Event extends Equatable {
       endDate: DateTime.fromMillisecondsSinceEpoch(map['endDate']),
       roomCode: map['roomCode'] ?? '',
       joiningAmount: map['joiningAmount']?.toInt() ?? 0,
+      type: map['type'] ?? '',
       memberIds: List<String>.from(map['memberIds']),
+      paid: map['paid'] ?? false,
     );
   }
 
@@ -84,7 +95,7 @@ class Event extends Equatable {
 
   @override
   String toString() {
-    return 'Event(id: $id, eventName: $eventName, description: $description, startDate: $startDate, creatorId: $creatorId, endDate: $endDate, roomCode: $roomCode, joiningAmount: $joiningAmount, memberIds: $memberIds)';
+    return 'Event(id: $id, eventName: $eventName, description: $description, startDate: $startDate, creatorId: $creatorId, endDate: $endDate, roomCode: $roomCode, joiningAmount: $joiningAmount, type: $type, memberIds: $memberIds, paid: $paid)';
   }
 
   @override
@@ -98,7 +109,9 @@ class Event extends Equatable {
       endDate,
       roomCode,
       joiningAmount,
+      type,
       memberIds,
+      paid,
     ];
   }
 }

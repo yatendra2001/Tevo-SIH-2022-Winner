@@ -9,6 +9,7 @@ import 'package:tevo/blocs/auth/auth_bloc.dart';
 
 import 'package:tevo/models/user_model.dart';
 import 'package:tevo/repositories/user/user_repository.dart';
+import 'package:tevo/repositories/wallet_repository/wallet_repo.dart';
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/onboarding/add_profile_photo_screen.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
@@ -181,6 +182,7 @@ class _DobScreenState extends State<DobScreen> {
                         OutlinedButton(
                             onPressed: () async {
                               SessionHelper.age = _ageController.text;
+                              context.read<AuthBloc>().isFirstTime = true;
                               widget.pageController.nextPage(
                                   duration: const Duration(milliseconds: 300),
                                   curve: Curves.easeIn);
@@ -211,6 +213,7 @@ class _DobScreenState extends State<DobScreen> {
                                   todo: SessionHelper.todo ?? 0,
                                   isPrivate: false,
                                   bio: "",
+                                  walletBalance: 0,
                                 ),
                               );
                               BlocProvider.of<InitializeStreamChatCubit>(

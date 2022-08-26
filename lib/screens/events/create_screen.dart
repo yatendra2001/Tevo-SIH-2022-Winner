@@ -1,16 +1,12 @@
-import 'dart:ffi';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:rolling_switch/rolling_switch.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tevo/models/event_model.dart';
 import 'package:tevo/repositories/event/event_repository.dart';
-import 'package:tevo/screens/events/bloc/event_bloc.dart';
-import 'package:tevo/screens/login/widgets/standard_elevated_button.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
@@ -38,6 +34,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final eventName = TextEditingController();
   final joiningAmount = TextEditingController(text: "1000");
   final description = TextEditingController();
+  String selectType = 'Peer To Peer';
+  bool paid = false;
 
   @override
   void initState() {
@@ -107,6 +105,51 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       ],
                     ),
                   ),
+                  Container(
+                      decoration: BoxDecoration(
+                        color: kPrimaryWhiteColor,
+                        border: Border.all(color: kPrimaryBlackColor),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      width: double.infinity,
+                      margin: EdgeInsets.only(
+                        top: 32,
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Text(
+                              paid ? 'Admin to User' : selectType,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 11.sp,
+                                  color: kPrimaryBlackColor),
+                            ),
+                          ),
+                          Spacer(),
+                          paid
+                              ? SizedBox.shrink()
+                              : DropdownButton<String>(
+                                  isDense: true,
+                                  underline: SizedBox.shrink(),
+                                  items: <String>[
+                                    'Peer to Peer',
+                                    'Admin to User'
+                                  ].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    selectType = value!;
+                                    setState(() {});
+                                  },
+                                ),
+                        ],
+                      )),
                   Container(
                     decoration: BoxDecoration(
                       color: kPrimaryWhiteColor,
@@ -178,39 +221,84 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     margin: EdgeInsets.only(top: 32),
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.only(top: 16, right: 16, bottom: 16),
                     child: Row(children: [
-                      Text(
-                        "Joining Amount",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 11.sp,
-                            color: kPrimaryBlackColor),
-                      ),
-                      Spacer(),
-                      SizedBox(
-                        width: 10.w,
-                        child: TextField(
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(4), //only 6 digit
-                          ],
-                          controller: joiningAmount,
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
+                      Transform.scale(
+                        scale: 0.6,
+                        child: RollingSwitch.icon(
+                          onChanged: (bool val) {
+                            paid = val;
+                            if (val) selectType = 'Admin to User';
+                            setState(() {});
+                          },
+                          rollingInfoLeft: RollingIconInfo(
+                            icon: Icons.paid,
+                            backgroundColor: kPrimaryBlackColor,
+                            text: Text(
+                              'Unpaid',
+                              style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontFamily: kFontFamily,
+                                  color: kPrimaryWhiteColor),
+                            ),
+                          ),
+                          rollingInfoRight: RollingIconInfo(
+                            icon: Icons.public,
+                            backgroundColor: Colors.grey,
+                            text: Text(
+                              'Paid',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12.sp,
+                                fontFamily: kFontFamily,
+                              ),
+                            ),
                           ),
                         ),
                       ),
+                      paid
+                          ? Text(
+                              "Joining Amount",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 11.sp,
+                                  color: kPrimaryBlackColor),
+                            )
+                          : SizedBox.shrink(),
+                      Spacer(),
+                      paid
+                          ? SizedBox(
+                              width: 10.w,
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(
+                                      4), //only 6 digit
+                                ],
+                                controller: joiningAmount,
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black)),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black)),
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
                       SizedBox(
-                        width: 8,
+                        width: 4,
                       ),
-                      Image.network(
-                        "https://cdn-icons-png.flaticon.com/512/1369/1369897.png",
-                        scale: 20,
-                      )
+                      paid
+                          ? Text(
+                              "INR",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 8.sp,
+                              ),
+                            )
+                          : SizedBox.shrink(),
                     ]),
                   ),
                   Container(
@@ -283,6 +371,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       await EventRepository()
           .createEvent(
             event: Event(
+              type: selectType,
+              paid: paid,
               eventName: eventName.text,
               memberIds: [SessionHelper.uid!],
               id: null,
@@ -291,7 +381,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               creatorId: SessionHelper.uid!,
               endDate: endDate,
               roomCode: code,
-              joiningAmount: int.parse(joiningAmount.text),
+              joiningAmount: paid ? int.parse(joiningAmount.text) : 0,
             ),
           )
           .then((value) => flutterToast(msg: "Event Created"));
