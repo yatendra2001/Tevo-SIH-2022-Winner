@@ -16,6 +16,7 @@ import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
+import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
@@ -39,7 +40,7 @@ class _FeedScreenState extends State<FeedScreen> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController();
-    if (context.read<AuthBloc>().isFirstTime) {
+    if (true || context.read<AuthBloc>().isFirstTime) {
       Future.delayed(
           Duration.zero,
           () async => showDialog(
@@ -53,7 +54,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   ),
                   title: Center(
                     child: Text(
-                      "Joining Bonus",
+                      "Welcome to Tevo!",
                       style: TextStyle(
                         fontFamily: kFontFamily,
                         fontSize: 14.sp,
@@ -62,14 +63,23 @@ class _FeedScreenState extends State<FeedScreen> {
                       ),
                     ),
                   ),
-                  content: Text(
-                    "Welcome to Tevo.",
-                    style: TextStyle(
-                      fontFamily: kFontFamily,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: kPrimaryBlackColor,
-                    ),
+                  content: Row(
+                    children: [
+                      Text(
+                        "Joining bonus 50",
+                        style: TextStyle(
+                          fontFamily: kFontFamily,
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w400,
+                          color: kPrimaryBlackColor,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Image.asset(
+                        kTevoCoin3d,
+                        scale: 4.5,
+                      ),
+                    ],
                   ),
                   actions: [
                     OutlinedButton(
