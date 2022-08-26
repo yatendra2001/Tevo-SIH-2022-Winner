@@ -17,12 +17,13 @@
 <br />
 <div align="center">
   <a href="https://github.com/yatendra2001/Tevo">
-    <img src="assets/images/TEVO (512 × 512px).png"  alt="Logo" width="200" height="130" >
+    <img src="assets/images/TEVO (512 × 512px).png"  alt="Logo" width="200" height="160" >
   </a>
   <p align="center">
     An app that makes your everyday progress fun.
     <br />
-    <a href="https://youtu.be/LrnHIeX0i8I">View Prototype</a>
+    <a href="https://play.google.com/store/apps/details?id=com.superawesomeapps.tevo">Download on PlayStore</a>
+    <a href="https://www.tevo.social/">| View Landing Page</a>
   </p>
 </div>
 
@@ -31,7 +32,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](_)
+[![Product Name Screen Shot][product-screenshot]](https://youtu.be/ZmuIWx-_2vE)
 
 Tevo is a social networking mobile application that will allow users to share their everyday progress on health, career or any personal interests.
 
@@ -44,6 +45,7 @@ Open the app → goto create post tab → add all your tasks for the day → bam
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
+Mobile App
 * [Dart](https://dart.dev/)
 * [Flutter](https://flutter.dev/)
 * [Firebase](https://firebase.google.com/)
@@ -51,9 +53,19 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * [StreamChat API](https://getstream.io/chat/)
 * [Adobe XD](https://www.adobe.com/in/products/xd.html)
 
+Landing Page
+* [React](https://reactjs.org)
+* [Tailwind CSS](https://tailwindcss.com)
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- Landing Page -->
+## Landing Page of Tevo
 
+A simple yet elegant landing page. Any contributions you make are **greatly appreciated**.
+<a href="https://github.com/tejasspatil/Tevo_Website">Find It Here</a>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
