@@ -10,6 +10,7 @@ const kPrimaryBlackColor = Color(0xff0c0c0d);
 const kPrimaryBlackFadedColor = Color(0xff3e3e42);
 const kSecondaryBlueColor = Color(0xffCAE9FF);
 const kSecondaryYellowColor = Color.fromARGB(255, 236, 186, 34);
+const kPrimaryGoldenColor = Color(0xffe2b512);
 
 class Palette {
   static const Color lightBlue = kPrimaryTealColor;
