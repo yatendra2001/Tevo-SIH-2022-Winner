@@ -14,6 +14,7 @@ import 'package:tevo/repositories/wallet_repository/wallet_repo.dart';
 import 'package:tevo/screens/events/create_screen.dart';
 import 'package:tevo/screens/events/direct_to_payments.dart';
 import 'package:tevo/screens/events/event_room_screen.dart';
+import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/flutter_toast.dart';
@@ -221,9 +222,7 @@ class _EventsScreenState extends State<EventsScreen> {
                           fontWeight: FontWeight.w500),
                     ),
                     Transform.scale(
-                        scale: 0.8,
-                        child: Image.network(
-                            "https://cdn-icons-png.flaticon.com/512/1369/1369897.png")),
+                        scale: 0.85, child: Image.asset(kTevoCoin2d)),
                   ],
                 ),
               ),
