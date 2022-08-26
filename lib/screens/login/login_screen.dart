@@ -1,11 +1,13 @@
 import 'dart:developer';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 
@@ -97,13 +99,21 @@ class _LoginScreenState extends State<LoginScreen> {
               StandardElevatedButton(
                   isArrowButton: true,
                   labelText: "Continue",
-                  onTap: () {
-                    widget.controller.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                    BlocProvider.of<LoginCubit>(context).sendOtpOnPhone(
-                        phone: context.read<LoginCubit>().phone);
-                    SessionHelper.phone = context.read<LoginCubit>().phone;
+                  onTap: () async {
+                    var connectivityResult =
+                        await (Connectivity().checkConnectivity());
+                    if (connectivityResult != ConnectivityResult.none) {
+                      widget.controller.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                      BlocProvider.of<LoginCubit>(context).sendOtpOnPhone(
+                          phone: context.read<LoginCubit>().phone);
+                      SessionHelper.phone = context.read<LoginCubit>().phone;
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: 'The Internet connection appears to be offline',
+                          backgroundColor: Colors.redAccent);
+                    }
                   },
                   isButtonNull: isButtonNotActive),
               Padding(

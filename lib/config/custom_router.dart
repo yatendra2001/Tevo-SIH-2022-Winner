@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tevo/screens/events/create_screen.dart';
 import 'package:tevo/screens/events/event_room_screen.dart';
 import 'package:tevo/screens/events/events_screen.dart';
@@ -21,6 +22,7 @@ import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
 class CustomRouter {
   static Route onGenerateRoute(RouteSettings settings) {
     print('Route: ${settings.name}');
+
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
@@ -36,7 +38,6 @@ class CustomRouter {
         return FollowingScreen.route(
           args: settings.arguments as FollowingScreenArgs,
         );
-
       case NavScreen.routeName:
         return NavScreen.route();
       case ProfileScreen.routeName:

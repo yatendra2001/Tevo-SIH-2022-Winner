@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:tevo/blocs/blocs.dart';
 import 'package:tevo/blocs/simple_bloc_observer.dart';
@@ -25,6 +26,7 @@ import 'key.dart';
 import 'screens/create_post/bloc/create_post_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
+import 'utils/community_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
