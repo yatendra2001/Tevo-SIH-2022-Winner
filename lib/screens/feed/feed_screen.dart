@@ -1,18 +1,22 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sizer/sizer.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:tevo/blocs/auth/auth_bloc.dart';
 import 'package:tevo/cubits/cubits.dart';
+import 'package:tevo/repositories/user/user_repository.dart';
 import 'package:tevo/screens/events/events_screen.dart';
 import 'package:tevo/screens/feed/bloc/feed_bloc.dart';
 import 'package:tevo/screens/login/onboarding/follow_users_screen.dart';
 import 'package:tevo/screens/screens.dart';
 import 'package:tevo/screens/stream_chat/cubit/initialize_stream_chat/initialize_stream_chat_cubit.dart';
 import 'package:tevo/screens/stream_chat/ui/stream_chat_inbox.dart';
+import 'package:tevo/utils/assets_constants.dart';
 import 'package:tevo/utils/session_helper.dart';
 import 'package:tevo/utils/theme_constants.dart';
 import 'package:tevo/widgets/widgets.dart';
@@ -36,6 +40,69 @@ class _FeedScreenState extends State<FeedScreen> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController();
+    if (true || context.read<AuthBloc>().isFirstTime) {
+      Future.delayed(
+          Duration.zero,
+          () async => showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) => AlertDialog(
+                  backgroundColor: Colors.grey[50],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    // side: BorderSide(color: kPrimaryBlackColor, width: 2.0),
+                  ),
+                  title: Center(
+                    child: Text(
+                      "Welcome to Tevo!",
+                      style: TextStyle(
+                        fontFamily: kFontFamily,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: kPrimaryBlackColor,
+                      ),
+                    ),
+                  ),
+                  content: Row(
+                    children: [
+                      Text(
+                        "Joining bonus 50",
+                        style: TextStyle(
+                          fontFamily: kFontFamily,
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w400,
+                          color: kPrimaryBlackColor,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Image.asset(
+                        kTevoCoin3d,
+                        scale: 4.5,
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    OutlinedButton(
+                        onPressed: () async {
+                          await FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(SessionHelper.uid)
+                              .update({"walletBalance": 50});
+                          context.read<AuthBloc>().isFirstTime = false;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "Claim",
+                          style: TextStyle(
+                              fontFamily: kFontFamily,
+                              color: kPrimaryBlackColor,
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w400),
+                        )),
+                  ],
+                ),
+              ));
+    }
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.offset >=

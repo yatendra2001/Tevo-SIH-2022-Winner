@@ -14,6 +14,7 @@ class User extends Equatable {
   final bool isPrivate;
   final int todo;
   final int completed;
+  final int walletBalance;
 
   const User({
     required this.id,
@@ -28,6 +29,7 @@ class User extends Equatable {
     required this.bio,
     required this.todo,
     required this.completed,
+    required this.walletBalance,
   });
 
   static const empty = User(
@@ -42,6 +44,7 @@ class User extends Equatable {
     bio: '',
     todo: 0,
     completed: 0,
+    walletBalance: 0,
   );
 
   @override
@@ -58,6 +61,7 @@ class User extends Equatable {
         bio,
         todo,
         completed,
+        walletBalance,
       ];
 
   User copyWith({
@@ -73,6 +77,7 @@ class User extends Equatable {
     String? bio,
     int? todo,
     int? completed,
+    int? walletBalance,
   }) {
     return User(
       id: id ?? this.id,
@@ -87,6 +92,7 @@ class User extends Equatable {
       bio: bio ?? this.bio,
       todo: todo ?? this.todo,
       completed: completed ?? this.completed,
+      walletBalance: walletBalance ?? this.walletBalance,
     );
   }
 
@@ -105,6 +111,7 @@ class User extends Equatable {
       'bio': bio,
       'todo': todo,
       'completed': completed,
+      'walletBalance': walletBalance,
     };
   }
 
@@ -123,6 +130,7 @@ class User extends Equatable {
       bio: data['bio'] ?? '',
       todo: (data['todo'] ?? 0).toInt(),
       completed: (data['completed'] ?? 0).toInt(),
+      walletBalance: (data['walletBalance'] ?? 0).toInt(),
     );
   }
 }

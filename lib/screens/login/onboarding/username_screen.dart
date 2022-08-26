@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tevo/blocs/auth/auth_bloc.dart';
+import 'package:tevo/repositories/wallet_repository/wallet_repo.dart';
 
 import 'package:tevo/screens/login/login_cubit/login_cubit.dart';
 import 'package:tevo/screens/login/onboarding/dob_screen.dart';
@@ -142,8 +145,9 @@ class _UsernameScreenState extends State<UsernameScreen> {
                 StandardElevatedButton(
                   isArrowButton: true,
                   labelText: "Continue",
-                  onTap: () {
+                  onTap: () async {
                     SessionHelper.username = _usernameController.text;
+
                     widget.pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeIn);
